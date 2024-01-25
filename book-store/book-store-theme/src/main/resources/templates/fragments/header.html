@@ -1,0 +1,308 @@
+<!--
+ ~ Copyright 2022 youngmonkeys.org
+ ~ 
+ ~ Licensed under the ezyplatform, Version 1.0.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~ 
+ ~     https://youngmonkeys.org/licenses/ezyplatform-1.0.0.txt
+ ~ 
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<!-- Navbar -->
+<div th:fragment="header" class="container-fluid main-nav">
+    <div class="d-flex align-items-center">
+        <div class="site-branding ps-2">
+            <a href="/" class="text-white custom-logo-link" rel="home" aria-current="page">
+                <img src="/images/logo.svg" class="main-logo" alt="Easy Going Platform">
+            </a>
+        </div><!-- .site-branding -->
+        <ul class="d-none d-lg-flex">
+            <li class="nav-item">
+                <a class="nav-link" href="/">[[#{home}]]</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/store">[[#{store}]]</a>
+            </li>
+            <li class="nav-item d-lg-block d-md-none">
+                <a class="nav-link" href="/contact-us">[[#{contact_us_menu}]]</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about-us">[[#{about_us}]]</a>
+            </li>
+        </ul>
+    </div>
+    <ul class="d-none d-lg-flex">
+        <li th:if="${loggedIn == true && shoppingCartProductCount > 0}"
+            class="nav-item dropdown">
+            <a class="nav-link" href="/checkout/shopping-cart">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="position-absolute translate-middle badge rounded-pill bg-warning navbar-badge">
+                    [[${shoppingCartProductCount}]]
+                </span>
+            </a>
+        </li>
+        <li th:if="${webLanguages.size() > 1}" class="nav-item dropdown">
+            <a class="nav-link cursor-pointer" data-bs-toggle="dropdown">
+                <i class="fas fa-globe"></i>
+            </a>
+            <div class="dropdown-menu language-dropdown">
+                <th:block th:each="webLanguage, iterator : ${webLanguages}">
+                    <a class="dropdown-item cursor-pointer" th:attr="onclick=|ezyweb.onLanguageSelected('${webLanguage.code}')|">
+                        [[${webLanguage.name}]]
+                    </a>
+                    <div th:if="${iterator.index < webLanguages.size() - 1}" class="dropdown-divider"></div>
+                </th:block>
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link" data-bs-toggle="dropdown" href="#">
+                [[#{help_center}]]
+            </a>
+            <div class="dropdown-menu dropdown-menu-md dropdown-menu-end">
+                <a href="/contact-us" class="dropdown-item mt-2 d-lg-none d-md-block">
+                    <i class="fas fa-paper-plane me-2"></i> [[#{contact_us_menu}]]
+                </a>
+                <div class="dropdown-divider d-lg-none d-md-block"></div>
+                <a href="/faq" class="dropdown-item mt-2">
+                    <i class="fas fa-question-circle me-2"></i> [[#{faqs}]]
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="https://stackask.com" class="dropdown-item mb-2" onclick="ezyweb.logout();">
+                    <i class="fas fa-layer-group me-2"></i> [[#{ask_us}]]
+                </a>
+            </div>
+        </li>
+        <li th:if="${loggedIn == true}" class="nav-item dropdown">
+            <a class="nav-link cursor-pointer" data-bs-toggle="dropdown">
+                <i class="far fa-bell fs-5"></i>
+                <span class="position-absolute translate-middle badge rounded-pill bg-warning navbar-badge notification-count d-none">0</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                <span class="dropdown-item dropdown-header"><span class="notification-count">0</span> [[#{notification_s}]]</span>
+                <div class="dropdown-divider" id="notificationHeaderDivider"></div>
+                <a class="dropdown-item dropdown-footer cursor-pointer" onclick="readAllNotifications();">[[#{see_all_notifications}]]</a>
+            </div>
+        </li>
+        <li th:if="${loggedIn != true}" class="nav-item">
+            <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#login-modal">
+                [[#{login}]]
+            </button>
+        </li>
+        <li th:if="${loggedIn == true}" class="nav-item dropdown">
+            <img id="headerAvatarImage" class="rounded-circle ms-4 small-avatar cursor-pointer"
+                 th:src="${avatarImage != null ?  avatarImage.getUrlOrDefault('/images/avatar.png') : '/images/avatar.png'}"
+                 data-bs-toggle="dropdown">
+            <div class="dropdown-menu dropdown-menu-md dropdown-menu-end">
+                <a href="/account" class="dropdown-item mt-2">
+                    <i class="far fa-user-circle me-2"></i> [[#{profile}]]
+                </a>
+                <th:block th:if="${isTeacher == true}">
+                    <div class="dropdown-divider"></div>
+                    <a href="/account/teacher/classes" class="dropdown-item">
+                        <i class="fas fa-chalkboard-teacher me-2"></i> [[#{your_assigned_classes}]]
+                    </a>
+                </th:block>
+                <div class="dropdown-divider"></div>
+                <a href="/account/classes" class="dropdown-item">
+                    <i class="fas fa-cubes me-2"></i> [[#{your_classes}]]
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="/orders" class="dropdown-item">
+                    <i class="fa-solid fa-receipt me-2"></i></i> [[#{orders}]]
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="/account/inbox" class="dropdown-item">
+                    <i class="fas fa-inbox me-2"></i> [[#{inbox}]]
+                    <span class="float-right text-muted text-sm letter-count">3</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item mb-2" onclick="ezyweb.logout();">
+                    <i class="fas fa-sign-out-alt me-2"></i> [[#{logout}]]
+                </a>
+            </div>
+        </li>
+    </ul>
+    <div class="d-lg-none d-flex">
+        <div th:if="${loggedIn == true && shoppingCartProductCount > 0}"
+            class="nav-item dropdown me-4">
+            <a class="nav-link" href="/checkout/shopping-cart">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="badge badge-warning navbar-badge">
+                        [[${shoppingCartProductCount}]]
+                    </span>
+            </a>
+        </div>
+        <div class="justify-content-end align-items-center">
+            <button class="btn" onclick="toggleMainMobileMenu();">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="mobile-menu" class="main-mobile-menu" id="mainMobileMenu">
+    <div class="d-flex justify-content-between">
+        <div></div>
+        <div class="site-branding mt-2">
+            <a href="/" class="custom-logo-link text-white" rel="home" aria-current="page">
+                <img src="/images/logo.svg" class="main-logo" alt="Easy Going Platform">
+            </a>
+        </div><!-- .site-branding -->
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-link" onclick="toggleMainMobileMenu();">
+                <h4><i class="text-white fas fa-times"></i></h4>
+            </button>
+        </div>
+    </div>
+    <div th:if="${currentParentPage != 'account'}" class="main-mobile-common-menu">
+        <ul class="nav nav-pills nav-sidebar flex-column mt-3">
+            <li th:if="${loggedIn == true}" class="nav-item dropdown">
+                <div class="d-flex align-items-center" data-bs-toggle="dropdown" onclick="return false;">
+                    <img id="mobileHeaderAvatarImage"  class="rounded-circle ms-3 small-avatar cursor-pointer"
+                         th:src="${avatarImage != null ?  avatarImage.getUrlOrDefault('/images/avatar.png') : '/images/avatar.png'}">
+                    <label class="text-white text-break ps-3" th:text="${user.getName()}">tvd12</label>
+                </div>
+                <div class="dropdown-menu dropdown-menu-md dropdown-menu-end">
+                    <a href="/account" class="dropdown-item mt-2">
+                        <i class="far fa-user-circle me-2"></i> [[#{profile}]]
+                    </a>
+                    <th:block th:if="${isTeacher == true}">
+                        <div class="dropdown-divider"></div>
+                        <a href="/account/teacher/classes" class="dropdown-item">
+                            <i class="fas fa-chalkboard-teacher me-2"></i> [[#{your_assigned_classes}]]
+                        </a>
+                    </th:block>
+                    <div class="dropdown-divider"></div>
+                    <a href="/account/classes" class="dropdown-item">
+                        <i class="fas fa-cubes me-2"></i> [[#{your_classes}]]
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/orders" class="dropdown-item mb-2">
+                        <i class="fa-solid fa-receipt me-2"></i> [[#{orders}]]
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="/account/inbox" class="dropdown-item mb-2">
+                        <i class="fas fa-inbox me-2"></i> [[#{inbox}]]
+                        <span class="float-right text-muted text-sm letter-count">3</span>
+                    </a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/">[[#{home}]]</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/store">[[#{store}]]</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/contact-us">[[#{contact_us_menu}]]</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/about-us">[[#{about_us}]]</a>
+            </li>
+        </ul>
+        <ul class="nav nav-pills nav-sidebar flex-column mt-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link"  data-bs-toggle="dropdown" href="#">[[#{help_center}]]</a>
+                <div class="dropdown-menu dropdown-menu-md dropdown-menu-end">
+                    <a href="/faq" class="dropdown-item mt-2">
+                        <i class="fas fa-question-circle me-2"></i> [[#{faqs}]]
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="https://stackask.com" class="dropdown-item mb-2" onclick="ezyweb.logout();">
+                        <i class="fas fa-layer-group me-2"></i> [[#{ask_us}]]
+                    </a>
+                </div>
+            </li>
+            <li th:if="${loggedIn != true}" class="nav-item">
+                <button class="btn btn-link nav-link text-white" data-bs-toggle="modal" data-bs-target="#login-modal">
+                    [[#{login}]]
+                </button>
+            </li>
+            <li th:if="${loggedIn == true}" class="nav-item">
+                <button class="btn btn-link nav-link text-white" onclick="ezyweb.logout();">
+                    <i class="fas fa-sign-out-alt me-2"></i> [[#{logout}]]
+                </button>
+            </li>
+        </ul>
+        <ul class="nav nav-pills nav-sidebar flex-column mt-4">
+            <li class="nav-item">
+                <a class="nav-link" href="/privacy-policy">[[#{privacy_policy}]]</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/terms-of-service">[[#{terms_of_service}]]</a>
+            </li>
+            <li th:if="${webLanguages.size() > 1}" class="nav-item dropdown">
+                <a class="nav-link" data-bs-toggle="dropdown" href="#">
+                    <i class="fas fa-globe"></i>
+                </a>
+                <div class="dropdown-menu language-dropdown">
+                    <th:block th:each="webLanguage, iterator : ${webLanguages}">
+                        <a class="dropdown-item cursor-pointer" th:attr="onclick=|ezyweb.onLanguageSelected('${webLanguage.code}')|">
+                            [[${webLanguage.name}]]
+                        </a>
+                        <div th:if="${iterator.index < webLanguages.size() - 1}" class="dropdown-divider"></div>
+                    </th:block>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div th:if="${currentParentPage == 'account'}">
+        <ul class="nav nav-pills nav-sidebar flex-column mt-3">
+            <li class="nav-item">
+                <a class="nav-link" href="/">
+                    <i class="nav-icon fas fa-home"></i> [[#{home}]]
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/account">
+                    <i class="nav-icon fas fa-user-circle"></i> [[#{profile}]]
+                </a>
+            </li>
+            <li th:if="${isTeacher == true}" class="nav-item">
+                <a class="nav-link" href="/account/teacher/classes">
+                    <i class="nav-icon fas fa-chalkboard-teacher"></i> [[#{your_assigned_classes}]]
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/account/classes">
+                    <i class="nav-icon fas fa-cubes"></i> [[#{your_classes}]]
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/orders">
+                    <i class="nav-icon fa-solid fa-receipt"></i> [[#{orders}]]
+                </a>
+            </li>
+            <li th:if="${loggedIn == true}" class="nav-item">
+                <a class="nav-link" href="#" onclick="ezyweb.logout();">
+                    <i class="nav-icon fas fa-sign-out-alt"></i> [[#{logout}]]
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<script th:fragment="scripts">
+// ===================== common ===============
+var isMainMobileMenuOpen = false;
+var toggleMainMobileMenu = function() {
+    $('#mainMobileMenu').css({
+        '-webkit-transform': 'translate3d(' + (isMainMobileMenuOpen ? '-100%' : '0%') + ',0,0)'
+    });
+    isMainMobileMenuOpen = !isMainMobileMenuOpen;
+}
+</script>
+</body>
+
+</html>

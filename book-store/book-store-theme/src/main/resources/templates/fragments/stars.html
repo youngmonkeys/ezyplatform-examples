@@ -1,0 +1,51 @@
+<!--
+ ~ Copyright 2022 youngmonkeys.org
+ ~ 
+ ~ Licensed under the ezyplatform, Version 1.0.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~ 
+ ~     https://youngmonkeys.org/licenses/ezyplatform-1.0.0.txt
+ ~ 
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="stars" class="stars" th:id="${inputType + '-stars-' + inputId}">
+	<i th:if="${stars > 0}"
+	   th:each="i: ${#numbers.sequence(1, stars)}"
+	   th:attr="onclick=|onStarClick('${inputType}', ${inputId}, ${i})|"
+	   class="fa fa-star star-checked star-item cursor-pointer"></i>
+	<i th:if="${stars < 5}"
+	   th:each="i: ${#numbers.sequence(stars + 1, 5)}"
+	   th:attr="onclick=|onStarClick('${inputType}', ${inputId}, ${i})|"
+	   class="fa fa-star star-item cursor-pointer"></i>
+</div>
+<script th:fragment="scripts">
+var createStarsViewItem = function(inputType, inputId, stars) {
+	var html = `<div class="stars" id="${inputType + '-stars-' + inputId}">`;
+	for (var i = 0; i < stars; ++i) {
+		html += `
+			<i onclick="onStarClick('${inputType}', ${inputId}, ${i + 1})"
+			   class="fa fa-star star-checked star-item cursor-pointer"></i>
+		`;
+	}
+	for (var i = stars; i < 5; ++i) {
+		html += `
+			<i onclick="onStarClick('${inputType}', ${inputId}, ${i + 1})"
+			   class="fa fa-star star-item cursor-pointer"></i>
+		`;
+	}
+	html += '</div>';
+	return html;
+}
+</script>
+</body>
+</html>

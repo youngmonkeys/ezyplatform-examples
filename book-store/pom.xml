@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.youngmonkeys</groupId>
+        <artifactId>ezyplatform-parent</artifactId>
+        <version>0.0.2</version>
+    </parent>
+    <artifactId>book-store</artifactId>
+    <groupId>org.youngmonkeys</groupId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <name>book-store</name>
+    <description>Book Store</description>
+
+    <properties>
+        <!--suppress UnresolvedMavenProperty -->
+        <ezyplatform.home>${env.EZYPLATFORM_HOME}</ezyplatform.home>
+    <ezyarticle.version>0.0.2</ezyarticle.version>
+    <ecommerce.version>0.0.1</ecommerce.version>
+    <ezylogin.version>0.0.1</ezylogin.version>
+        <ezymail.version>0.0.2</ezymail.version>
+        <facebook.client.version>2022.3.1</facebook.client.version>
+        <google.apis.version>v2-rev157-1.25.0</google.apis.version>
+        <google.client.version>1.33.2</google.client.version>
+        <javax.mail.version>1.6.2</javax.mail.version>
+        <ezypayment.version>0.0.1</ezypayment.version>
+    <ezysupport.version>0.0.2</ezysupport.version>
+    <ezyaccount.version>0.0.1</ezyaccount.version>
+    </properties>
+
+    <modules>
+        <module>book-store-theme</module>
+        <module>book-store-socket-plugin</module>
+        <module>book-store-admin-plugin</module>
+        <module>book-store-socket-app</module>
+        <module>book-store-web-plugin</module>
+    </modules>
+<dependencies>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyplatform-common-sdk</artifactId>
+            <version>${ezy.platform.version}</version>
+        <scope>provided</scope>
+        </dependency>
+    <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>${javax.mail.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ecommerce-sdk</artifactId>
+            <version>${ecommerce.version}</version>
+            <scope>system</scope>
+            <systemPath>${ezyplatform.home}/web/plugins/ecommerce/lib/ecommerce-sdk-${ecommerce.version}.jar</systemPath>
+        </dependency>
+    </dependencies>
+</project>
