@@ -18,19 +18,20 @@
         <!--suppress UnresolvedMavenProperty -->
         <ezyplatform.home>${env.EZYPLATFORM_HOME}</ezyplatform.home>
     <ezyarticle.version>0.0.4</ezyarticle.version>
-    <ecommerce.version>0.0.2</ecommerce.version>
+    <ecommerce.version>0.0.3</ecommerce.version>
     <ezylogin.version>0.0.1</ezylogin.version>
         <ezymail.version>0.0.2</ezymail.version>
         <facebook.client.version>2022.3.1</facebook.client.version>
         <google.apis.version>v2-rev157-1.25.0</google.apis.version>
         <google.client.version>1.33.2</google.client.version>
         <javax.mail.version>1.6.2</javax.mail.version>
-        <ezypayment.version>0.0.2</ezypayment.version>
+        <ezypayment.version>0.0.3</ezypayment.version>
     <ezysupport.version>0.0.2</ezysupport.version>
     <ezyaccount.version>0.0.1</ezyaccount.version>
     </properties>
 
     <modules>
+        <module>book-store-sdk</module>
         <module>book-store-theme</module>
         <module>book-store-socket-plugin</module>
         <module>book-store-admin-plugin</module>

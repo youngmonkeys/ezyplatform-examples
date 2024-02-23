@@ -14,6 +14,11 @@
     <dependencies>
         <dependency>
             <groupId>org.youngmonkeys</groupId>
+            <artifactId>book-store-sdk</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
             <artifactId>ezyplatform-admin-sdk</artifactId>
             <version>${ezy.platform.version}</version>
         </dependency>
