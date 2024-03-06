@@ -22,10 +22,10 @@ import com.tvd12.ezyfoxserver.support.entry.EzyDefaultAppEntry;
 
 public class AppEntryLoader extends EzyAbstractAppEntryLoader {
 
-	@Override
-	public EzyAppEntry load() throws Exception {
-		return new AppEntry();
-	}
+    @Override
+    public EzyAppEntry load() throws Exception {
+        return new AppEntry();
+    }
 
-	public static class AppEntry extends EzyDefaultAppEntry {}
+    public static class AppEntry extends EzyDefaultAppEntry {}
 }

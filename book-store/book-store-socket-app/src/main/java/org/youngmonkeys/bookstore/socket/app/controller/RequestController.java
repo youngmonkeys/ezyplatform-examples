@@ -28,19 +28,19 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @EzyRequestController
 public class RequestController extends EzyLoggable {
-	private final WheelService wheelService;
-	private final EzyResponseFactory responseFactory;
-	
-	@EzyDoHandle("spin")
-	public void spin(EzySession session, EzyUser user) {
-		int result = wheelService.spin();
+    private final WheelService wheelService;
+    private final EzyResponseFactory responseFactory;
+    
+    @EzyDoHandle("spin")
+    public void spin(EzySession session, EzyUser user) {
+        int result = wheelService.spin();
 
-		wheelService.decreaseQuantity(result);
-		
-		responseFactory.newObjectResponse()
-				.command("spin")
-				.param("result", result)
-				.session(session)
-				.execute();
-	}
+        wheelService.decreaseQuantity(result);
+        
+        responseFactory.newObjectResponse()
+                .command("spin")
+                .param("result", result)
+                .session(session)
+                .execute();
+    }
 }

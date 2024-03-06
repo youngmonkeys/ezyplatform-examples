@@ -20,20 +20,20 @@ import com.tvd12.ezyfox.bean.annotation.EzySingleton;
 import lombok.AllArgsConstructor;
 import org.youngmonkeys.bookstore.admin.converter.AdminBookStoreModelToResponseConverter;
 import org.youngmonkeys.bookstore.admin.response.AdminBookResponse;
-import org.youngmonkeys.ecommerce.admin.converter.AdminEcommerceModelToResponseConverter;
 import org.youngmonkeys.ecommerce.admin.service.AdminProductPriceService;
 import org.youngmonkeys.ecommerce.admin.service.AdminProductService;
-import org.youngmonkeys.ecommerce.admin.service.AdminShopService;
 import org.youngmonkeys.ecommerce.model.ProductBookModel;
 import org.youngmonkeys.ecommerce.model.ProductModel;
 import org.youngmonkeys.ecommerce.model.ProductPriceModel;
-import org.youngmonkeys.ecommerce.response.ProductResponse;
 import org.youngmonkeys.ezyplatform.admin.service.AdminMediaService;
 import org.youngmonkeys.ezyplatform.model.MediaNameModel;
 import org.youngmonkeys.ezyplatform.model.PaginationModel;
 import org.youngmonkeys.ezyplatform.rx.Reactive;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.tvd12.ezyfox.io.EzyLists.newArrayList;
@@ -43,59 +43,9 @@ import static com.tvd12.ezyfox.io.EzyLists.newArrayList;
 public class AdminBookModelDecorator {
 
     private final AdminMediaService mediaService;
-    private final AdminShopService shopService;
     private final AdminProductService productService;
     private final AdminProductPriceService productPriceService;
-    private final AdminEcommerceModelToResponseConverter modelToResponseConverter;
     private final AdminBookStoreModelToResponseConverter bookStoreModelToResponseConverter;
-
-    public ProductResponse decorate(
-        ProductModel model,
-        long currencyId,
-        String currencyFormat
-    ) {
-        Set<Long> mediaIds = new HashSet<>();
-        long iconImageId = model.getIconImageId();
-        if (iconImageId > 0) {
-            mediaIds.add(iconImageId);
-        }
-        long bannerImageId = model.getBannerImageId();
-        if (bannerImageId > 0) {
-            mediaIds.add(bannerImageId);
-        }
-        return Reactive.multiple()
-            .register(
-                "mediaMap",
-                () -> mediaService.getMediaNameMapByIds(mediaIds)
-            )
-            .register(
-                "price",
-                () -> productPriceService.getProductPrice(
-                    model.getId(),
-                    currencyId
-                )
-            )
-            .register(
-                "shop",
-                () -> shopService.getShopNameById(model.getShopId())
-            )
-            .mapBegin(map -> {
-                Map<Long, MediaNameModel> mediaMap = map.get("mediaMap");
-                ProductPriceModel price = map.get(
-                    "price",
-                    ProductPriceModel.ZERO
-                );
-                return modelToResponseConverter.toResponse(
-                    model,
-                    map.get("shop"),
-                    mediaMap.get(iconImageId),
-                    mediaMap.get(bannerImageId),
-                    price,
-                    currencyFormat
-                );
-            })
-            .blockingGet();
-    }
 
     @SuppressWarnings("MethodLength")
     public PaginationModel<AdminBookResponse> decorate(
