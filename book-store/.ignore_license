@@ -1,0 +1,12 @@
+.idea
+**/.idea/**
+.settings
+**/.settings/**
+target
+**/target/**
+test-output
+**/test-output/**
+**/resources/static/**
+**/settings/setup.properties
+**/settings/config.properties
+
