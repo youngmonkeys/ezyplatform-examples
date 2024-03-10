@@ -73,7 +73,9 @@ public class AdminBookController {
     public View booksIdEditGet(
         @PathVariable long productId
     ) {
-        View view = productController.productsAddGet();
+        View view = productController.productsIdEditGet(
+            productId
+        );
         decorateView(view);
         return view;
     }

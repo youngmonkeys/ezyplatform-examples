@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  ~ Copyright 2024 youngmonkeys.org
- ~ 
+ ~
  ~ Licensed under the ezyplatform, Version 1.0.0 (the "License");
  ~ you may not use this file except in compliance with the License.
  ~ You may obtain a copy of the License at
- ~ 
+ ~
  ~     https://youngmonkeys.org/licenses/ezyplatform-1.0.0.txt
- ~ 
+ ~
  ~ Unless required by applicable law or agreed to in writing, software
  ~ distributed under the License is distributed on an "AS IS" BASIS,
  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,17 +32,17 @@
     <properties>
         <!--suppress UnresolvedMavenProperty -->
         <ezyplatform.home>${env.EZYPLATFORM_HOME}</ezyplatform.home>
-    <ezyarticle.version>0.0.5</ezyarticle.version>
-    <ecommerce.version>0.0.3</ecommerce.version>
-    <ezylogin.version>0.0.2</ezylogin.version>
+        <ezyarticle.version>0.0.5</ezyarticle.version>
+        <ecommerce.version>0.0.4</ecommerce.version>
+        <ezylogin.version>0.0.2</ezylogin.version>
         <ezymail.version>0.0.4</ezymail.version>
         <facebook.client.version>2022.3.1</facebook.client.version>
         <google.apis.version>v2-rev157-1.25.0</google.apis.version>
         <google.client.version>1.33.2</google.client.version>
         <javax.mail.version>1.6.2</javax.mail.version>
-        <ezypayment.version>0.0.3</ezypayment.version>
-    <ezysupport.version>0.0.3</ezysupport.version>
-    <ezyaccount.version>0.0.1</ezyaccount.version>
+        <ezypayment.version>0.0.4</ezypayment.version>
+        <ezysupport.version>0.0.3</ezysupport.version>
+        <ezyaccount.version>0.0.1</ezyaccount.version>
     </properties>
 
     <modules>
@@ -53,14 +53,14 @@
         <module>book-store-socket-app</module>
         <module>book-store-web-plugin</module>
     </modules>
-<dependencies>
+    <dependencies>
         <dependency>
             <groupId>org.youngmonkeys</groupId>
             <artifactId>ezyplatform-common-sdk</artifactId>
             <version>${ezy.platform.version}</version>
-        <scope>provided</scope>
+            <scope>provided</scope>
         </dependency>
-    <dependency>
+        <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
             <version>${javax.mail.version}</version>

@@ -130,7 +130,7 @@ bookStore.changeBrowserUrl = function() {
 
 // ========== books init =============
 ezyadmin.onNewButtonClick = function() {
-    window.location = '/ecommerce/books/add'
+    window.location = '/book-store/books/add'
         + (ezyadmin.lang ? '?lang=' + ezyadmin.lang : '');
 }
 
@@ -236,11 +236,11 @@ bookStore.buildBookListItemHtml = function(book) {
 	'	<td>' + ezyadmin.formatTimeStamp(book.createdAt) + '</td>\n' +
 	'	<td>\n';
 	 html += '' +
-        '	    <button type="button" class="btn pr-1" onclick="bookStore.editBook(' + book.id + ');">\n' +
+        '	    <button type="button" class="btn pr-1" onclick="bookStore.editBook(' + book.productId + ');">\n' +
         '	        <i class="fas fa-edit text-primary"></i>\n' +
         '	    </button>\n';
 	html += '' +
-        '	    <button type="button" class="btn pl-1" onclick="bookStore.onDeleteBookClick(' + book.id + ', \'' + escape(book.productName) + '\');">\n' +
+        '	    <button type="button" class="btn pl-1" onclick="ecommerce.onDeleteProductClick(' + book.productId + ', \'' + escape(book.bookName) + '\');">\n' +
         '	        <i class="fas fa-trash text-danger"></i>\n' +
         '	    </button>\n';
 	html += '' +
@@ -253,6 +253,11 @@ bookStore.fetchBookList();
 // ============== product actions =============
 bookStore.editBook = function(id) {
     window.location = '/book-store/books/' + id + '/edit'
+        + (ezyadmin.lang ? '?lang=' + ezyadmin.lang : '');
+}
+
+ecommerce.onProductDeleted = function() {
+    window.location = '/book-store/books'
         + (ezyadmin.lang ? '?lang=' + ezyadmin.lang : '');
 }
 </script>
