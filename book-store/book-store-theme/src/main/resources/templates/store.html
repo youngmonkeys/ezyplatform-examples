@@ -1,35 +1,25 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{ezytheme}">
 <head>
-    <title>Book Store</title>
-    <style>
-        .sidebar {
-            width: 20%;
-            float: left;
-        }
-        .product-list {
-            width: 80%;
-            float: right;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" ezy:vhref="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" ezy:vhref="/ezylogin/css/style.css"/>
 </head>
-<body>
-<div class="sidebar">
-    <h2>Filter</h2>
-<!--    <form th:action="@{/store}" method="get">-->
-<!--        <label for="category">Category:</label><br>-->
-<!--        <select id="category" name="category">-->
-<!--            <option th:each="category : ${categories}" th:value="${category}" th:text="${category}"></option>-->
-<!--        </select><br>-->
-<!--        <input type="submit" value="Filter">-->
-<!--    </form>-->
-</div>
-<div class="product-list">
-    <h2>Products</h2>
-    <div th:each="book : ${books}">
-        <h3 th:text="${book.title}"></h3>
-        <p th:text="${book.description}"></p>
-        <p><strong>Price:</strong> <span th:text="${book.price}"></span></p>
+<body th:remove="tag">
+<div layout:fragment="content">
+    <div class="sidebar">
+        <h2 th:text="#{store_filter}"></h2>
+    </div>
+    <div class="product-list">
+        <h2 th:text="#{store_products}"></h2>
+        <div th:each="book : ${books}">
+            <h3 th:text="${book.title}"></h3>
+            <p th:text="${book.description}"></p>
+            <p><strong>Price:</strong> <span th:text="${book.price}"></span></p>
+        </div>
     </div>
 </div>
 </body>

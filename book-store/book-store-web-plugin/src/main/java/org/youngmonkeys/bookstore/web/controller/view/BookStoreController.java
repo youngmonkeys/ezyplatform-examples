@@ -9,7 +9,7 @@ import org.youngmonkeys.ezyarticle.web.manager.WebPageFragmentManager;
 import java.util.Arrays;
 
 @AllArgsConstructor
-public class BookStoreStoreController {
+public class BookStoreController {
 
     private final WebPageFragmentManager pageFragmentManager;
 
@@ -27,7 +27,7 @@ public class BookStoreStoreController {
                 )
                 .addVariable(
                         "categories",
-                        Arrays.asList("cate test 1", "cate test 2", "cate test 3")
+                        Arrays.asList("cate test 1", "cate test 2", "cate test 3") // mockup data
                 )
                 .build();
     }

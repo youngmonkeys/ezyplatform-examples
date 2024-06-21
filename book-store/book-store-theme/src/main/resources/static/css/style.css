@@ -522,3 +522,13 @@ div.screen-loading {
 }
 
 /********* home *********/
+/********* store *********/
+ .sidebar {
+     width: 20%;
+     float: left;
+ }
+.product-list {
+    width: 80%;
+    float: right;
+}
+/********* store *********/
