@@ -11,14 +11,14 @@
 <body th:remove="tag">
 <div layout:fragment="content">
     <div class="sidebar">
-        <h2 th:text="#{store_filter}"></h2>
+        <h2 th:text="#{filter}"></h2>
     </div>
     <div class="product-list">
-        <h2 th:text="#{store_products}"></h2>
+        <h2 th:text="#{products}"></h2>
         <div th:each="book : ${books}">
             <h3 th:text="${book.title}"></h3>
             <p th:text="${book.description}"></p>
-            <p><strong>Price:</strong> <span th:text="${book.price}"></span></p>
+            <p><strong th:text="#{price}">:</strong> <span th:text="${book.price}"></span></p>
         </div>
     </div>
 </div>

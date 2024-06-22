@@ -524,11 +524,11 @@ div.screen-loading {
 /********* home *********/
 /********* store *********/
  .sidebar {
-     width: 20%;
+     width: 30%;
      float: left;
  }
 .product-list {
-    width: 80%;
+    width: 70%;
     float: right;
 }
 /********* store *********/
