@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{ezytheme}">
 <head>
-    <style>
-        ul {
-            margin-left: 30px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" ezy:vhref="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" ezy:vhref="/ezylogin/css/style.css"/>
 </head>
-<body>
+<body th:remove="tag">
 <div layout:fragment="content">
     <div class="sidebar">
         <h2 th:text="#{filter}"></h2>
