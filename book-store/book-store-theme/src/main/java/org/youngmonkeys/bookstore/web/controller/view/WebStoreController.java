@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 youngmonkeys.org
+ * Copyright 2023 youngmonkeys.org
  * 
  * Licensed under the ezyplatform, Version 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,15 @@
  * limitations under the License.
 */
 
-package org.youngmonkeys.bookstore.web.interceptor;
+package org.youngmonkeys.bookstore.web.controller.view;
 
-import com.tvd12.ezyfox.collect.Sets;
-import com.tvd12.ezyhttp.core.annotation.Interceptor;
-import org.youngmonkeys.ezyplatform.web.interceptor.WebAuthenticationInterceptor;
+import com.tvd12.ezyhttp.server.core.annotation.Controller;
+import org.youngmonkeys.ezyarticle.web.manager.WebPageFragmentManager;
 
-import java.util.Set;
+@Controller
+public class WebStoreController extends BookStoreController {
 
-@Interceptor
-public class AuthenticationInterceptor extends WebAuthenticationInterceptor {
-
-    @Override
-    protected Set<String> getCanBeUseUserIdUris() {
-        return Sets.newHashSet(
-            "/",
-                "/store"
-        );
+    public WebStoreController(WebPageFragmentManager webPageFragmentManager) {
+        super(webPageFragmentManager);
     }
 }
