@@ -1,0 +1,103 @@
+/*
+ * Copyright 2024 youngmonkeys.org
+ * 
+ * Licensed under the ezyplatform, Version 1.0.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     https://youngmonkeys.org/licenses/ezyplatform-1.0.0.txt
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
+
+$utilities: (
+    "opacity": (
+        property: opacity,
+        responsive: true,
+        values: (
+            0: 0,
+            10: .10,
+            15: .15,
+            25: .25,
+            50: .5,
+            75: .75,
+            100: 1,
+        )
+    ),
+    "font-weight": (
+        property: font-weight,
+        class:fw,
+        values: (
+            300: 300,
+            400: 400,
+            500: 500,
+            600: 600,
+            'light': 300,
+            'regular': 400,
+            'medium': 500,
+            'semibold': 600,
+        )
+    ),
+    "font-size": (
+        property: font-size,
+        class:fs,
+        responsive: true,
+        values: (
+            'xs': 12px,
+            'sm': 14px,
+            'base': 16px,
+            'md': 18px,
+            'lg': 22px,
+            'xl': 24px,
+            '2xl': 28px,
+            0px: 0px,
+            14px: 14px,
+            16px: 16px,
+            18px: 18px,
+            20px: 20px,
+            22px: 22px,
+            24px: 24px,
+            28px: 28px,
+            36px: 36px,
+            45px: 45px,
+        )
+    ),
+    "width": (
+        property: width,
+        responsive: true,
+        class: w,
+        values: (
+            50px: 50px,
+            25: 25%,
+            50: 50%,
+            75: 75%,
+            100: 100%,
+            auto: auto
+        )
+    ),
+    "height": (
+        property: height,
+        class: h,
+        responsive: true,
+        values: (
+            50px: 50px,
+            25: 25%,
+            50: 50%,
+            75: 75%,
+            100: 100%,
+            auto: auto
+        )
+    ),
+    "max-height": (
+            property: max-height,
+            class: mh,
+            values: (
+                100: 100%,
+            )
+    ),
+);
+

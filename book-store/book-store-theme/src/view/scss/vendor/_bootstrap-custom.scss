@@ -1,0 +1,70 @@
+// Custom.scss
+// Option B: Include parts of Bootstrap
+
+// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
+@import "bootstrap-5.3.3/functions";
+
+// 2. Include any default variable overrides here
+
+// Default variable overrides
+//$body-bg: #000;
+//$body-color: #111;
+
+// 3. Include remainder of required Bootstrap stylesheets (including any separate color mode stylesheets)
+@import "bootstrap-5.3.3/variables";
+@import "bootstrap-5.3.3/variables-dark";
+
+// 4. Include any default map overrides here
+
+
+// 5. Include remainder of required parts
+@import "bootstrap-5.3.3/maps";
+@import "bootstrap-5.3.3/mixins";
+@import "bootstrap-5.3.3/root";
+
+@import "./../helper/custom-color";
+
+// Merge the maps
+$theme-colors: map-merge($theme-colors, $custom-colors);
+$utilities-bg-colors: map-merge($utilities-bg-colors, $custom-colors);
+$utilities-text-colors: map-merge($utilities-text-colors, $custom-colors);
+
+// 6. Optionally include any other parts as needed
+@import "bootstrap-5.3.3/utilities";
+@import "bootstrap-5.3.3/reboot";
+@import "bootstrap-5.3.3/type";
+@import "bootstrap-5.3.3/images";
+@import "bootstrap-5.3.3/containers";
+@import "bootstrap-5.3.3/grid";
+@import "bootstrap-5.3.3/helpers";
+@import "bootstrap-5.3.3/button-group";
+@import "bootstrap-5.3.3/buttons";
+@import "bootstrap-5.3.3/forms";
+@import "bootstrap-5.3.3/accordion";
+@import "bootstrap-5.3.3/alert";
+@import "bootstrap-5.3.3/badge";
+@import "bootstrap-5.3.3/breadcrumb";
+@import "bootstrap-5.3.3/card";
+@import "bootstrap-5.3.3/close";
+@import "bootstrap-5.3.3/carousel";
+@import "bootstrap-5.3.3/dropdown";
+@import "bootstrap-5.3.3/list-group";
+@import "bootstrap-5.3.3/modal";
+@import "bootstrap-5.3.3/nav";
+@import "bootstrap-5.3.3/navbar";
+@import "bootstrap-5.3.3/offcanvas";
+@import "bootstrap-5.3.3/pagination";
+@import "bootstrap-5.3.3/placeholders";
+@import "bootstrap-5.3.3/popover";
+@import "bootstrap-5.3.3/reboot";
+@import "bootstrap-5.3.3/spinners";
+@import "bootstrap-5.3.3/tables";
+@import "bootstrap-5.3.3/toasts";
+@import "bootstrap-5.3.3/tooltip";
+@import "bootstrap-5.3.3/transitions";
+
+// 7. Optionally include utilities API last to generate classes based on the Sass map in `_utilities.scss`
+@import "bootstrap-5.3.3/utilities/api";
+
+// 8. Add additional custom code here
+

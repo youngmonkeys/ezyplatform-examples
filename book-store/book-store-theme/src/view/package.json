@@ -1,0 +1,14 @@
+{
+  "name": "ezyplatform",
+  "version": "1.0.0",
+  "description": "ezyplatform",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" &amp;&amp; exit 1",
+    "sass": "sass --watch --update --embed-source-map --style=compressed scss:../main/resources/static/css"
+  },
+  "author": "Ezyplatform",
+  "license": "ISC",
+  "devDependencies": {
+    "sass": "^1.74.1"
+  }
+}
