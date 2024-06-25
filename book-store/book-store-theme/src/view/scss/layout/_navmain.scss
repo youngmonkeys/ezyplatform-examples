@@ -1,0 +1,48 @@
+/*
+ * Copyright 2024 youngmonkeys.org
+ * 
+ * Licensed under the ezyplatform, Version 1.0.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     https://youngmonkeys.org/licenses/ezyplatform-1.0.0.txt
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
+
+.main-nav {min-height: 80px;display: flex;align-items: center;justify-content: space-between;
+    .nav-link-notify,
+    .nav-link-cart {position: relative;
+        span {background: $yellow-1;position: absolute;top: 5px;right: 0;color: $brand-1;padding: 0 6px;border-radius: 18px;font-size: 12px;min-width: 18px;min-height: 18px;}
+        &::before {content: none !important;}
+    }
+}
+.main-nav ul {list-style: none;margin: 0;justify-content: center;align-items: center;}
+.main-nav li > a {color: #fff;display: inline-block;padding: 16px;position: relative;
+    &::before {content: '';background: white;display: block;width: 20%;height: 2px;border-radius: 2px;position: absolute;bottom: 0;left: 50%;opacity: 0;
+        transform: translateX(-50%);transition: all .3s ease;will-change: width, opacity;
+    }
+    &.active,
+    &:hover {color: white;
+        &::before {width: 70%;opacity: 1}
+    }
+}
+
+.main-mobile-menu {background: #1f345e;position: fixed;height: 100%;width: 310px;z-index: 100;transition: all 0.6s ease-in-out;transform: translate3d(-100%,0,0);}
+.main-mobile-menu li > a {color: #fff;
+    &:active,
+    &:hover {color: $yellow-1}
+}
+.main-mobile-menu ul {list-style: none;margin: 0;}
+.main-mobile-common-menu {padding: 0 .5rem;height: 100%;overflow-y: auto;
+    .nav-link.active {background: $brand-1 !important;}
+}
+.main-logo {max-height: 64px;}
+
+@include media-breakpoint-up(md) {
+  .main-nav-container {padding-left: 30px; padding-right: 30px;}
+}
