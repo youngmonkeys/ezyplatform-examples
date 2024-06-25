@@ -1,13 +1,55 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{ezytheme}">
 <body th:remove="tag">
 <div layout:fragment="content">
     <div class="sidebar">
         <h2 th:text="#{filter}"></h2>
+        <div class="list-group  hidden-sm hidden-xs" id="list-group-l">
+            <ul class="nav navs sidebar menu" id="cssmenu">
+                <li class="item" th:each="menu : ${categories}">
+                    <div th:if="${#lists.isEmpty(menu.menuItems)}">
+                        <a href="/" title="">
+                            <span th:text="${menu.displayName}"></span>
+                        </a>
+                    </div>
+                    <div th:unless="${#lists.isEmpty(menu.menuItems)}">
+                        <div>
+                            <i class="fa fa-bars" id="toggle-menu"></i>
+                            <a href="/" title="">
+                                <span th:text="${menu.displayName}"/>
+                            </a>
+                        </div>
+                        <ul id="menu-items" class="nav children collapse in" style="display: none;">
+                            <li class="first current active" th:each="subMenu : ${menu.menuItems}">
+                                <div th:if="${#lists.isEmpty(subMenu.menuItems)}">
+                                    <a href="/" title="">
+                                        <span th:text="${subMenu.displayName}"></span>
+                                    </a>
+                                </div>
+                                <div th:unless="${#lists.isEmpty(subMenu.menuItems)}">
+                                    <div>
+                                        <i class="fa fa-bars" id="toggle-sub-menu"></i>
+                                        <a href="/" title="">
+                                            <span th:text="${subMenu.displayName}"/>
+                                        </a>
+                                    </div>
+                                    <ul id="sub-menu-items" class="nav children collapse in" style="display: none;">
+                                        <li class="first current active" th:each="subLv3Menu : ${subMenu.menuItems}">
+                                            <a href="#" title="">
+                                                <span th:text="${subLv3Menu.displayName}"></span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
     <div class="product-list">
         <h2 th:text="#{products}"></h2>
@@ -18,5 +60,18 @@
         </div>
     </div>
 </div>
+<script layout:fragment="scripts" th:inline="javascript">
+    $(document).ready(function () {
+        $("#toggle-menu").click(function () {
+            $("#menu-items").toggle();
+        });
+    });
+
+    $(document).ready(function () {
+        $("#toggle-sub-menu").click(function () {
+            $("#sub-menu-items").toggle();
+        });
+    });
+</script>
 </body>
 </html>
