@@ -32,8 +32,8 @@
     <properties>
         <!--suppress UnresolvedMavenProperty -->
         <ezyplatform.home>${env.EZYPLATFORM_HOME}</ezyplatform.home>
-        <ezyarticle.version>0.1.7</ezyarticle.version>
-        <ecommerce.version>0.2.3</ecommerce.version>
+        <ezyarticle.version>0.1.9</ezyarticle.version>
+        <ecommerce.version>0.2.5</ecommerce.version>
         <ezylogin.version>0.0.3</ezylogin.version>
         <ezymail.version>0.0.6</ezymail.version>
         <facebook.client.version>2022.3.1</facebook.client.version>
@@ -41,7 +41,7 @@
         <google.client.version>1.33.2</google.client.version>
         <javax.mail.version>1.6.2</javax.mail.version>
         <ezypayment.version>0.0.5</ezypayment.version>
-        <ezysupport.version>0.1.1</ezysupport.version>
+        <ezysupport.version>0.1.2</ezysupport.version>
         <ezyaccount.version>0.0.3</ezyaccount.version>
     </properties>
 

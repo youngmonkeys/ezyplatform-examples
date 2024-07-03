@@ -17,16 +17,19 @@
 package org.youngmonkeys.bookstore.web.controller.view;
 
 import com.tvd12.ezyhttp.server.core.annotation.Controller;
-import org.youngmonkeys.bookstore.web.service.ProductCategoryService;
+import org.youngmonkeys.ecommerce.web.controller.service.WebProductCategoryControllerService;
 import org.youngmonkeys.ezyarticle.web.manager.WebPageFragmentManager;
 
 @Controller
 public class WebStoreController extends BookStoreController {
 
     public WebStoreController(
-            WebPageFragmentManager pageFragmentManager,
-            ProductCategoryService myProductCategoryService
+        WebPageFragmentManager pageFragmentManager,
+        WebProductCategoryControllerService productCategoryControllerService
     ) {
-        super(pageFragmentManager, myProductCategoryService);
+        super(
+            pageFragmentManager,
+            productCategoryControllerService
+        );
     }
 }
