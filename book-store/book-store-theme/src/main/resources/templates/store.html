@@ -4,7 +4,14 @@
       xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{ezytheme}">
-<body th:remove="tag">
+<head>
+    <style>
+        ul {
+            margin-left: 30px;
+        }
+    </style>
+</head>
+<body>
 <div layout:fragment="content">
     <div class="sidebar">
         <h2 th:text="#{filter}"></h2>
