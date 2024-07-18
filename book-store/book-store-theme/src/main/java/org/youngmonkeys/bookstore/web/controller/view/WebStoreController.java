@@ -30,6 +30,5 @@ public class WebStoreController extends BookStoreController {
                 pageFragmentManager,
                 productCategoryControllerService
         );
-
     }
 }

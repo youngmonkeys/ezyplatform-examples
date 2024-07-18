@@ -524,11 +524,88 @@ div.screen-loading {
 /********* home *********/
 /********* store *********/
  .sidebar {
-     width: 30%;
+     width: 20%;
      float: left;
  }
 .product-list {
-    width: 70%;
+    width: 80%;
     float: right;
+}
+
+ul {
+    margin-left: 30px;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    max-height: 55vh; /* Ensures the card's height is 55% of the viewport height */
+    overflow: hidden;
+}
+
+.discount-price {
+    color: red;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.card-img-top-container {
+    flex-grow: 1; /* Allows the image container to expand and fill the available space */
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-img-top {
+    width: 100%; /* Ensures the image is responsive and fills the width of its container */
+    height: auto; /* Maintains the image's aspect ratio */
+    object-fit: cover; /* Ensures the image covers the available area without distortion */
+}
+
+.card-img-top:hover {
+    transform: scale(1.1);
+}
+
+.card-body > * {
+    margin-bottom: 10px; /* Example of applying margin to all direct children */
+}
+
+.card-title, .card-text {
+    text-align: center;
+}
+
+.product-detail-left-buttons, .product-detail-right-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    float: left; /* for left buttons */
+}
+
+.product-detail-right-buttons {
+    float: right; /* for right buttons */
+}
+
+.product-detail-buttons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48%; /* Adjust based on preference */
+    text-decoration: none;
+    color: inherit; /* Keeps the link color consistent with the text */
+}
+
+.product-detail-left-buttons a .text,
+.product-detail-right-buttons a .text {
+    display: none;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+
+.product-detail-left-buttons a:hover .text,
+.product-detail-right-buttons a:hover .text {
+    visibility: visible;
+    display: inline;
+    opacity: 1;
 }
 /********* store *********/

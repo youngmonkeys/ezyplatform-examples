@@ -43,10 +43,33 @@
     </div>
     <div class="product-list">
         <h2 th:text="#{products}"></h2>
-        <div th:each="book : ${books}">
-            <h3 th:text="${book.title}"></h3>
-            <p th:text="${book.description}"></p>
-            <p><strong th:text="#{price}">:</strong> <span th:text="${book.price}"></span></p>
+        <div class="row">
+            <div class="col-sm-3 product-item" th:each="book : ${books.items}">
+                <div class="card">
+                    <div class="card-img-top-container">
+                        <img class="card-img-top" src="http://localhost:8080/images/book-programming-principles.jpg?v=0.0.2" alt="Book image">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${book.name}"></h5>
+                        <p class="card-text"><strong th:text="#{price}">:</strong> <span th:text="${book.amount}"></span></p>
+                        <p class="card-text discount-price" th:text="#{sold_amount} + ': ' + ${book.soldAmount}"></p>
+                        <div class="product-detail-buttons">
+                            <div class="product-detail-left-buttons">
+                            <a href="#" class="quick-show">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                <span class="text" th:text="#{quick_show}"></span>
+                            </a>
+                            </div>
+                            <div class="product-detail-right-buttons">
+                            <a href="#" class="add-to-cart">
+                                <span class="text" th:text="#{add_to_card}"></span>
+                                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                            </a>
+                            </div>
+                        </div>
+                </div>
+            </div>
+            </div>
         </div>
     </div>
 </div>
