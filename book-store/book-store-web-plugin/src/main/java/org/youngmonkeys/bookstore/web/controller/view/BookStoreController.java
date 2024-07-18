@@ -26,6 +26,7 @@ public class BookStoreController {
         int defaultPageLimit = 10;
         String defaultSortType = "ASC";
         String defaultCurrency = "USD";
+        int defaultCurrencyId = 1; //don't know where this information
         return View.builder()
             .template("store")
             .addVariable("pageTitle", "store")
@@ -40,7 +41,7 @@ public class BookStoreController {
                     null,
                     Boolean.FALSE,
                     defaultPageLimit,
-                    1,
+                    defaultCurrencyId,
                     defaultCurrency
                 )
             )
