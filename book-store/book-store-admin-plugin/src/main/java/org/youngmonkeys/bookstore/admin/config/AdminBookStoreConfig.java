@@ -19,6 +19,8 @@ package org.youngmonkeys.bookstore.admin.config;
 import com.tvd12.ezyfox.bean.EzyBeanConfig;
 import com.tvd12.ezyfox.bean.annotation.EzyConfigurationAfter;
 import lombok.AllArgsConstructor;
+import org.youngmonkeys.bookstore.constant.BookStoreProductCategoryType;
+import org.youngmonkeys.ecommerce.admin.manager.AdminProductCategoryTypeManager;
 import org.youngmonkeys.ezyplatform.admin.model.AddUserRoleNameModel;
 import org.youngmonkeys.ezyplatform.admin.service.AdminSettingService;
 import org.youngmonkeys.ezyplatform.admin.service.AdminUserRoleService;
@@ -29,11 +31,17 @@ import static org.youngmonkeys.bookstore.constant.BookStoreConstants.*;
 @AllArgsConstructor
 public class AdminBookStoreConfig implements EzyBeanConfig {
 
+    private final AdminProductCategoryTypeManager productCategoryTypeManager;
     private final AdminSettingService settingService;
     private final AdminUserRoleService userRoleService;
 
     @Override
     public void config() {
+        addBookAuthorRoleIfNotExists();
+        registerProductCategoryTypes();
+    }
+
+    private void addBookAuthorRoleIfNotExists() {
         long savedBookAuthorRoleId = settingService.getLongValue(
             SETTING_NAME_BOOK_AUTHOR_ROLE_ID
         );
@@ -49,5 +57,11 @@ public class AdminBookStoreConfig implements EzyBeanConfig {
                 roleId
             );
         }
+    }
+
+    private void registerProductCategoryTypes() {
+        productCategoryTypeManager.addProductCategoryType(
+            BookStoreProductCategoryType.BOOK.toString()
+        );
     }
 }

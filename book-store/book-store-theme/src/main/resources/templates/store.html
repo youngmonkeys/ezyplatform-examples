@@ -1,13 +1,44 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{ezytheme}">
-<body th:remove="tag">
+<head>
+    <style>
+        ul {
+            margin-left: 30px;
+        }
+    </style>
+</head>
+<body>
 <div layout:fragment="content">
     <div class="sidebar">
         <h2 th:text="#{filter}"></h2>
+        <div class="list-group  hidden-sm hidden-xs" id="list-group-l">
+            <ul class="nav navs sidebar menu" id="cssmenu">
+                <li th:each="menu : ${categories}" class="item">
+                    <a th:href="${'/book-categories/' + menu.category.name}">
+                        <span>[[${menu.category.displayName}]]</span>
+                    </a>
+                    <ul th:if="${menu.children.size() > 0}"
+                        id="menu-items" class="nav children">
+                        <li th:each="menuItemLv1 : ${menu.children}" class="first current active">
+                            <a th:href="${'/book-categories/' + menuItemLv1.category.name}">
+                                <span th:text="${menuItemLv1.category.displayName}"></span>
+                            </a>
+                            <ul th:if="${menuItemLv1.children.size() > 0}"
+                                id="sub-menu-items" class="nav children">
+                                <li th:each="menuItemLv2 : ${menuItemLv1.children}" class="first current active">
+                                    <a th:href="${'/book-categories/' + menuItemLv2.category.name}" title="">
+                                        <span th:text="${menuItemLv2.category.displayName}"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
     </div>
     <div class="product-list">
         <h2 th:text="#{products}"></h2>
@@ -18,5 +49,18 @@
         </div>
     </div>
 </div>
+<script layout:fragment="scripts" th:inline="javascript">
+    $(document).ready(function () {
+        $("#toggle-menu").click(function () {
+            $("#menu-items").toggle();
+        });
+    });
+
+    $(document).ready(function () {
+        $("#toggle-sub-menu").click(function () {
+            $("#sub-menu-items").toggle();
+        });
+    });
+</script>
 </body>
 </html>

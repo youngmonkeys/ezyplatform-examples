@@ -30,6 +30,11 @@
     <dependencies>
         <dependency>
             <groupId>org.youngmonkeys</groupId>
+            <artifactId>book-store-sdk</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
             <artifactId>ezyplatform-web-sdk</artifactId>
             <version>${ezy.platform.version}</version>
         </dependency>
