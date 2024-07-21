@@ -7,19 +7,29 @@ import com.tvd12.ezyhttp.server.core.view.View;
 import lombok.AllArgsConstructor;
 import org.youngmonkeys.bookstore.constant.BookStoreProductCategoryType;
 import org.youngmonkeys.ecommerce.entity.ProductCategoryStatus;
+<<<<<<< HEAD
 import org.youngmonkeys.ecommerce.pagination.DefaultProductFilter;
 import org.youngmonkeys.ecommerce.pagination.DefaultProductPriceFilter;
 import org.youngmonkeys.ecommerce.web.controller.service.WebProductCategoryControllerService;
 import org.youngmonkeys.ecommerce.web.controller.service.WebProductControllerService;
+=======
+import org.youngmonkeys.ecommerce.web.controller.service.WebProductCategoryControllerService;
+import org.youngmonkeys.ezyarticle.web.manager.WebPageFragmentManager;
+>>>>>>> 926a4f6363c244788f79459828ee519758da528d
 
 import java.util.Collections;
 
 @AllArgsConstructor
 public class BookStoreController {
 
+<<<<<<< HEAD
     private final WebProductCategoryControllerService productCategoryControllerService;
     private final WebProductControllerService webProductControllerService;
 
+=======
+    private final WebPageFragmentManager pageFragmentManager;
+    private final WebProductCategoryControllerService productCategoryControllerService;
+>>>>>>> 926a4f6363c244788f79459828ee519758da528d
 
     @DoGet("/store")
     public View storeGet(@RequestParam("lang") String language) {
@@ -32,6 +42,7 @@ public class BookStoreController {
             .addVariable("pageTitle", "store")
             .addVariable(
                 "books",
+<<<<<<< HEAD
                 webProductControllerService.getWebProductPagination(
                     language,
                     DefaultProductFilter.builder().build(),
@@ -43,6 +54,11 @@ public class BookStoreController {
                     defaultPageLimit,
                     defaultCurrencyId,
                     defaultCurrency
+=======
+                pageFragmentManager.getPageFragmentMap(
+                    "store",
+                    language
+>>>>>>> 926a4f6363c244788f79459828ee519758da528d
                 )
             )
             .addVariable(
