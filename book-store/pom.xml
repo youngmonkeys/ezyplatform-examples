@@ -33,7 +33,7 @@
         <!--suppress UnresolvedMavenProperty -->
         <ezyplatform.home>${env.EZYPLATFORM_HOME}</ezyplatform.home>
         <ezyarticle.version>0.1.9</ezyarticle.version>
-        <ecommerce.version>0.2.6</ecommerce.version>
+        <ecommerce.version>0.2.8</ecommerce.version>
         <ezylogin.version>0.0.4</ezylogin.version>
         <ezymail.version>0.0.6</ezymail.version>
         <facebook.client.version>2022.3.1</facebook.client.version>
