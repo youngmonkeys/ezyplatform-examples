@@ -7,8 +7,10 @@ import com.tvd12.ezyhttp.server.core.view.View;
 import lombok.AllArgsConstructor;
 import org.youngmonkeys.bookstore.constant.BookStoreProductCategoryType;
 import org.youngmonkeys.ecommerce.entity.ProductCategoryStatus;
+import org.youngmonkeys.ecommerce.model.ProductCurrencyModel;
 import org.youngmonkeys.ecommerce.pagination.DefaultProductFilter;
 import org.youngmonkeys.ecommerce.pagination.DefaultProductPriceFilter;
+import org.youngmonkeys.ecommerce.service.ProductCurrencyService;
 import org.youngmonkeys.ecommerce.web.controller.service.WebProductCategoryControllerService;
 import org.youngmonkeys.ecommerce.web.controller.service.WebProductControllerService;
 import org.youngmonkeys.ecommerce.web.response.WebProductCategoryResponse;
@@ -20,14 +22,14 @@ public class BookStoreController {
 
     private final WebProductCategoryControllerService productCategoryControllerService;
     private final WebProductControllerService webProductControllerService;
+    private final ProductCurrencyService productCurrencyService;
 
 
     @DoGet("/store")
-    public View storeGet(@RequestParam("lang") String language) {
-        int defaultPageLimit = 10;
+    public View storeGet(@RequestParam("lang") String language, @RequestParam(value = "limit", defaultValue = "10") int limit) {
         String defaultSortType = "ASC";
-        String defaultCurrency = "USD";
-        int defaultCurrencyId = 1; //don't know where this information
+        ProductCurrencyModel defaultCurrency = productCurrencyService
+            .getDefaultCurrency();
         return View.builder()
             .template("store")
             .addVariable("pageTitle", "store")
@@ -41,9 +43,9 @@ public class BookStoreController {
                     null,
                     null,
                     Boolean.FALSE,
-                    defaultPageLimit,
-                    defaultCurrencyId,
-                    defaultCurrency
+                    limit,
+                    defaultCurrency.getId(),
+                    defaultCurrency.getFormat()
                 )
             )
             .addVariable(
@@ -57,11 +59,10 @@ public class BookStoreController {
     }
 
     @DoGet("/book-categories/{category-name}")
-    public View categoryGet(@RequestParam("lang") String language, @PathVariable("category-name") String categoryName) {
-        int defaultPageLimit = 10;
+    public View categoryGet(@RequestParam("lang") String language, @PathVariable("category-name") String categoryName,  @RequestParam(value = "limit", defaultValue = "10") int limit) {
         String defaultSortType = "ASC";
-        String defaultCurrency = "USD";
-        int defaultCurrencyId = 1; //don't know where this information
+        ProductCurrencyModel defaultCurrency = productCurrencyService
+            .getDefaultCurrency();
         WebProductCategoryResponse category = productCategoryControllerService.getWebProductCategoryItemByNameAndTypeAndStatuses(
             categoryName,
             BookStoreProductCategoryType.BOOK.name(),
@@ -85,9 +86,9 @@ public class BookStoreController {
                     null,
                     null,
                     Boolean.FALSE,
-                    defaultPageLimit,
-                    defaultCurrencyId,
-                    defaultCurrency
+                    limit,
+                    defaultCurrency.getId(),
+                    defaultCurrency.getFormat()
                 )
             )
             .addVariable(

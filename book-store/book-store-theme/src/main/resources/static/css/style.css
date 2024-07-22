@@ -543,12 +543,6 @@ ul {
     float: left;
 }
 
-.discount-price {
-    color: red;
-    font-weight: bold;
-    font-size: 1.2em;
-}
-
 .card-img-top-container {
     float: left;
     position: relative;

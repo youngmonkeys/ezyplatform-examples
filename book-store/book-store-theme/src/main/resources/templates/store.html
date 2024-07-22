@@ -66,18 +66,21 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title" th:text="${book.name}"></h5>
+
+                            <a th:href="${'/book-detail/' + book.id}" th:title="${book.name}">
+                                <h5 class="card-title"  th:text="${book.name}"/>
+                            </a>
+
                         <p class="card-text"><strong th:text="#{price}">:</strong> <span th:text="${book.amount}"></span></p>
-                        <p class="card-text discount-price" th:text="#{sold_amount} + ': ' + ${book.soldAmount}"></p>
                 </div>
             </div>
 
                 <!-- Modal -->
-                <div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true">
+                <div class="modal fade" id="quickShowModal" tabindex="-1" role="dialog" aria-labelledby="quickShowModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="cartModalLabel">Cart</h5>
+                                <h5 class="modal-title" id="quickShowModalLabel">Cart</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -110,11 +113,11 @@
     });
 
     $(document).ready(function () {
-        $(".add-to-cart").click(function() {
-            $("#cartModal").modal('show');
+        $(".quick-show").click(function() {
+            $("#quickShowModal").modal('show');
         });
         $(".close, .close-btn").click(function() {
-            $("#cartModal").modal('hide');
+            $("#quickShowModal").modal('hide');
         })
     })
 </script>

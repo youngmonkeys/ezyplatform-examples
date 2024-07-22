@@ -16,6 +16,7 @@
 package org.youngmonkeys.bookstore.web.controller.view;
 
 import com.tvd12.ezyhttp.server.core.annotation.Controller;
+import org.youngmonkeys.ecommerce.service.ProductCurrencyService;
 import org.youngmonkeys.ecommerce.web.controller.service.WebProductCategoryControllerService;
 import org.youngmonkeys.ecommerce.web.controller.service.WebProductControllerService;
 
@@ -24,11 +25,13 @@ public class WebStoreController extends BookStoreController {
 
     public WebStoreController(
         WebProductCategoryControllerService productCategoryControllerService,
-        WebProductControllerService webProductControllerService
+        WebProductControllerService webProductControllerService,
+        ProductCurrencyService productCurrencyService
     ) {
         super(
             productCategoryControllerService,
-            webProductControllerService
+            webProductControllerService,
+            productCurrencyService
         );
     }
 }
