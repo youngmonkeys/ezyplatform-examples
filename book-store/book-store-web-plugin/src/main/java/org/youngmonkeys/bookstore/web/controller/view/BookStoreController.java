@@ -29,31 +29,31 @@ public class BookStoreController {
         String defaultCurrency = "USD";
         int defaultCurrencyId = 1; //don't know where this information
         return View.builder()
-                .template("store")
-                .addVariable("pageTitle", "store")
-                .addVariable(
-                        "books",
-                        webProductControllerService.getWebProductPagination(
-                                language,
-                                DefaultProductFilter.builder().build(),
-                                DefaultProductPriceFilter.builder().build(),
-                                defaultSortType,
-                                null,
-                                null,
-                                Boolean.FALSE,
-                                defaultPageLimit,
-                                defaultCurrencyId,
-                                defaultCurrency
-                        )
+            .template("store")
+            .addVariable("pageTitle", "store")
+            .addVariable(
+                "books",
+                webProductControllerService.getWebProductPagination(
+                    language,
+                    DefaultProductFilter.builder().build(),
+                    DefaultProductPriceFilter.builder().build(),
+                    defaultSortType,
+                    null,
+                    null,
+                    Boolean.FALSE,
+                    defaultPageLimit,
+                    defaultCurrencyId,
+                    defaultCurrency
                 )
-                .addVariable(
-                        "categories",
-                        productCategoryControllerService.getProductCategoryMenusByTypeAndStatuses(
-                                BookStoreProductCategoryType.BOOK.toString(),
-                                Collections.singletonList(ProductCategoryStatus.SHOW.toString())
-                        )
+            )
+            .addVariable(
+                "categories",
+                productCategoryControllerService.getProductCategoryMenusByTypeAndStatuses(
+                    BookStoreProductCategoryType.BOOK.toString(),
+                    Collections.singletonList(ProductCategoryStatus.SHOW.toString())
                 )
-                .build();
+            )
+            .build();
     }
 
     @DoGet("/book-categories/{category-name}")
@@ -63,40 +63,40 @@ public class BookStoreController {
         String defaultCurrency = "USD";
         int defaultCurrencyId = 1; //don't know where this information
         WebProductCategoryResponse category = productCategoryControllerService.getWebProductCategoryItemByNameAndTypeAndStatuses(
-                categoryName,
-                BookStoreProductCategoryType.BOOK.name(),
-                Collections.singletonList(ProductCategoryStatus.SHOW.name()),
-                language);
+            categoryName,
+            BookStoreProductCategoryType.BOOK.name(),
+            Collections.singletonList(ProductCategoryStatus.SHOW.name()),
+            language);
         Long categoryId = null;
         if (category != null) {
             categoryId = category.getId();
 
         }
         return View.builder()
-                .template("store")
-                .addVariable("pageTitle", categoryName)
-                .addVariable(
-                        "books",
-                        webProductControllerService.getWebProductPagination(
-                                language,
-                                DefaultProductFilter.builder().inclusiveCategoryId(categoryId).build(),
-                                DefaultProductPriceFilter.builder().build(),
-                                defaultSortType,
-                                null,
-                                null,
-                                Boolean.FALSE,
-                                defaultPageLimit,
-                                defaultCurrencyId,
-                                defaultCurrency
-                        )
+            .template("store")
+            .addVariable("pageTitle", categoryName)
+            .addVariable(
+                "books",
+                webProductControllerService.getWebProductPagination(
+                    language,
+                    DefaultProductFilter.builder().inclusiveCategoryId(categoryId).build(),
+                    DefaultProductPriceFilter.builder().build(),
+                    defaultSortType,
+                    null,
+                    null,
+                    Boolean.FALSE,
+                    defaultPageLimit,
+                    defaultCurrencyId,
+                    defaultCurrency
                 )
-                .addVariable(
-                        "categories",
-                        productCategoryControllerService.getProductCategoryMenusByTypeAndStatuses(
-                                BookStoreProductCategoryType.BOOK.toString(),
-                                Collections.singletonList(ProductCategoryStatus.SHOW.toString())
-                        )
+            )
+            .addVariable(
+                "categories",
+                productCategoryControllerService.getProductCategoryMenusByTypeAndStatuses(
+                    BookStoreProductCategoryType.BOOK.toString(),
+                    Collections.singletonList(ProductCategoryStatus.SHOW.toString())
                 )
-                .build();
+            )
+            .build();
     }
 }
