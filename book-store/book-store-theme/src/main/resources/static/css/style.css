@@ -539,8 +539,8 @@ ul {
 .card {
     display: flex;
     flex-direction: column;
-    max-height: 55vh; /* Ensures the card's height is 55% of the viewport height */
     overflow: hidden;
+    float: left;
 }
 
 .discount-price {
@@ -550,25 +550,29 @@ ul {
 }
 
 .card-img-top-container {
-    flex-grow: 1; /* Allows the image container to expand and fill the available space */
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    float: left;
+    position: relative;
+    display: block;
+    max-width: 100%;
 }
 
 .card-img-top {
-    width: 100%; /* Ensures the image is responsive and fills the width of its container */
-    height: auto; /* Maintains the image's aspect ratio */
-    object-fit: cover; /* Ensures the image covers the available area without distortion */
+    display: block;
+    width: 80%;
+    padding-left: 22%;
 }
 
 .card-img-top:hover {
     transform: scale(1.1);
 }
 
+.card-body {
+    max-height: 35vh;
+    float: left;
+}
+
 .card-body > * {
-    margin-bottom: 10px; /* Example of applying margin to all direct children */
+    /*margin-bottom: 10px; !* Example of applying margin to all direct children *!*/
 }
 
 .card-title, .card-text {
@@ -580,6 +584,10 @@ ul {
     justify-content: space-between;
     align-items: center;
     float: left; /* for left buttons */
+}
+
+.product-detail-left-buttons {
+    padding-left: 5%;
 }
 
 .product-detail-right-buttons {
@@ -607,5 +615,9 @@ ul {
     visibility: visible;
     display: inline;
     opacity: 1;
+}
+
+.product-item {
+    padding-top: 10px;
 }
 /********* store *********/

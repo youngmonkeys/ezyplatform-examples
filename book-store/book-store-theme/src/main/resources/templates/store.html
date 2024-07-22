@@ -16,7 +16,7 @@
     <div class="sidebar">
         <h2 th:text="#{filter}"></h2>
         <div class="list-group  hidden-sm hidden-xs" id="list-group-l">
-            <ul class="nav navs sidebar menu" id="cssmenu">
+            <ul class="nav navs menu" id="cssmenu">
                 <li th:each="menu : ${categories}" class="item">
                     <a th:href="${'/book-categories/' + menu.category.name}">
                         <span>[[${menu.category.displayName}]]</span>
@@ -44,31 +44,54 @@
     <div class="product-list">
         <h2 th:text="#{products}"></h2>
         <div class="row">
-            <div class="col-sm-3 product-item" th:each="book : ${books.items}">
+            <div class="col-6 col-lg-3 col-md-4" th:each="book : ${books.items}">
                 <div class="card">
                     <div class="card-img-top-container">
-                        <img class="card-img-top" src="http://localhost:8080/images/book-programming-principles.jpg?v=0.0.2" alt="Book image">
+                        <a class="img" href="#" th:title="${book.name}">
+                            <img class="card-img-top" src="http://localhost:8080/images/book-programming-principles.jpg?v=0.0.2" alt="Book image">
+                        </a>
+                        <div class="product-detail-buttons">
+                            <div class="product-detail-left-buttons">
+                                <a href="#" class="quick-show">
+                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                    <span class="text" th:text="#{quick_show}"></span>
+                                </a>
+                            </div>
+                            <div class="product-detail-right-buttons">
+                                <a href="#" class="add-to-cart">
+                                    <span class="text" th:text="#{add_to_card}"></span>
+                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body">
                         <h5 class="card-title" th:text="${book.name}"></h5>
                         <p class="card-text"><strong th:text="#{price}">:</strong> <span th:text="${book.amount}"></span></p>
                         <p class="card-text discount-price" th:text="#{sold_amount} + ': ' + ${book.soldAmount}"></p>
-                        <div class="product-detail-buttons">
-                            <div class="product-detail-left-buttons">
-                            <a href="#" class="quick-show">
-                                <i class="fa fa-eye" aria-hidden="true"></i>
-                                <span class="text" th:text="#{quick_show}"></span>
-                            </a>
-                            </div>
-                            <div class="product-detail-right-buttons">
-                            <a href="#" class="add-to-cart">
-                                <span class="text" th:text="#{add_to_card}"></span>
-                                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                            </a>
-                            </div>
-                        </div>
                 </div>
             </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="cartModalLabel">Cart</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Item added to cart.
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary checkout-btn">Checkout</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -85,6 +108,15 @@
             $("#sub-menu-items").toggle();
         });
     });
+
+    $(document).ready(function () {
+        $(".add-to-cart").click(function() {
+            $("#cartModal").modal('show');
+        });
+        $(".close, .close-btn").click(function() {
+            $("#cartModal").modal('hide');
+        })
+    })
 </script>
 </body>
 </html>
