@@ -23,12 +23,12 @@ import org.youngmonkeys.ecommerce.web.controller.service.WebProductControllerSer
 public class WebStoreController extends BookStoreController {
 
     public WebStoreController(
-            WebProductCategoryControllerService productCategoryControllerService,
-            WebProductControllerService webProductControllerService
+        WebProductCategoryControllerService productCategoryControllerService,
+        WebProductControllerService webProductControllerService
     ) {
         super(
-                productCategoryControllerService,
-                webProductControllerService
+            productCategoryControllerService,
+            webProductControllerService
         );
     }
 }
