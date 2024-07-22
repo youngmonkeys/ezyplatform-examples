@@ -524,11 +524,94 @@ div.screen-loading {
 /********* home *********/
 /********* store *********/
  .sidebar {
-     width: 30%;
+     width: 20%;
      float: left;
  }
 .product-list {
-    width: 70%;
+    width: 80%;
     float: right;
+}
+
+ul {
+    margin-left: 30px;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    float: left;
+}
+
+.card-img-top-container {
+    float: left;
+    position: relative;
+    display: block;
+    max-width: 100%;
+}
+
+.card-img-top {
+    display: block;
+    width: 80%;
+    padding-left: 22%;
+}
+
+.card-img-top:hover {
+    transform: scale(1.1);
+}
+
+.card-body {
+    max-height: 35vh;
+    float: left;
+}
+
+.card-body > * {
+    /*margin-bottom: 10px; !* Example of applying margin to all direct children *!*/
+}
+
+.card-title, .card-text {
+    text-align: center;
+}
+
+.product-detail-left-buttons, .product-detail-right-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    float: left; /* for left buttons */
+}
+
+.product-detail-left-buttons {
+    padding-left: 5%;
+}
+
+.product-detail-right-buttons {
+    float: right; /* for right buttons */
+}
+
+.product-detail-buttons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48%; /* Adjust based on preference */
+    text-decoration: none;
+    color: inherit; /* Keeps the link color consistent with the text */
+}
+
+.product-detail-left-buttons a .text,
+.product-detail-right-buttons a .text {
+    display: none;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+
+.product-detail-left-buttons a:hover .text,
+.product-detail-right-buttons a:hover .text {
+    visibility: visible;
+    display: inline;
+    opacity: 1;
+}
+
+.product-item {
+    padding-top: 10px;
 }
 /********* store *********/
