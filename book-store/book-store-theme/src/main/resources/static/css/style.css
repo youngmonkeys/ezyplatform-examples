@@ -536,82 +536,202 @@ ul {
     margin-left: 30px;
 }
 
-.card {
+
+/* Products */
+.section-book {
+    padding: 9.6rem 0;
+    width: 80%;
+    float: left;
+}
+
+.book {
+    box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.075);
+    border-radius: 11px;
+    overflow: hidden;
+    transition: all 0.4s;
+}
+
+.book:hover {
+    transform: translateY(-1.2rem);
+    box-shadow: 0 3.2rem 6.4rem rgba(0, 0, 0, 0.06);
+}
+
+.book-content {
+    padding: 3.2rem 4.8rem 4.8rem 4.8rem;
+}
+
+.book-tags {
+    margin-bottom: 1.2rem;
+    display: flex;
+    gap: 0.4rem;
+}
+
+.tag {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    color: #333;
+    border-radius: 100px;
+    font-weight: 600;
+}
+
+.discount-percent {
+    background-color: red;
+}
+
+.book-title {
+    font-size: 2.4rem;
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 3.2rem;
+}
+
+.book-attributes {
+    list-style: none;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    float: left;
+    gap: 2rem;
 }
 
-.card-img-top-container {
-    float: left;
-    position: relative;
-    display: block;
-    max-width: 100%;
+.book-attribute {
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
 }
 
-.card-img-top {
-    display: block;
-    width: 80%;
-    padding-left: 22%;
+.book-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
 }
 
-.card-img-top:hover {
-    transform: scale(1.1);
+.book-btn {
+    background-color: var(--light-color);
+    position: absolute;
+    right: 0;
+    top: 48%;
+    width: 10%;
+    height: 50%;
+    opacity: 0.5;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-.card-body {
-    max-height: 35vh;
-    float: left;
+.book:hover .book-btn {
+    opacity: 1;
+    visibility: visible;
 }
 
-.card-body > * {
-    /*margin-bottom: 10px; !* Example of applying margin to all direct children *!*/
+.preview-book,
+.book:hover .book-btn .preview-book {
+    font-size: 24px;
+    top: 15%;
+    position: absolute;
+    color: #9EA0A3;
+    cursor: pointer;
 }
 
-.card-title, .card-text {
-    text-align: center;
+.no-padding-margin {
+    padding: 0;
+    margin: 0;
 }
 
-.product-detail-left-buttons, .product-detail-right-buttons {
+strong {
+    font-weight: bold;
+}
+
+.icon-attribute {
+    padding-bottom: 6px;
+}
+
+.hide {
+    display: none;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 10px;
+}
+
+.modal-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    float: left; /* for left buttons */
+    border-top: 1px solid #ddd;
 }
 
-.product-detail-left-buttons {
-    padding-left: 5%;
-}
-
-.product-detail-right-buttons {
-    float: right; /* for right buttons */
-}
-
-.product-detail-buttons a {
+.modal-book-information {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48%; /* Adjust based on preference */
-    text-decoration: none;
-    color: inherit; /* Keeps the link color consistent with the text */
+    flex-wrap: wrap;
+    width: 100%;
 }
 
-.product-detail-left-buttons a .text,
-.product-detail-right-buttons a .text {
-    display: none;
-    transition: opacity 0.3s ease;
-    opacity: 0;
+.modal-book-information dt {
+    width: 30%;
+    font-weight: bold;
+    float: left;
+    clear: left;
 }
 
-.product-detail-left-buttons a:hover .text,
-.product-detail-right-buttons a:hover .text {
-    visibility: visible;
-    display: inline;
-    opacity: 1;
+.modal-book-information dd {
+    width: 70%;
+    margin: 0;
+    float: left;
 }
 
-.product-item {
-    padding-top: 10px;
+.book-image {
+    width: 100%;
+    height: auto;
 }
+
+#mainImage {
+    width: 50%;
+    max-height: 50vh;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+}
+
+.thumbnail-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.thumbnail {
+    width: 20%;
+    cursor: pointer;
+}
+
+.add-to-cart-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.close-btn {
+    background-color: #f44336;
+    color: white;
+}
+
 /********* store *********/
