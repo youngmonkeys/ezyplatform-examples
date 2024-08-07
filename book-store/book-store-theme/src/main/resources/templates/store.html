@@ -5,99 +5,108 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{ezytheme}">
 <head>
-    <style>
-        ul {
-            margin-left: 30px;
-        }
-    </style>
+    <link rel="stylesheet" ezy:vhref="/css/general.css">
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="sidebar">
-        <h2 th:text="#{filter}"></h2>
-        <div class="list-group  hidden-sm hidden-xs" id="list-group-l">
-            <ul class="nav navs menu" id="cssmenu">
-                <li th:each="menu : ${categories}" class="item">
-                    <a th:href="${'/book-categories/' + menu.category.name}">
-                        <span>[[${menu.category.displayName}]]</span>
-                    </a>
-                    <ul th:if="${menu.children.size() > 0}"
-                        id="menu-items" class="nav children">
-                        <li th:each="menuItemLv1 : ${menu.children}" class="first current active">
-                            <a th:href="${'/book-categories/' + menuItemLv1.category.name}">
-                                <span th:text="${menuItemLv1.category.displayName}"></span>
-                            </a>
-                            <ul th:if="${menuItemLv1.children.size() > 0}"
-                                id="sub-menu-items" class="nav children">
-                                <li th:each="menuItemLv2 : ${menuItemLv1.children}" class="first current active">
-                                    <a th:href="${'/book-categories/' + menuItemLv2.category.name}" title="">
-                                        <span th:text="${menuItemLv2.category.displayName}"></span>
-                                    </a>
+    <main>
+        <div class="sidebar ">
+            <h2 th:text="#{filter}"></h2>
+            <div class="list-group  hidden-sm hidden-xs" id="list-group-l">
+                <ul class="nav navs menu" id="cssmenu">
+                    <li th:each="menu : ${categories}" class="item">
+                        <a th:href="${'/book-categories/' + menu.category.name}">
+                            <span>[[${menu.category.displayName}]]</span>
+                        </a>
+                        <ul th:if="${menu.children.size() > 0}"
+                            id="menu-items" class="nav children">
+                            <li th:each="menuItemLv1 : ${menu.children}" class="first current active">
+                                <a th:href="${'/book-categories/' + menuItemLv1.category.name}">
+                                    <span th:text="${menuItemLv1.category.displayName}"></span>
+                                </a>
+                                <ul th:if="${menuItemLv1.children.size() > 0}"
+                                    id="sub-menu-items" class="nav children">
+                                    <li th:each="menuItemLv2 : ${menuItemLv1.children}"
+                                        class="first current active">
+                                        <a th:href="${'/book-categories/' + menuItemLv2.category.name}" title="">
+                                            <span th:text="${menuItemLv2.category.displayName}"></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <section class="section-book">
+            <div class="container">
+                <span class="subheading" th:text="#{Books}"/>
+                <h2 class="heading-secondary" th:text="#{BooksHeading}"/>
+            </div>
+            <div class="row">
+                <div class="hide" th:text="${currencyId}" id="currentCurrency" />
+                <div class="container grid grid--3-cols margin-bottom-md">
+                    <div class="book" th:each="book : ${books.items}">
+                        <img src="/images/book-programming-principles.jpg" alt="book image"
+                             class="book-img">
+                        <div class="book-content">
+                            <div class="book-tags">
+                                <span class="tag discount-percent" th:if="${book.discountPercent > 0}"
+                                      th:text="${'- ' + book.discountPercent + ' %'}"></span>
+                            </div>
+                            <p class="book-title" th:text="${book.name}"></p>
+                            <ul class="book-attributes no-padding-margin">
+                                <li class="book-attribute">
+                                    <i class="fa-solid fa-dollar-sign icon-attribute"></i>
+                                    <strong th:text="${book.formattedPrice}"/>
+                                </li>
+                                <li class="book-attribute">
+                                    <i class="fa-solid fa-warehouse  icon-attribute"></i>
+                                    <span> <strong th:text="${book.amount}"/> </span>
                                 </li>
                             </ul>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="product-list">
-        <h2 th:text="#{products}"></h2>
-        <div class="row">
-            <div class="col-6 col-lg-3 col-md-4" th:each="book : ${books.items}">
-                <div class="card">
-                    <div class="card-img-top-container">
-                        <a class="img" href="#" th:title="${book.name}">
-                            <img class="card-img-top" src="http://localhost:8080/images/book-programming-principles.jpg?v=0.0.2" alt="Book image">
-                        </a>
-                        <div class="product-detail-buttons">
-                            <div class="product-detail-left-buttons">
-                                <a href="#" class="quick-show">
-                                    <i class="fa fa-eye" aria-hidden="true"></i>
-                                    <span class="text" th:text="#{quick_show}"></span>
-                                </a>
-                            </div>
-                            <div class="product-detail-right-buttons">
-                                <a href="#" class="add-to-cart">
-                                    <span class="text" th:text="#{add_to_card}"></span>
-                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                                </a>
+                            <div class="book-btn" >
+                                <i class="fa fa-eye preview-book" th:id="${book.id}" ></i>
                             </div>
                         </div>
                     </div>
-                    <div class="card-body">
-
-                            <a th:href="${'/book-detail/' + book.id}" th:title="${book.name}">
-                                <h5 class="card-title"  th:text="${book.name}"/>
-                            </a>
-
-                        <p class="card-text"><strong th:text="#{price}">:</strong> <span th:text="${book.amount}"></span></p>
                 </div>
-            </div>
-
                 <!-- Modal -->
-                <div class="modal fade" id="quickShowModal" tabindex="-1" role="dialog" aria-labelledby="quickShowModalLabel" aria-hidden="true">
+                <div class="modal fade" id="previewModal" tabindex="-1" role="dialog"
+                     aria-labelledby="previewModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="quickShowModalLabel">Cart</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
                             <div class="modal-body">
-                                Item added to cart.
+                                <div class="image-preview">
+                                    <img id="mainImage" src="/images/book-programming-principles.jpg" alt="Book Image" class="book-image">
+                                    <div class="thumbnail-container">
+                                        <img src="/images/favicon.ico" alt="Thumbnail 1" class="thumbnail" onclick="changeImage('/images/favicon.ico')">
+                                        <img src="/images/logo.svg" class="thumbnail" onclick="changeImage('/images/logo.svg')">
+                                        <img src="/images/book-programming-principles.jpg" class="thumbnail" onclick="changeImage('/images/book-programming-principles.jpg')">
+                                    </div>
+                                </div>
+                                <dl class="modal-book-information">
+                                    <dt><span th:text="#{name}"></span>:</dt>
+                                    <dd id="bookName"></dd>
+                                    <dt><span th:text="#{author}"></span>:</dt>
+                                    <dd id="bookAuthor"></dd>
+                                    <dt><span th:text="#{price}"></span>:</dt>
+                                    <dd id="bookPrice"></dd>
+                                    <dt><span th:text="#{amount}"></span>:</dt>
+                                    <dd id="bookAmount"></dd>
+                                </dl>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary checkout-btn">Checkout</button>
+                                <button class="btn add-to-cart-btn">Add to Cart</button>
+                                <button class="btn close-btn">Close</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 </div>
 <script layout:fragment="scripts" th:inline="javascript">
     $(document).ready(function () {
@@ -113,13 +122,36 @@
     });
 
     $(document).ready(function () {
-        $(".quick-show").click(function() {
-            $("#quickShowModal").modal('show');
+        $(".preview-book").click(function () {
+            var bookId = $(this).attr('id');
+            var currenCurrency = $("#currentCurrency").text();
+            $.ajax({
+                type: "GET",
+                url: "/api/v1/books/" + bookId,
+                data: {currencyId: currenCurrency},
+                success: function (data) {
+                    console.log(data);
+                    $("#bookName").text(data.productName);
+                    // $("#bookAuthor").text(data.author);
+                    $("#bookPrice").text(data.formattedPrice);
+                    $("#bookAmount").text(data.amount);
+                    $(".modal-backdrop").remove();
+                },
+                error: function (xhr) {
+                    alert("An error occurred: " + xhr.status + " " + xhr.statusText);
+                }
+            })
+            $("#previewModal").modal('show');
         });
-        $(".close, .close-btn").click(function() {
-            $("#quickShowModal").modal('hide');
+        $(".close, .close-btn").click(function () {
+            $("#previewModal").modal('hide');
         })
     })
+
+    function changeImage(src) {
+        document.getElementById("mainImage").src = src;
+    }
+
 </script>
 </body>
 </html>

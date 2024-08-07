@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.youngmonkeys.bookstore.web.controller.view;
 
 import com.tvd12.ezyhttp.server.core.annotation.Controller;
@@ -24,12 +25,12 @@ import org.youngmonkeys.ecommerce.web.controller.service.WebProductControllerSer
 public class WebStoreController extends BookStoreController {
 
     public WebStoreController(
-        WebProductCategoryControllerService productCategoryControllerService,
+        WebProductCategoryControllerService webProductCategoryControllerService,
         WebProductControllerService webProductControllerService,
         ProductCurrencyService productCurrencyService
     ) {
         super(
-            productCategoryControllerService,
+            webProductCategoryControllerService,
             webProductControllerService,
             productCurrencyService
         );
