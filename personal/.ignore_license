@@ -1,0 +1,11 @@
+.idea
+**/.idea/**
+.settings
+**/.settings/**
+target
+**/target/**
+test-output
+**/test-output/**
+**/src/main/resources/static/**
+**/scss/vendor/**
+**/node_modules/**

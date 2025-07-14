@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout">
+
+<head th:remove="tag">
+	<link rel="stylesheet" type="text/css" ezy:vhref="/css/main.css" />
+</head>
+<body th:remove="tag">
+<div class="wrapper">
+	<header class="header">
+		<div th:replace="~{fragments/header :: header}"></div>
+	</header>
+	<main>
+		<div layout:fragment="content"></div>
+	</main>
+	<footer th:replace="~{fragments/footer :: footer}"></footer>
+</div>
+
+<div id="loadingScreen" class="screen-loading d-none">
+	<i class="fas fa-3x fa-sync fa-spin text-secondary"></i>
+</div>
+
+<th:block layout:fragment="modals"></th:block>
+
+<!-- REQUIRED SCRIPTS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script ezy:vsrc="/js/main.js" type="text/javascript"></script>
+
+<!-- OPTIONAL SCRIPTS -->
+<script layout:fragment="import-scripts" th:remove="tag"></script>
+<script layout:fragment="pre-main-scripts" type="text/javascript"></script>
+<script layout:fragment="scripts" type="text/javascript"></script>
+<script layout:fragment="post-scripts" type="text/javascript"></script>
+<script>
+$( document ).ready(function() {
+	ezyweb.formatDateStringElements();
+	ezyweb.formatDateTimeStringElements();
+	ezyweb.formatDateTimeMinuteStringElements();
+	ezyweb.formatStatusTextElements();
+	ezyweb.formatNumberWithCommasElements();
+	if (ezyweb.lang) {
+		ezyweb.appendLangParameterToLinks(ezyweb.lang);
+	}
+});
+</script>
+<script th:replace="~{fragments/header :: scripts}" type="text/javascript"></script>
+</body>
+</html>

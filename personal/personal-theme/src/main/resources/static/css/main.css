@@ -1,0 +1,9 @@
+body {
+    background: #880044;
+    padding:0px;
+    margin:0px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

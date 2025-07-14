@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>personal</artifactId>
+        <groupId>org.youngmonkeys</groupId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>personal-web-plugin</artifactId>
+    <name>personal-web-plugin</name>
+    <url>https://youngmonkeys.org</url>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyplatform-web-sdk</artifactId>
+            <version>${ezy.platform.version}</version>
+        </dependency>
+        <!-- start add sdk dependency -->
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>personal-sdk</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- end add sdk dependency -->
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyplatform-common</artifactId>
+            <version>${ezy.platform.version}</version>
+            <scope>system</scope>
+            <systemPath>${ezyplatform.home}/lib/ezyplatform-common-${ezy.platform.version}.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyplatform-web</artifactId>
+            <version>${ezy.platform.version}</version>
+            <scope>system</scope>
+            <systemPath>${ezyplatform.home}/web/lib/ezyplatform-web-${ezy.platform.version}.jar</systemPath>
+        </dependency>
+    </dependencies>
+    <profiles>
+        <profile>
+            <id>test</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                    </resource>
+                    <resource>
+                        <directory>${ezyplatform.home}/settings</directory>
+                    </resource>
+                    <resource>
+                        <directory>${ezyplatform.home}/web/resources</directory>
+                    </resource>
+                    <resource>
+                        <directory>${ezyplatform.home}/web/settings</directory>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+    </profiles>
+</project>

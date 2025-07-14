@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{ezytheme}">
+<body>
+<div layout:fragment="content">
+</div>
+<th:block layout:fragment="post-scripts">
+    <script ezy:vsrc="/js/ezyclient-1.0.3.min.js"></script>
+    <script ezy:vsrc="/js/phaser.min.js"></script>
+    <script ezy:vsrc="/js/game.js"></script>
+    <script ezy:vsrc="/js/socket.js"></script>
+</th:block>
+</body>
+</html>
