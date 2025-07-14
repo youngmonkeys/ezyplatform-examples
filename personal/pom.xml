@@ -8,7 +8,7 @@
     </parent>
     <artifactId>personal</artifactId>
     <groupId>org.youngmonkeys</groupId>
-    <version>1.0.0</version>
+    <version>0.0.1</version>
     <packaging>pom</packaging>
 
     <name>personal</name>
@@ -22,7 +22,9 @@
     <modules>
         <module>personal-sdk</module>
         <module>personal-theme</module>
+        <module>personal-socket-plugin</module>
         <module>personal-admin-plugin</module>
+        <module>personal-socket-app</module>
         <module>personal-web-plugin</module>
     </modules>
 
