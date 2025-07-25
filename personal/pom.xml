@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -17,6 +17,8 @@
     <properties>
         <!--suppress UnresolvedMavenProperty -->
         <ezyplatform.home>${env.EZYPLATFORM_HOME}</ezyplatform.home>
+    <jsoup.version>1.18.3</jsoup.version>
+        <ezyarticle.version>0.5.7</ezyarticle.version>
     </properties>
 
     <modules>
@@ -34,6 +36,18 @@
             <artifactId>ezyplatform-test-sdk</artifactId>
             <version>${ezy.platform.version}</version>
             <scope>test</scope>
+        </dependency>
+    <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
+        <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyplatform-common-sdk</artifactId>
+            <version>${ezy.platform.version}</version>
+        <scope>provided</scope>
         </dependency>
     </dependencies>
 

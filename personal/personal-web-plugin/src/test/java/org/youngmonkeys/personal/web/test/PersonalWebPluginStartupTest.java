@@ -10,7 +10,8 @@ import com.tvd12.ezyhttp.server.core.annotation.PropertiesSources;
 })
 @ComponentsScan({
     "org.youngmonkeys.ezyplatform",
-    "org.youngmonkeys.personal"
+    "org.youngmonkeys.personal",
+    "org.youngmonkeys.ezyarticle"
 })
 public class PersonalWebPluginStartupTest {
 
