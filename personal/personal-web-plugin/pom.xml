@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>personal</artifactId>
@@ -38,6 +38,26 @@
             <scope>system</scope>
             <systemPath>${ezyplatform.home}/web/lib/ezyplatform-web-${ezy.platform.version}.jar</systemPath>
         </dependency>
+    <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyarticle-sdk</artifactId>
+            <version>${ezyarticle.version}</version>
+        <scope>system</scope>
+            <systemPath>${ezyplatform.home}/web/plugins/ezyarticle/lib/ezyarticle-sdk-${ezyarticle.version}.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyplatform-test-sdk</artifactId>
+            <version>${ezy.platform.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyarticle-web-plugin</artifactId>
+            <version>${ezyarticle.version}</version>
+            <scope>system</scope>
+            <systemPath>${ezyplatform.home}/web/plugins/ezyarticle/lib/ezyarticle-web-plugin-${ezyarticle.version}.jar</systemPath>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>
@@ -58,6 +78,9 @@
                     </resource>
                     <resource>
                         <directory>${ezyplatform.home}/web/settings</directory>
+                    </resource>
+                <resource>
+                        <directory>${ezyplatform.home}/web/plugins/ezyarticle/resources</directory>
                     </resource>
                 </resources>
             </build>
