@@ -24,7 +24,7 @@
 <div layout:fragment="content" class="page-wrapper">
   <div class="container">
     <section class="page-header">
-        <div th:replace="~{fragments/breadcrumb :: content(title=${blog.title}, backText=#{bank_to_home}, backUrl='/')}"></div>
+        <div th:replace="~{fragments/breadcrumb :: content(title=${blog.title}, backText=#{back_to_home}, backUrl='/')}"></div>
     </section>
     <section class="page-content page-article">
       <div class="row">
@@ -41,6 +41,7 @@
               <a th:each="term : ${blog.terms}">
                 [[${term.name}]]
               </a>
+            </div>
           </div>
         </div>
         <div class="col-lg-2"></div>
