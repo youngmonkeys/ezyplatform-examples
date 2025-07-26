@@ -1,0 +1,62 @@
+<!--
+ ~ Copyright 2022 youngmonkeys.org
+ ~ 
+ ~ Licensed under the ezyplatform, Version 1.0.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~ 
+ ~   https://youngmonkeys.org/licenses/ezyplatform-1.0.0.txt
+ ~ 
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{ezytheme}">
+<body>
+<div layout:fragment="content" class="page-wrapper">
+  <div class="container">
+    <section class="page-header">
+        <div th:replace="~{fragments/breadcrumb :: content(title=${blog.title}, backText=#{back_to_home}, backUrl='/')}"></div>
+    </section>
+    <section class="page-content page-article">
+      <div class="row">
+        <div class="col-12">
+          <span>[[#{posted_by}]]: [[${blog.author.name}]]</span>
+          <span>
+            [[${#strings.toLowerCase(#messages.msg('at'))}]]: <span class="date-time-minute-string">[[${blog.publishedAt}]]</span>
+          </span>
+        </div>
+        <div th:if="${blog.terms.size() > 0}" class="col-12">
+          <div class="terms-wrapper">
+            <span>[[#{in}]]:</span>
+            <div class="terms">
+              <a th:each="term : ${blog.terms}">
+                [[${term.name}]]
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+          <div class="row">
+            <div th:if="${blog.featuredImage != null}">
+              <img th:src="${blog.featuredImage.getUrlOrNull()}">
+            </div>
+            <div class="col-md-12 article-content" th:utext="${blog.content}"></div>
+          </div>
+        </div>
+        <div class="col-lg-2"></div>
+      </div>
+    </section>
+  </div>
+</div>
+</body>
+</html>
