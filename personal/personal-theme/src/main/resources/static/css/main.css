@@ -262,10 +262,10 @@ header .flex-wrapper { display: none; }
   padding: 15px 0;
 }
 
-.logo-light,
 .logo-dark { display: none; }
 
-.light-theme .logo-light,
+.light-theme .logo-light { display: none; }
+
 .dark-theme .logo-dark { display: block; }
 
 header .btn-group {
@@ -784,6 +784,10 @@ footer .wrapper { text-align: center; }
   }
 
   .desktop-nav .nav-link:hover { color: var(--accent); }
+
+  .desktop-nav .nav-link.active {
+     border-bottom: solid 2px black;
+  }
 
   .theme-btn-desktop {
     position: relative;
