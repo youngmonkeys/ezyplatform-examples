@@ -66,37 +66,6 @@
             <scope>system</scope>
             <systemPath>${ezyplatform.home}/web/plugins/ezyarticle/lib/ezyarticle-web-plugin-${ezyarticle.version}.jar</systemPath>
         </dependency>
-    <dependency>
-            <groupId>org.youngmonkeys</groupId>
-            <artifactId>ezymail-sdk</artifactId>
-            <version>${ezymail.version}</version>
-            <scope>system</scope>
-            <systemPath>
-                ${ezyplatform.home}/web/plugins/ezymail/lib/ezymail-sdk-${ezymail.version}.jar
-            </systemPath>
-        </dependency>
-        <dependency>
-            <groupId>org.youngmonkeys</groupId>
-            <artifactId>ezymail-web-plugin</artifactId>
-            <version>${ezymail.version}</version>
-            <scope>system</scope>
-            <systemPath>${ezyplatform.home}/web/plugins/ezymail/lib/ezymail-web-plugin-${ezymail.version}.jar
-            </systemPath>
-        </dependency>
-        <dependency>
-            <groupId>org.youngmonkeys</groupId>
-            <artifactId>ezysupport-sdk</artifactId>
-            <version>${ezysupport.version}</version>
-        <scope>system</scope>
-            <systemPath>${ezyplatform.home}/web/plugins/ezysupport/lib/ezysupport-sdk-${ezysupport.version}.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>org.youngmonkeys</groupId>
-            <artifactId>ezysupport-web-plugin</artifactId>
-            <version>${ezysupport.version}</version>
-            <scope>system</scope>
-            <systemPath>${ezyplatform.home}/web/plugins/ezysupport/lib/ezysupport-web-plugin-${ezysupport.version}.jar</systemPath>
-        </dependency>
     </dependencies>
     <profiles>
         <profile>
@@ -120,12 +89,6 @@
                     </resource>
                 <resource>
                         <directory>${ezyplatform.home}/web/plugins/ezyarticle/resources</directory>
-                    </resource>
-                <resource>
-                        <directory>${ezyplatform.home}/web/plugins/ezysupport/resources</directory>
-                    </resource>
-                <resource>
-                        <directory>${ezyplatform.home}/web/plugins/ezymail/resources</directory>
                     </resource>
                 </resources>
             </build>
