@@ -11,9 +11,7 @@ import com.tvd12.ezyhttp.server.core.annotation.PropertiesSources;
 @ComponentsScan({
     "org.youngmonkeys.ezyplatform",
     "org.youngmonkeys.personal",
-    "org.youngmonkeys.ezyarticle",
-    "org.youngmonkeys.ezysupport",
-    "org.youngmonkeys.ezymail"
+    "org.youngmonkeys.ezyarticle"
 })
 public class PersonalAdminPluginStartupTest {
 
