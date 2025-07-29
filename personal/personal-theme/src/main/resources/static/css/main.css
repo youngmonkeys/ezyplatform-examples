@@ -262,10 +262,10 @@ header .flex-wrapper { display: none; }
   padding: 15px 0;
 }
 
+.logo-light,
 .logo-dark { display: none; }
 
-.light-theme .logo-light { display: none; }
-
+.light-theme .logo-light,
 .dark-theme .logo-dark { display: block; }
 
 header .btn-group {
@@ -345,7 +345,7 @@ header .btn-group {
 
 
 
-/*-----------------------------------*\ 
+/*-----------------------------------*\
   #HERO SECTION
 \*-----------------------------------*/
 
@@ -385,7 +385,7 @@ header .btn-group {
 
 
 
-/*-----------------------------------*\ 
+/*-----------------------------------*\
   #BLOG SECTION
 \*-----------------------------------*/
 
@@ -491,7 +491,7 @@ header .btn-group {
 
 
 
-/*-----------------------------------*\ 
+/*-----------------------------------*\
   #ASIDE
 \*-----------------------------------*/
 
@@ -501,7 +501,7 @@ header .btn-group {
 
 
 
-/*-----------------------------------*\ 
+/*-----------------------------------*\
   #FOOTER
 \*-----------------------------------*/
 
@@ -554,7 +554,7 @@ footer .wrapper { text-align: center; }
 
 
 
-/*-----------------------------------*\ 
+/*-----------------------------------*\
   #MEDIA QUERIES
 \*-----------------------------------*/
 
@@ -567,7 +567,7 @@ footer .wrapper { text-align: center; }
   :root {
 
     /**
-     * typography 
+     * typography
      */
 
     --fs-base: 0.90rem;
@@ -576,7 +576,7 @@ footer .wrapper { text-align: center; }
 
 
   /**
-   * BLOG 
+   * BLOG
    */
 
   .blog-card {
@@ -612,7 +612,7 @@ footer .wrapper { text-align: center; }
   :root {
 
     /**
-     * typography 
+     * typography
      */
 
     --fs-1: 2.25rem;
@@ -622,7 +622,7 @@ footer .wrapper { text-align: center; }
 
 
   /**
-   * REUSED STYLE 
+   * REUSED STYLE
    */
 
   .container { padding: 0 30px; }
@@ -630,7 +630,7 @@ footer .wrapper { text-align: center; }
 
 
   /**
-   * HEADER 
+   * HEADER
    */
 
   .navbar { padding: 30px 0; }
@@ -638,7 +638,7 @@ footer .wrapper { text-align: center; }
 
 
   /**
-   * BLOG 
+   * BLOG
    */
 
   .blog .h2 {
@@ -698,7 +698,7 @@ footer .wrapper { text-align: center; }
 
 
   /**
-   * FOOTER 
+   * FOOTER
    */
 
   footer .container {
@@ -723,7 +723,7 @@ footer .wrapper { text-align: center; }
 @media (min-width: 768px) {
 
   /**
-   * REUSED STYLE 
+   * REUSED STYLE
    */
 
   .container { max-width: 800px; }
@@ -743,7 +743,7 @@ footer .wrapper { text-align: center; }
   :root {
 
     /**
-     * typography 
+     * typography
      */
 
     --fs-base: 1rem;
@@ -754,7 +754,7 @@ footer .wrapper { text-align: center; }
 
 
   /**
-   * REUSED STYLE 
+   * REUSED STYLE
    */
 
   .container { max-width: 1150px; }
@@ -762,7 +762,7 @@ footer .wrapper { text-align: center; }
 
 
   /**
-   * HEADER 
+   * HEADER
    */
 
   header .btn-group { display: none; }
@@ -787,6 +787,10 @@ footer .wrapper { text-align: center; }
 
   .desktop-nav .nav-link.active {
      border-bottom: solid 2px black;
+  }
+
+  .dark-theme .desktop-nav .nav-link.active {
+    border-color: var(--foreground-tertiary);
   }
 
   .theme-btn-desktop {
@@ -829,7 +833,7 @@ footer .wrapper { text-align: center; }
 
 
   /**
-   * HERO 
+   * HERO
    */
 
   .hero { text-align: left; }
@@ -902,7 +906,7 @@ footer .wrapper { text-align: center; }
 
 
   /**
-   * MAIN 
+   * MAIN
    */
 
   .main .container {
@@ -914,7 +918,7 @@ footer .wrapper { text-align: center; }
 
 
   /**
-   * ASIDE 
+   * ASIDE
    */
 
   .aside {
@@ -1024,7 +1028,7 @@ footer .wrapper { text-align: center; }
   .social-link .twitter { color: hsl(203, 89%, 53%); }
 
   .social-link .facebook { color: hsl(220, 46%, 48%); }
-  
+
   .social-link .icon-box:hover {
     background: var(--accent);
     color: var(--white);
@@ -1068,7 +1072,7 @@ footer .wrapper { text-align: center; }
 
 
   /**
-   * FOOTER 
+   * FOOTER
    */
 
   .footer-title { font-size: 1.125rem; }

@@ -12,22 +12,26 @@
             <div class="left">
 
                 <h1 class="h1">
-                    Hi, I'm <b>Julia&nbsp;Walker</b>.
-                    <br>Web Developer
+                    <th:block th:if="${headingFragments.get('description').title != 'description'}"
+                              th:utext="${headingFragments.get('description').title}">
+                    </th:block>
                 </h1>
                 <p class="h3">
-                    Specialized in <abbr title="Accessibility">a11y</abbr>
-                    and Core Web Vitals
+                    <th:block th:if="${headingFragments.get('description').content != 'description'}"
+                              th:utext="${headingFragments.get('description').content}">
+                    </th:block>
                 </p>
                 <div class="btn-group">
-                    <a href="#" class="btn btn-primary">Contact Me</a>
-                    <a href="#" class="btn btn-secondary">About Me</a>
+                    <a href="/contact/us" class="btn btn-primary">[[#{contact}]]</a>
+                    <a href="/about-us" class="btn btn-secondary">[[#{about_me}]]</a>
                 </div>
             </div>
             <div class="right">
                 <div class="pattern-bg"></div>
                 <div class="img-box">
-                    <img src="/images/hero.png" alt="Julia Walker" class="hero-img">
+                    <img th:src="${!#strings.isEmpty(webBannerImageUrl) ? webBannerImageUrl : '/images/hero.png'}"
+                         onclick="showIntroVideoModal();"
+                         class="hero-img" th:alt="#{banner}"/>
                     <div class="shape shape-1"></div>
                     <div class="shape shape-2"></div>
                 </div>

@@ -10,16 +10,27 @@ import org.youngmonkeys.ezyarticle.sdk.entity.PostStatus;
 import org.youngmonkeys.ezyarticle.sdk.entity.PostType;
 import org.youngmonkeys.ezyarticle.sdk.pagination.DefaultPostFilter;
 import org.youngmonkeys.ezyarticle.web.controller.service.WebPostControllerService;
+import org.youngmonkeys.ezyarticle.web.manager.WebPageFragmentManager;
 import org.youngmonkeys.ezyarticle.web.response.WebPostItemResponse;
 import org.youngmonkeys.ezyplatform.model.PaginationModel;
 import org.youngmonkeys.ezyplatform.web.controller.service.WebLanguageControllerService;
+import org.youngmonkeys.ezyplatform.web.service.WebSettingService;
 import org.youngmonkeys.ezyplatform.web.validator.WebCommonValidator;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static org.youngmonkeys.ezyplatform.util.StringConverters.trimOrNull;
+import static org.youngmonkeys.ezysupport.constant.EzySupportConstants.SETTING_NAME_BANNER_IMAGE_URL;
+
 @Setter
 @Controller
 public class HomeController {
+
+    @EzyAutoBind
+    private WebPageFragmentManager pageFragmentManager;
+
+    @EzyAutoBind
+    private WebSettingService settingService;
 
     @EzyAutoBind
     private WebLanguageControllerService languageControllerService;
@@ -61,6 +72,21 @@ public class HomeController {
             .template("home")
             .addVariable("pagination", pagination)
             .addVariable("pageTitle", "home")
+            .addVariable(
+                "headingFragments",
+                pageFragmentManager.getPageFragmentMap(
+                    "main_page_heading",
+                    language
+                )
+            )
+            .addVariable(
+                "webBannerImageUrl",
+                trimOrNull(
+                    settingService.getTextValue(
+                        SETTING_NAME_BANNER_IMAGE_URL
+                    )
+                )
+            )
             .build();
     }
 }
