@@ -4,9 +4,7 @@
 <body>
 <footer th:fragment="footer" class="content">
     <div class="container">
-
         <div class="wrapper">
-
             <a href="#" class="footer-logo">
                 <img src="/images/logo-light.svg" alt="SimpleBlog Logo" width="150" class="logo-light">
                 <img src="/images/logo-dark.svg" alt="SimpleBlog Logo" width="150" class="logo-dark">
@@ -15,53 +13,37 @@
             <p class="footer-text">
                 Learn about Web accessibility, Web performance, and Database management.
             </p>
-
         </div>
 
         <div class="wrapper">
-
-            <p class="footer-title">Quick Links</p>
-
+            <p class="footer-title">[[#{quick_links}]]</p>
             <ul>
-
                 <li>
-                    <a href="#" class="footer-link">Advertise with us</a>
+                    <a href="#" class="footer-link">[[#{advertise_with_us}]]</a>
                 </li>
-
                 <li>
-                    <a href="#" class="footer-link">About Us</a>
+                    <a href="/about-us" class="footer-link">[[#{about_me}]]</a>
                 </li>
-
                 <li>
-                    <a href="#" class="footer-link">Contact Us</a>
+                    <a href="/contact-us" class="footer-link">[[#{contact_me}]]</a>
                 </li>
-
             </ul>
-
         </div>
 
         <div class="wrapper">
-
-            <p class="footer-title">Legal Stuff</p>
-
+            <p class="footer-title">[[#{legal_stuff}]]</p>
             <ul>
-
                 <li>
-                    <a href="#" class="footer-link">Privacy Notice</a>
+                    <a href="/privacy-policy" class="footer-link">[[#{privacy_policy}]]</a>
                 </li>
-
                 <li>
-                    <a href="#" class="footer-link">Cookie Policy</a>
+                    <a href="/cookie-policy" class="footer-link">[[#{cookie_policy}]]</a>
                 </li>
-
                 <li>
-                    <a href="#" class="footer-link">Terms Of Use</a>
+                    <a href="/terms-of-service" class="footer-link">[[#{terms_of_use}]]</a>
                 </li>
-
             </ul>
-
         </div>
-
     </div>
 
     <p class="copyright">
