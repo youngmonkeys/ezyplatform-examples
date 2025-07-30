@@ -17,23 +17,7 @@
 package org.youngmonkeys.personal.web.controller.view;
 
 import com.tvd12.ezyhttp.server.core.annotation.Controller;
-import org.youngmonkeys.ezyarticle.web.controller.service.WebPostControllerService;
 import org.youngmonkeys.ezyarticle.web.controller.view.BlogController;
-import org.youngmonkeys.ezyarticle.web.validator.WebTermValidator;
-import org.youngmonkeys.ezyplatform.web.validator.WebCommonValidator;
 
 @Controller
-public class WebPersonalBlogController extends BlogController {
-
-    public WebPersonalBlogController(
-        WebPostControllerService postControllerService,
-        WebCommonValidator commonValidator,
-        WebTermValidator termValidator
-    ) {
-        super(
-            postControllerService,
-            commonValidator,
-            termValidator
-        );
-    }
-}
+public class WebPersonalBlogController extends BlogController {}

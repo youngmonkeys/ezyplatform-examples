@@ -17,11 +17,11 @@
     <properties>
         <!--suppress UnresolvedMavenProperty -->
         <ezyplatform.home>${env.EZYPLATFORM_HOME}</ezyplatform.home>
-    <jsoup.version>1.18.3</jsoup.version>
-        <ezyarticle.version>0.5.7</ezyarticle.version>
-    <ezymail.version>0.1.1</ezymail.version>
+        <jsoup.version>1.18.3</jsoup.version>
+        <ezyarticle.version>0.5.9</ezyarticle.version>
+        <ezymail.version>0.1.1</ezymail.version>
         <javax.mail.version>1.6.2</javax.mail.version>
-        <ezysupport.version>0.2.1</ezysupport.version>
+        <ezysupport.version>0.2.2</ezysupport.version>
     </properties>
 
     <modules>

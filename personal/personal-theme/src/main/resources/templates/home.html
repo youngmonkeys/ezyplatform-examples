@@ -2,7 +2,6 @@
 <html
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:th="http://www.thymeleaf.org"
-    xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout"
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="~{ezytheme}">
 <body>
@@ -10,7 +9,6 @@
     <div class="hero">
         <div class="container">
             <div class="left">
-
                 <h1 class="h1">
                     <th:block th:if="${headingFragments.get('description').title != 'description'}"
                               th:utext="${headingFragments.get('description').title}">
