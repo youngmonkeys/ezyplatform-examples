@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{ezyadmin}">
+
+<body>
+<div layout:fragment="content" class="row">
+    <div class="col-md-3">
+        <a class="small-box bg-info" href="/personal/dashboard/posts">
+            <div class="inner">
+                <h3>[[${blogCount}]]</h3>
+                <p>[[#{post_s}]]</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-ios-barcode"></i>
+            </div>
+        </a>
+    </div>
+</div>
+</body>
+</html>
