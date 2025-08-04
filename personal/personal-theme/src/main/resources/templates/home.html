@@ -56,28 +56,14 @@
 
                     <h2 class="h2">[[#{topics}]]</h2>
 
-                    <a href="#" class="topic-btn">
+                    <a th:each="topCategory : ${topCategories}"
+                       th:href="${'/topics/' + topCategory.slug}"
+                       class="topic-btn">
                         <div class="icon-box">
-                            <ion-icon name="server-outline"></ion-icon>
+                            <img th:if="${topCategory.titleImage != null}"
+                                 th:src="${topCategory.titleImage.getUrlOrNull()}">
                         </div>
-
-                        <p>Database</p>
-                    </a>
-
-                    <a href="#" class="topic-btn">
-                        <div class="icon-box">
-                            <ion-icon name="accessibility-outline"></ion-icon>
-                        </div>
-
-                        <p>Accessibility</p>
-                    </a>
-
-                    <a href="#" class="topic-btn">
-                        <div class="icon-box">
-                            <ion-icon name="rocket-outline"></ion-icon>
-                        </div>
-
-                        <p>Web Performance</p>
+                        <p>[[${topCategory.name}]]</p>
                     </a>
 
                 </div>
@@ -88,14 +74,10 @@
 
                     <div class="wrapper">
 
-                        <button class="hashtag">#mongodb</button>
-                        <button class="hashtag">#nodejs</button>
-                        <button class="hashtag">#a11y</button>
-                        <button class="hashtag">#mobility</button>
-                        <button class="hashtag">#inclusion</button>
-                        <button class="hashtag">#webperf</button>
-                        <button class="hashtag">#optimize</button>
-                        <button class="hashtag">#performance</button>
+                        <button th:each="topTag : ${topTags}"
+                                type="button" class="hashtag">
+                            #[[${topTag.name}]]
+                        </button>
 
                     </div>
 
