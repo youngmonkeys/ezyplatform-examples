@@ -89,6 +89,34 @@
             <scope>system</scope>
             <systemPath>${ezyplatform.home}/web/plugins/ezysupport/lib/ezysupport-web-plugin-${ezysupport.version}.jar</systemPath>
         </dependency>
+    <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ecommerce-sdk</artifactId>
+            <version>${ecommerce.version}</version>
+        <scope>system</scope>
+            <systemPath>${ezyplatform.home}/web/plugins/ecommerce/lib/ecommerce-sdk-${ecommerce.version}.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ecommerce-web-plugin</artifactId>
+            <version>${ecommerce.version}</version>
+            <scope>system</scope>
+            <systemPath>${ezyplatform.home}/web/plugins/ecommerce/lib/ecommerce-web-plugin-${ecommerce.version}.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezycrm-sdk</artifactId>
+            <version>${ezycrm.version}</version>
+        <scope>system</scope>
+            <systemPath>${ezyplatform.home}/web/plugins/ezycrm/lib/ezycrm-sdk-${ezycrm.version}.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezycrm-web-plugin</artifactId>
+            <version>${ezycrm.version}</version>
+            <scope>system</scope>
+            <systemPath>${ezyplatform.home}/web/plugins/ezycrm/lib/ezycrm-web-plugin-${ezycrm.version}.jar</systemPath>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>
@@ -118,6 +146,12 @@
                     </resource>
                 <resource>
                         <directory>${ezyplatform.home}/web/plugins/ezymail/resources</directory>
+                    </resource>
+                <resource>
+                        <directory>${ezyplatform.home}/web/plugins/ezycrm/resources</directory>
+                    </resource>
+                <resource>
+                        <directory>${ezyplatform.home}/web/plugins/ecommerce/resources</directory>
                     </resource>
                 </resources>
             </build>

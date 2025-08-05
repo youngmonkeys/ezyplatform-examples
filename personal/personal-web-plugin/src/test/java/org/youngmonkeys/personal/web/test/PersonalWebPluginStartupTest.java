@@ -13,7 +13,9 @@ import com.tvd12.ezyhttp.server.core.annotation.PropertiesSources;
     "org.youngmonkeys.personal",
     "org.youngmonkeys.ezyarticle",
     "org.youngmonkeys.ezysupport",
-    "org.youngmonkeys.ezymail"
+    "org.youngmonkeys.ezymail",
+    "org.youngmonkeys.ezycrm",
+    "org.youngmonkeys.ecommerce"
 })
 public class PersonalWebPluginStartupTest {
 

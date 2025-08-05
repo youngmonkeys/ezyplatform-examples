@@ -83,6 +83,38 @@
             <scope>system</scope>
             <systemPath>${ezyplatform.home}/admin/plugins/ezysupport/lib/ezysupport-admin-plugin-${ezysupport.version}.jar</systemPath>
         </dependency>
+    <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ecommerce-admin-plugin</artifactId>
+            <version>${ecommerce.version}</version>
+            <scope>system</scope>
+            <systemPath>
+                ${ezyplatform.home}/admin/plugins/ecommerce/lib/ecommerce-admin-plugin-${ecommerce.version}.jar
+            </systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ecommerce-sdk</artifactId>
+            <version>${ecommerce.version}</version>
+            <scope>system</scope>
+            <systemPath>
+                ${ezyplatform.home}/admin/plugins/ecommerce/lib/ecommerce-sdk-${ecommerce.version}.jar
+            </systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezycrm-sdk</artifactId>
+            <version>${ezycrm.version}</version>
+        <scope>system</scope>
+            <systemPath>${ezyplatform.home}/admin/plugins/ezycrm/lib/ezycrm-sdk-${ezycrm.version}.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezycrm-admin-plugin</artifactId>
+            <version>${ezycrm.version}</version>
+            <scope>system</scope>
+            <systemPath>${ezyplatform.home}/admin/plugins/ezycrm/lib/ezycrm-admin-plugin-${ezycrm.version}.jar</systemPath>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>
@@ -112,6 +144,12 @@
                     </resource>
                 <resource>
                         <directory>${ezyplatform.home}/admin/plugins/ezymail/resources</directory>
+                    </resource>
+                <resource>
+                        <directory>${ezyplatform.home}/admin/plugins/ezycrm/resources</directory>
+                    </resource>
+                <resource>
+                        <directory>${ezyplatform.home}/admin/plugins/ecommerce/resources</directory>
                     </resource>
                 </resources>
             </build>
