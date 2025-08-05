@@ -130,10 +130,12 @@
                             Subscribe to our newsletter to be among the first to keep up with the latest updates.
                         </p>
 
-                        <form action="#">
-                            <input type="email" name="email" placeholder="Email Address" required>
-
-                            <button type="submit" class="btn btn-primary">Subscribe</button>
+                        <form id="subscribeForm" onsubmit="return false;">
+                            <input type="email" name="email" th:placeholder="#{email_address}" required
+                                   onkeydown="onKeydownToSubscribe();">
+                            <button type="button" class="btn btn-primary" onclick="onSubscribeClick();">
+                                [[#{subscribe}]]
+                            </button>
                         </form>
 
                     </div>
@@ -144,7 +146,30 @@
         </div>
     </div>
 </div>
-<th:block layout:fragment="post-scripts">
-</th:block>
+<script layout:fragment="scripts" th:inline="javascript">
+/*<![CDATA[*/
+ezyweb.messages.subscribe_successfully = /*[[#{subscribe_successfully}]]*/;
+/*]]>*/
+
+var onKeydownToSubscribe = function() {
+    if(event.key === 'Enter') {
+        onSubscribeClick();
+    }
+}
+
+var onSubscribeClick = function() {
+    var formData = ezyweb.formDataToObject('subscribeForm');
+    $.ajax({
+        type: 'POST',
+        url: '/api/v1/ezycrm/subscribe',
+        contentType: 'application/json',
+        data: JSON.stringify(formData)
+    }).done(function (menu) {
+        alert(ezyweb.messages.subscribe_successfully);
+    }).fail(function (e) {
+        ezyweb.processGetApiErrors(e);
+    });
+}
+</script>
 </body>
 </html>
