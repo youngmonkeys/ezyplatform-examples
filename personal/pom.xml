@@ -22,7 +22,7 @@
         <ezymail.version>0.1.1</ezymail.version>
         <javax.mail.version>1.6.2</javax.mail.version>
         <ezysupport.version>0.2.2</ezysupport.version>
-    <ecommerce.version>0.8.7</ecommerce.version>
+    <ecommerce.version>0.8.8</ecommerce.version>
         <zxing.version>3.5.3</zxing.version>
         <ezycrm.version>0.2.0</ezycrm.version>
     </properties>

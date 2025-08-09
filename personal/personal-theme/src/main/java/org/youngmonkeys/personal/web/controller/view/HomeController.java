@@ -43,7 +43,7 @@ public class HomeController {
     @EzyAutoBind
     private WebPostControllerService postControllerService;
 
-     @EzyAutoBind
+    @EzyAutoBind
     private WebTermControllerService termControllerService;
 
     @EzyAutoBind
