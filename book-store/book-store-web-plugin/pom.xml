@@ -13,8 +13,7 @@
  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+--><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>book-store</artifactId>
         <groupId>org.youngmonkeys</groupId>
@@ -160,6 +159,33 @@
             <version>${ezyaccount.version}</version>
             <scope>system</scope>
             <systemPath>${ezyplatform.home}/web/plugins/ezyaccount/lib/ezyaccount-web-plugin-${ezyaccount.version}.jar</systemPath>
+        </dependency>
+    <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyaccount-sdk</artifactId>
+            <version>${ezyaccount.version}</version>
+        <scope>system</scope>
+            <systemPath>${ezyplatform.home}/web/plugins/ezyaccount/lib/ezyaccount-sdk-${ezyaccount.version}.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezycrm-sdk</artifactId>
+            <version>${ezycrm.version}</version>
+        <scope>system</scope>
+            <systemPath>${ezyplatform.home}/web/plugins/ezycrm/lib/ezycrm-sdk-${ezycrm.version}.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezycrm-web-plugin</artifactId>
+            <version>${ezycrm.version}</version>
+            <scope>system</scope>
+            <systemPath>${ezyplatform.home}/web/plugins/ezycrm/lib/ezycrm-web-plugin-${ezycrm.version}.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyplatform-test-sdk</artifactId>
+            <version>${ezy.platform.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <profiles>

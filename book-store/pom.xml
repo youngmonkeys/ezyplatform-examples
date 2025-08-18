@@ -13,8 +13,7 @@
  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+--><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.youngmonkeys</groupId>
@@ -32,17 +31,20 @@
     <properties>
         <!--suppress UnresolvedMavenProperty -->
         <ezyplatform.home>${env.EZYPLATFORM_HOME}</ezyplatform.home>
-        <ezyarticle.version>0.2.9</ezyarticle.version>
-        <ecommerce.version>0.5.9</ecommerce.version>
-        <ezylogin.version>0.0.5</ezylogin.version>
-        <ezymail.version>0.0.8</ezymail.version>
+        <ezyarticle.version>0.6.1</ezyarticle.version>
+        <ecommerce.version>0.8.9</ecommerce.version>
+        <ezylogin.version>0.1.4</ezylogin.version>
+        <ezymail.version>0.1.1</ezymail.version>
         <facebook.client.version>2022.3.1</facebook.client.version>
         <google.apis.version>v2-rev157-1.25.0</google.apis.version>
         <google.client.version>1.33.2</google.client.version>
         <javax.mail.version>1.6.2</javax.mail.version>
-        <ezypayment.version>0.0.8</ezypayment.version>
-        <ezysupport.version>0.1.7</ezysupport.version>
-        <ezyaccount.version>0.0.4</ezyaccount.version>
+        <ezypayment.version>0.1.3</ezypayment.version>
+        <ezysupport.version>0.2.2</ezysupport.version>
+        <ezyaccount.version>0.1.1</ezyaccount.version>
+        <ezycrm.version>0.2.0</ezycrm.version>
+        <jsoup.version>1.18.3</jsoup.version>
+        <zxing.version>3.5.3</zxing.version>
     </properties>
 
     <modules>
@@ -54,6 +56,12 @@
         <module>book-store-web-plugin</module>
     </modules>
     <dependencies>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyplatform-test-sdk</artifactId>
+            <version>${ezy.platform.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.youngmonkeys</groupId>
             <artifactId>ezyplatform-common-sdk</artifactId>
@@ -72,6 +80,38 @@
             <version>${ecommerce.version}</version>
             <scope>system</scope>
             <systemPath>${ezyplatform.home}/web/plugins/ecommerce/lib/ecommerce-sdk-${ecommerce.version}.jar</systemPath>
+        </dependency>
+    <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>${zxing.version}</version>
+        <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
+        <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyarticle-sdk</artifactId>
+            <version>${ezyarticle.version}</version>
+            <scope>system</scope>
+            <systemPath>${ezyplatform.home}/admin/plugins/ezyarticle/lib/ezyarticle-sdk-${ezyarticle.version}.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyplatform-common</artifactId>
+            <version>${ezy.platform.version}</version>
+            <scope>system</scope>
+            <systemPath>${ezyplatform.home}/lib/ezyplatform-common-${ezy.platform.version}.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyplatform-test-sdk</artifactId>
+            <version>${ezy.platform.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

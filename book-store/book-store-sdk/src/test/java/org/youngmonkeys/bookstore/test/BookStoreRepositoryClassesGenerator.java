@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 youngmonkeys.org
+ * Copyright 2025 youngmonkeys.org
  * 
  * Licensed under the ezyplatform, Version 1.0.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,14 @@
  * limitations under the License.
 */
 
-package org.youngmonkeys.bookstore.web.controller.view;
+package org.youngmonkeys.bookstore.test;
 
-import com.tvd12.ezyhttp.server.core.annotation.Controller;
-import org.youngmonkeys.bookstore.web.view.ViewFactory;
+import org.youngmonkeys.devtools.repository.RepositoryClassesGenerator;
 
-@Controller
-public class WebHomeController extends BookStoreHomeController {
+public class BookStoreRepositoryClassesGenerator {
 
-    public WebHomeController(ViewFactory viewFactory) {
-        super(viewFactory);
+    public static void main(String[] args) throws Exception {
+        new RepositoryClassesGenerator(Object.class)
+            .generate();
     }
 }

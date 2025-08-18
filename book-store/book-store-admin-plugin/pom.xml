@@ -13,8 +13,7 @@
  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  ~ See the License for the specific language governing permissions and
  ~ limitations under the License.
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+--><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.youngmonkeys</groupId>
         <artifactId>book-store</artifactId>
@@ -136,6 +135,20 @@
             <scope>system</scope>
             <systemPath>${ezyplatform.home}/admin/plugins/ezysupport/lib/ezysupport-admin-plugin-${ezysupport.version}.jar</systemPath>
         </dependency>
+    <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyaccount-sdk</artifactId>
+            <version>${ezyaccount.version}</version>
+        <scope>system</scope>
+            <systemPath>${ezyplatform.home}/admin/plugins/ezyaccount/lib/ezyaccount-sdk-${ezyaccount.version}.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyaccount-admin-plugin</artifactId>
+            <version>${ezyaccount.version}</version>
+            <scope>system</scope>
+            <systemPath>${ezyplatform.home}/admin/plugins/ezyaccount/lib/ezyaccount-admin-plugin-${ezyaccount.version}.jar</systemPath>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>
@@ -174,6 +187,9 @@
                     </resource>
                 <resource>
                         <directory>${ezyplatform.home}/admin/plugins/ezylogin/resources</directory>
+                    </resource>
+                <resource>
+                        <directory>${ezyplatform.home}/admin/plugins/ezyaccount/resources</directory>
                     </resource>
                 </resources>
             </build>

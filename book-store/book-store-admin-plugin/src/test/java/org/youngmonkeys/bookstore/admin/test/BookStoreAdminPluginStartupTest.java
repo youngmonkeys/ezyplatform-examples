@@ -32,7 +32,8 @@ import com.tvd12.ezyhttp.server.core.annotation.PropertiesSources;
     "org.youngmonkeys.ezypayment",
     "org.youngmonkeys.ezysupport",
     "org.youngmonkeys.ezymail",
-    "org.youngmonkeys.ezylogin"
+    "org.youngmonkeys.ezylogin",
+    "org.youngmonkeys.ezyaccount"
 })
 public class BookStoreAdminPluginStartupTest {
 

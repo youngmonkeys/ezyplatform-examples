@@ -16,19 +16,30 @@
 
 package org.youngmonkeys.bookstore.web.controller.view;
 
+import com.tvd12.ezyfox.bean.annotation.EzyAutoBind;
 import com.tvd12.ezyhttp.server.core.annotation.DoGet;
-import com.tvd12.ezyhttp.server.core.annotation.RequestParam;
 import com.tvd12.ezyhttp.server.core.view.View;
-import lombok.AllArgsConstructor;
+import lombok.Setter;
 import org.youngmonkeys.bookstore.web.view.ViewFactory;
+import org.youngmonkeys.ezyplatform.web.controller.service.WebLanguageControllerService;
 
-@AllArgsConstructor
-public class BookStoreHomeController {
+import javax.servlet.http.HttpServletRequest;
 
-    private final ViewFactory viewFactory;
+@Setter
+public class HomeController {
+
+    @EzyAutoBind
+    private ViewFactory viewFactory;
+
+    @EzyAutoBind
+    private WebLanguageControllerService languageControllerService;
 
     @DoGet("/")
-    public View homeGet(@RequestParam("lang") String language) {
+    public View homeGet(
+        HttpServletRequest request
+    ) {
+        String language = languageControllerService
+            .getLanguageCodeOrDefault(request);
         return viewFactory
             .newHomeViewBuilder(language)
             .build();
