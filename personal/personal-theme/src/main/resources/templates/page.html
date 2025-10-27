@@ -12,8 +12,8 @@
 	<th:block th:if="${commonFragments.get('styles') != null && commonFragments.get('styles').content != 'styles'}">
         <ezy:block ezy:utext="${commonFragments.get('styles').content}" />
     </th:block>
-	<th:block th:if="${pageFragments != null && pageFragments.get('content') != null && !#strings.isEmpty(pageFragments.get('content').additionalHead)}">
-        <ezy:block ezy:utext="${pageFragments.get('content').additionalHead}" />
+	<th:block th:if="${pageFragments != null && pageFragments.get('container') != null && !#strings.isEmpty(pageFragments.get('container').additionalHead)}">
+        <ezy:block ezy:utext="${pageFragments.get('container').additionalHead}" />
     </th:block>
 	<th:block th:if="${commonFragments.get('footer') != null}">
         <ezy:block ezy:utext="${commonFragments.get('footer').additionalHead}" />
@@ -29,10 +29,10 @@
 			<div th:replace="~{fragments/header :: header}"></div>
 		</header>
 	</th:block>
-	<th:block th:if="${pageFragments != null && pageFragments.get('content') != null && pageFragments.get('content').content != 'content'}">
-		<ezy:block ezy:utext="${pageFragments.get('content').content}" />
+	<th:block th:if="${pageFragments != null && pageFragments.get('container') != null && pageFragments.get('container').content != 'container'}">
+		<ezy:block ezy:utext="${pageFragments.get('container').content}" />
 	</th:block>
-	<th:block th:if="${pageFragments == null || pageFragments.get('content') == null || pageFragments.get('content').content == 'content'}">
+	<th:block th:if="${pageFragments == null || pageFragments.get('container') == null || pageFragments.get('container').content == 'container'}">
 		<main>
 			<div layout:fragment="content"></div>
 		</main>

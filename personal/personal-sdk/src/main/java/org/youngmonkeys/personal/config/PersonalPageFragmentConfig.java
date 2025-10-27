@@ -22,11 +22,11 @@ public class PersonalPageFragmentConfig implements EzyBeanConfig {
         );
         pageFragmentManager.registerFragmentNames(
             "home",
-            "content"
+            "container"
         );
         pageFragmentManager.registerFragmentNames(
             "blog_details",
-            "content"
+            "container"
         );
     }
 }
