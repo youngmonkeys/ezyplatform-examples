@@ -44,9 +44,8 @@
 		<footer th:replace="~{fragments/footer :: footer}"></footer>
 	</th:block>
 </div>
-<div id="loadingScreen" class="screen-loading d-none">
-	<i class="fas fa-3x fa-sync fa-spin text-secondary"></i>
-</div>
+
+<th:block th:replace="~{ezycommon/loading :: content}" />
 
 <th:block layout:fragment="modals"></th:block>
 
