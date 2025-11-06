@@ -15,7 +15,7 @@
 	<th:block th:if="${pageFragments != null && pageFragments.get('container') != null && !#strings.isEmpty(pageFragments.get('container').additionalHead)}">
         <ezy:block ezy:utext="${pageFragments.get('container').additionalHead}" />
     </th:block>
-	<th:block th:if="${commonFragments.get('footer') != null}">
+	<th:block th:if="${commonFragments.get('footer') != null} && !#strings.isEmpty(commonFragments.get('footer').additionalHead)}">
         <ezy:block ezy:utext="${commonFragments.get('footer').additionalHead}" />
     </th:block>
 </head>
