@@ -2,9 +2,11 @@ package org.youngmonkeys.personal.admin.appender;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tvd12.ezyfox.bean.annotation.EzySingleton;
+import com.tvd12.ezyfox.util.EzyMapBuilder;
 import com.tvd12.ezyfox.util.Next;
 import org.youngmonkeys.ezyarticle.sdk.entity.PostHistory;
 import org.youngmonkeys.ezyplatform.admin.appender.AdminDataAppender;
+import org.youngmonkeys.ezyplatform.admin.event.AdminEventHandlerManager;
 import org.youngmonkeys.ezyplatform.admin.service.AdminSettingService;
 import org.youngmonkeys.ezyplatform.time.ClockProxy;
 import org.youngmonkeys.personal.admin.repo.AdminPersonalPostHistoryRepository;
@@ -16,17 +18,20 @@ import java.util.List;
 
 import static com.tvd12.ezyfox.io.EzyLists.last;
 import static org.youngmonkeys.ezyplatform.constant.CommonConstants.LIMIT_100_RECORDS;
+import static org.youngmonkeys.personal.constant.PersonalConstants.INTERNAL_EVENT_NAME_POST_WORD_COUNT;
 
 @EzySingleton
 public class AdminPersonalPostWordCountDataAppender
     extends AdminDataAppender<PostHistory, PersonalPostWordCount, Long> {
 
     private final ClockProxy clock;
+    private final AdminEventHandlerManager eventHandlerManager;
     private final AdminPersonalPostHistoryRepository postHistoryRepository;
     private final AdminPersonalPostWordCountRepository postWordCountRepository;
 
     public AdminPersonalPostWordCountDataAppender(
         ClockProxy clock,
+        AdminEventHandlerManager eventHandlerManager,
         ObjectMapper objectMapper,
         AdminSettingService settingService,
         AdminPersonalPostHistoryRepository postHistoryRepository,
@@ -34,6 +39,7 @@ public class AdminPersonalPostWordCountDataAppender
     ) {
         super(objectMapper, settingService);
         this.clock = clock;
+        this.eventHandlerManager = eventHandlerManager;
         this.postHistoryRepository = postHistoryRepository;
         this.postWordCountRepository = postWordCountRepository;
     }
@@ -46,6 +52,13 @@ public class AdminPersonalPostWordCountDataAppender
     @Override
     protected void addDataRecord(PersonalPostWordCount dataRecord) {
         postWordCountRepository.save(dataRecord);
+        eventHandlerManager.handleEvent(
+            INTERNAL_EVENT_NAME_POST_WORD_COUNT,
+            EzyMapBuilder.mapBuilder()
+                .put("postId", dataRecord.getPostId())
+                .put("wordCount", dataRecord.getWordCount())
+                .toMap()
+        );
     }
 
     @Override
