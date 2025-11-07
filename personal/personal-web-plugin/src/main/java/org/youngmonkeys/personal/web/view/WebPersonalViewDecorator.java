@@ -19,6 +19,8 @@ package org.youngmonkeys.personal.web.view;
 import com.tvd12.ezyfox.bean.annotation.EzySingleton;
 import com.tvd12.ezyhttp.server.core.view.View;
 import lombok.AllArgsConstructor;
+import org.youngmonkeys.ezyarticle.web.manager.WebPageFragmentManager;
+import org.youngmonkeys.ezyplatform.web.controller.service.WebLanguageControllerService;
 import org.youngmonkeys.ezyplatform.web.service.WebSettingService;
 import org.youngmonkeys.ezyplatform.web.view.WebViewDecorator;
 
@@ -31,7 +33,9 @@ import static org.youngmonkeys.ezysupport.constant.EzySupportConstants.SETTING_N
 @AllArgsConstructor
 public class WebPersonalViewDecorator extends WebViewDecorator {
 
+    private final WebPageFragmentManager pageFragmentManager;
     private final WebSettingService settingService;
+    private final WebLanguageControllerService languageControllerService;
 
     @SuppressWarnings("MethodLength")
     @Override
@@ -47,6 +51,15 @@ public class WebPersonalViewDecorator extends WebViewDecorator {
                 settingService.getTextValue(
                     SETTING_NAME_LOGO_WITHOUT_TEXT_URL
                 )
+            )
+        );
+        String languageCode = languageControllerService
+            .getLanguageCodeOrDefault(request);
+        view.setVariable(
+            "commonFragments",
+            pageFragmentManager.getPageFragmentMap(
+                "common",
+                languageCode
             )
         );
     }

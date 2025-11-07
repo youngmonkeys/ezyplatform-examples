@@ -22,55 +22,88 @@
 	xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout">
 
 <head th:remove="tag">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" type="text/css" ezy:vhref="/css/style.css" />
-<link rel="stylesheet" type="text/css" ezy:vhref="/ezylogin/css/style.css" />
-<style th:inline="css">
-	.custom-file-label::after {
-		content: "[[#{browse}]]" !important;
-	}
-</style>
+	<th:block th:if="${commonFragments.get('styles') == null || commonFragments.get('styles').content == 'styles'}">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+		<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" ezy:vhref="/css/style.css" />
+		<link rel="stylesheet" type="text/css" ezy:vhref="/ezylogin/css/style.css" />
+	</th:block>
+	<th:block th:if="${commonFragments.get('styles') != null && commonFragments.get('styles').content != 'styles'}">
+        <ezy:block ezy:utext="${commonFragments.get('styles').content}" />
+    </th:block>
+	<th:block th:if="${pageFragments != null && pageFragments.get('container') != null && !#strings.isEmpty(pageFragments.get('container').additionalHead)}">
+        <ezy:block ezy:utext="${pageFragments.get('container').additionalHead}" />
+    </th:block>
+	<th:block th:if="${commonFragments.get('footer') != null && !#strings.isEmpty(commonFragments.get('footer').additionalHead)}">
+        <ezy:block ezy:utext="${commonFragments.get('footer').additionalHead}" />
+    </th:block>
+	<style th:inline="css">
+		.custom-file-label::after {
+			content: "[[#{browse}]]" !important;
+		}
+	</style>
 </head>
 <body th:remove="tag">
+
 <th:block th:replace="~{ezycommon/toast :: content}" />
+
 <div class="wrapper">
-	<header>
-		<!-- Navbar -->
-		<div th:replace="~{fragments/header :: mobile-menu}"></div>
-		<div th:replace="~{fragments/header :: header}"></div>
-	</header>
-	<main>
-		<div class="container-fluid">
-			<div layout:fragment="content"></div>
-		</div>
-	</main>
-	<div class="spacing-elements"></div>
-	<!-- /.control-sidebar -->
-	<footer th:replace="~{fragments/footer :: footer}"></footer>
+	<th:block th:if="${commonFragments.get('header') != null && commonFragments.get('header').content != 'header'}">
+		<ezy:block ezy:utext="${commonFragments.get('header').content}" />
+	</th:block>
+	<th:block th:if="${commonFragments.get('header') == null || commonFragments.get('header').content == 'header'}">
+		<header class="header">
+			<th:block th:replace="~{fragments/header :: header}" />
+		</header>
+	</th:block>
+	<th:block th:if="${pageFragments != null && pageFragments.get('container') != null && pageFragments.get('container').content != 'container'}">
+		<ezy:block ezy:utext="${pageFragments.get('container').content}" />
+	</th:block>
+	<th:block th:if="${pageFragments == null || pageFragments.get('container') == null || pageFragments.get('container').content == 'container'}">
+		<main>
+			<th:block layout:fragment="content" />
+		</main>
+	</th:block>
+	<th:block th:if="${commonFragments.get('footer') != null && commonFragments.get('footer').content != 'footer'}">
+		<th:block th:utext="${commonFragments.get('footer').content}" />
+	</th:block>
+	<th:block th:if="${commonFragments.get('footer') == null || commonFragments.get('footer').content == 'footer'}">
+		<th:block th:replace="~{fragments/footer :: footer}" />
+	</th:block>
 </div>
-<div id="loadingScreen" class="screen-loading d-none">
-	<i class="fas fa-3x fa-sync fa-spin text-secondary"></i>
-</div>
+
+<th:block th:replace="~{ezycommon/loading :: content}" />
+
 <th:block th:if="${loggedIn != true}">
 <div th:replace="~{ezylogin/login :: content}"></div>
 <div th:replace="~{ezylogin/register :: content}"></div>
 <div th:replace="~{ezylogin/forgot-password :: content}"></div>
 </th:block>
+
 <th:block th:replace="~{ezycommon/alert :: content}" />
 <th:block th:replace="~{ezycommon/toast :: content}" />
+
 <th:block layout:fragment="modals"></th:block>
 
-<!-- REQUIRED SCRIPTS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bs-custom-file-input/1.3.4/bs-custom-file-input.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<th:block th:if="${commonFragments.get('scripts') == null || commonFragments.get('scripts').content == 'scripts'}">
+	<!-- REQUIRED SCRIPTS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bs-custom-file-input/1.3.4/bs-custom-file-input.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</th:block>
+
+<th:block th:if="${commonFragments.get('scripts') != null && commonFragments.get('scripts').content != 'scripts'}">
+    <ezy:block ezy:utext="${commonFragments.get('scripts').content}" />
+</th:block>
 
 <!-- OPTIONAL SCRIPTS -->
 <script layout:fragment="import-scripts" th:remove="tag"></script>
+<script layout:fragment="pre-main-scripts" type="text/javascript"></script>
+<script layout:fragment="scripts" type="text/javascript"></script>
+<script layout:fragment="post-scripts" type="text/javascript"></script>
 
 <script th:inline="javascript">
 /*<![CDATA[*/
@@ -96,15 +129,24 @@ $( document ).ready(function() {
 });
 </script>
 <th:block th:if="${loggedIn != true}">
-<script th:replace="~{ezylogin/login :: scripts}"></script>
-<script th:replace="~{ezylogin/register :: scripts}"></script>
-<script th:replace="~{ezylogin/forgot-password :: scripts}"></script>
+	<script th:replace="~{ezylogin/login :: scripts}"></script>
+	<script th:replace="~{ezylogin/register :: scripts}"></script>
+	<script th:replace="~{ezylogin/forgot-password :: scripts}"></script>
 </th:block>
 <script th:replace="~{ezycommon/alert :: scripts}"></script>
 <script th:replace="~{ezycommon/toast :: scripts}"></script>
 <script th:replace="~{fragments/header :: scripts}"></script>
 <th:block th:if="${loggedIn == true}">
-<script th:replace="~{ezyaccount/notification :: scripts}"></script>
+	<th:block th:replace="~{ezyaccount/notification :: scripts}" />
+</th:block>
+<th:block th:if="${commonFragments.get('header') != null && !#strings.isEmpty(commonFragments.get('header').additionalFoot)}">
+	<ezy:block ezy:utext="${commonFragments.get('header').additionalFoot}" />
+</th:block>
+<th:block th:if="${commonFragments.get('header') == null || #strings.isEmpty(commonFragments.get('header').additionalFoot)}">
+	<th:block th:replace="~{fragments/header :: scripts}" />
+</th:block>
+<th:block th:if="${commonFragments.get('footer') != null && !#strings.isEmpty(commonFragments.get('footer').additionalFoot)}">
+	<ezy:block ezy:utext="${commonFragments.get('footer').additionalFoot}" />
 </th:block>
 </body>
 </html>

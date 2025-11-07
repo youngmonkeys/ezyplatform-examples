@@ -20,8 +20,9 @@ import com.tvd12.ezyfox.bean.annotation.EzySingleton;
 import com.tvd12.ezyhttp.server.core.view.View;
 import lombok.AllArgsConstructor;
 import org.youngmonkeys.ecommerce.web.service.WebShoppingCartService;
+import org.youngmonkeys.ezyarticle.web.manager.WebPageFragmentManager;
 import org.youngmonkeys.ezyplatform.model.UserModel;
-import org.youngmonkeys.ezyplatform.rx.Reactive;
+import org.youngmonkeys.ezyplatform.web.controller.service.WebLanguageControllerService;
 import org.youngmonkeys.ezyplatform.web.view.WebViewDecorator;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +31,23 @@ import javax.servlet.http.HttpServletRequest;
 @AllArgsConstructor
 public class BookStoreWebViewDecorator extends WebViewDecorator {
 
+    private final WebPageFragmentManager pageFragmentManager;
     private final WebShoppingCartService shoppingCartService;
+    private final WebLanguageControllerService languageControllerService;
+
+    @Override
+    public void decorate(HttpServletRequest request, View view) {
+        super.decorate(request, view);
+        String languageCode = languageControllerService
+            .getLanguageCodeOrDefault(request);
+        view.setVariable(
+            "commonFragments",
+            pageFragmentManager.getPageFragmentMap(
+                "common",
+                languageCode
+            )
+        );
+    }
 
     @Override
     protected void decorateWithUserData(
@@ -38,15 +55,13 @@ public class BookStoreWebViewDecorator extends WebViewDecorator {
         View view,
         UserModel user
     ) {
-        Reactive.multiple()
-            .register(
-                "shoppingCartProductCount",
-                () -> shoppingCartService
-                    .getShoppingCartProductCountByOwnerId(user.getId())
-            )
-            .blockingConsume(map ->
-                view.setVariables(map.valueMap())
-            );
+        view.setVariable(
+            "shoppingCartProductCount",
+            shoppingCartService
+                .getShoppingCartProductCountByOwnerId(
+                    user.getId()
+                )
+        );
     }
 
     @Override
