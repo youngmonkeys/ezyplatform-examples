@@ -15,7 +15,7 @@
 	<th:block th:if="${pageFragments != null && pageFragments.get('container') != null && !#strings.isEmpty(pageFragments.get('container').additionalHead)}">
         <ezy:block ezy:utext="${pageFragments.get('container').additionalHead}" />
     </th:block>
-	<th:block th:if="${commonFragments.get('footer') != null} && !#strings.isEmpty(commonFragments.get('footer').additionalHead)}">
+	<th:block th:if="${commonFragments.get('footer') != null && !#strings.isEmpty(commonFragments.get('footer').additionalHead)}">
         <ezy:block ezy:utext="${commonFragments.get('footer').additionalHead}" />
     </th:block>
 </head>
@@ -26,7 +26,7 @@
 	</th:block>
 	<th:block th:if="${commonFragments.get('header') == null || commonFragments.get('header').content == 'header'}">
 		<header class="header">
-			<div th:replace="~{fragments/header :: header}"></div>
+			<th:block th:replace="~{fragments/header :: header}" />
 		</header>
 	</th:block>
 	<th:block th:if="${pageFragments != null && pageFragments.get('container') != null && pageFragments.get('container').content != 'container'}">
@@ -34,14 +34,14 @@
 	</th:block>
 	<th:block th:if="${pageFragments == null || pageFragments.get('container') == null || pageFragments.get('container').content == 'container'}">
 		<main>
-			<div layout:fragment="content"></div>
+			<th:block layout:fragment="content" />
 		</main>
 	</th:block>
 	<th:block th:if="${commonFragments.get('footer') != null && commonFragments.get('footer').content != 'footer'}">
 		<th:block th:utext="${commonFragments.get('footer').content}" />
 	</th:block>
 	<th:block th:if="${commonFragments.get('footer') == null || commonFragments.get('footer').content == 'footer'}">
-		<footer th:replace="~{fragments/footer :: footer}"></footer>
+		<th:block th:replace="~{fragments/footer :: footer}" />
 	</th:block>
 </div>
 
@@ -49,14 +49,15 @@
 
 <th:block layout:fragment="modals"></th:block>
 
-<!-- REQUIRED SCRIPTS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <th:block th:if="${commonFragments.get('scripts') == null || commonFragments.get('scripts').content == 'scripts'}">
+	<!-- REQUIRED SCRIPTS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 	<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 	<script ezy:vsrc="/js/main.js" type="text/javascript"></script>
 </th:block>
+
 <th:block th:if="${commonFragments.get('scripts') != null && commonFragments.get('scripts').content != 'scripts'}">
     <ezy:block ezy:utext="${commonFragments.get('scripts').content}" />
 </th:block>
@@ -81,7 +82,7 @@ $( document ).ready(function() {
 	<ezy:block ezy:utext="${commonFragments.get('header').additionalFoot}" />
 </th:block>
 <th:block th:if="${commonFragments.get('header') == null || #strings.isEmpty(commonFragments.get('header').additionalFoot)}">
-	<script th:replace="~{fragments/header :: scripts}" type="text/javascript"></script>
+	<th:block th:replace="~{fragments/header :: scripts}" />
 </th:block>
 <th:block th:if="${commonFragments.get('footer') != null && !#strings.isEmpty(commonFragments.get('footer').additionalFoot)}">
 	<ezy:block ezy:utext="${commonFragments.get('footer').additionalFoot}" />
