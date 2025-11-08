@@ -1,0 +1,92 @@
+:root {
+    --accent-color: #C5A992;
+    --secondary-color: #C5A992;
+    --dark-color: #2f2f2f;
+    --light-color: #F3F2EC;
+    --body-text-color: #757575;
+    --light-text-color: #afafaf;
+    --dark-text-color: #2f2f2f;
+    --body-font: "Raleway", sans-serif;
+    --heading-font: "Prata", Georgia, serif;
+    --secondary-font: "Playfair Display", Georgia, serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--body-font);
+    font-size: 16px;
+    line-height: 2;
+    color: var(--body-text-color);
+    background-color: var(--light-color);
+}
+
+a {
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    object-fit: cover;
+}
+
+.btn-link {
+    text-decoration: none;
+}
+
+/**** loading ****/
+div.screen-loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2147483647;
+    background-color: rgba(16, 16, 16, 0.5);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+div.screen-loading .loading-percent {
+    color: #f0f0f0;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+/**** pagination ****/
+.pagination .page-link { font-size: 1rem; }
+.pagination-arrows {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+.pagination-arrows a, .pagination-arrows span {
+     display:flex;
+     align-items: center;
+     justify-content: center;
+     padding: 15px;
+     cursor: pointer;
+}
+.pagination-arrows a, .pagination-arrows span {
+    color: gray;
+}
+.pagination-arrows a:hover, .pagination-arrows span:hover {
+    text-decoration: none;
+    color: #f95eff;
+}
+.pagination-arrows a:nth-child(1),
+.pagination-arrows a:nth-child(5),
+.pagination-arrows span:nth-child(1),
+.pagination-arrows span:nth-child(5) {
+  background: lightgray;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border-width: 1px;
+  border-color: gray;
+}
+.pagination-sm .page-link { font-size: 1rem; }

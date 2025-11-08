@@ -398,28 +398,6 @@ main {
     justify-content: center;
     align-items: center;
 }
-.main-mobile-menu {
-    position: fixed;
-    height: 100%;
-    width: 310px;
-    transform: translate3d(-100%,0,0);
-    z-index: 100;
-    transition: all 0.6s ease-in-out;
-    background: #1f345e;
-}
-.main-mobile-menu li > a {
-    color: #fff;
-}
-.main-mobile-menu ul {
-    list-style: none;
-    margin: 0px;
-}
-.main-mobile-common-menu {
-    padding-left: 1rem;
-}
-.main-logo {
-    max-height: 64px;
-}
 /************ banner ***************/
 .main-book {
     padding: 60px 0px 60px 0px;
