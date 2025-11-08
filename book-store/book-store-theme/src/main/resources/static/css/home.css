@@ -1,0 +1,28 @@
+.main-book {
+    display: flex;
+}
+
+.main-book .description-item {
+    width: 50%;
+}
+
+.main-book .image-item {
+    width: 50%;
+    display: flex;
+    justify-content: end;
+}
+
+@media (max-width: 767.98px) {
+    .main-book {
+        flex-direction: column;
+    }
+
+    .main-book .description-item {
+        width: 100%;
+    }
+
+    .main-book .image-item {
+        width: 100%;
+        justify-content: ceter;
+    }
+}

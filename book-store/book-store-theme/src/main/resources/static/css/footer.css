@@ -1,0 +1,26 @@
+.footer {
+    padding: 60px 0px 60px 0px;
+}
+
+.footer ul {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+
+.footer .copyright {
+    text-align: center;
+}
+
+.footer .footer-menu {
+    display: flex;
+    justify-content: end;
+    gap: 16px;
+}
+
+@media (max-width: 767.98px) {
+    .footer .footer-menu {
+        padding-top: 20px;
+        justify-content: space-between;
+    }
+}

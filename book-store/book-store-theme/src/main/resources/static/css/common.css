@@ -36,6 +36,13 @@ img {
     text-decoration: none;
 }
 
+/**** avatar ****/
+.small-avatar {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+}
+
 /**** loading ****/
 div.screen-loading {
     position: fixed;
