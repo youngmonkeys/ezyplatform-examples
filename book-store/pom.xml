@@ -50,9 +50,7 @@
     <modules>
         <module>book-store-sdk</module>
         <module>book-store-theme</module>
-        <module>book-store-socket-plugin</module>
         <module>book-store-admin-plugin</module>
-        <module>book-store-socket-app</module>
         <module>book-store-web-plugin</module>
     </modules>
     <dependencies>

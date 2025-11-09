@@ -59,7 +59,8 @@ public class StoreController {
         PaginationModel<WebProductResponse> books = productControllerService
             .getWebProductPagination(
                 language,
-                DefaultProductFilter.builder().build(),
+                DefaultProductFilter.builder()
+                    .build(),
                 DefaultProductPriceFilter.builder().build(),
                 sortOrder,
                 nextPageToken,
