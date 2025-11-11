@@ -1,0 +1,59 @@
+<!--
+ ~ Copyright 2022 youngmonkeys.org
+ ~ 
+ ~ Licensed under the ezyplatform, Version 1.0.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~ 
+ ~     https://youngmonkeys.org/licenses/ezyplatform-1.0.0.txt
+ ~ 
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout"
+      layout:decorate="~{ezytheme}">
+<head>
+    <th:block th:if="${pageFragments.get('content') != null && !#strings.isEmpty(pageFragments.get('content').additionalHead)}">
+        <ezy:block ezy:utext="${pageFragments.get('content').additionalHead}" />
+    </th:block>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <th:block th:if="${pageFragments.get('content') != null && pageFragments.get('content').content != 'content'}">
+        <ezy:block ezy:utext="${pageFragments.get('content').content}" />
+    </th:block>
+    <th:block th:if="${pageFragments.get('content') == null || pageFragments.get('content').content == 'content'}">
+        <th:block th:replace="~{fragments/posts :: posts}" />
+    </th:block>
+</th:block>
+<th:block layout:fragment="scripts">
+    <th:block th:if="${pageFragments.get('content') != null && !#strings.isEmpty(pageFragments.get('content').additionalFoot)}">
+        <ezy:block ezy:utext="${pageFragments.get('content').additionalFoot}" />
+    </th:block>
+    <th:block th:if="${pageFragments.get('content') == null || #strings.isEmpty(pageFragments.get('content').additionalFoot)}">
+        <script>
+            function capitalize(s) {
+                return s[0].toUpperCase() + s.slice(1);
+            }
+
+            let currentUrl = new URL(window.location.href);
+            let filteredTitle = $("#filteredTitle");
+            currentUrl.searchParams.forEach((value, key) => {
+                if (key === "nextPageToken" || key === "")
+                filteredTitle.append(
+                    $(`<h3>${capitalize(key)}: "${value}"</h3>`)
+                );
+            });
+        </script>
+        <script th:replace="~{fragments/posts :: scripts}"/>
+    </th:block>
+</th:block>
+</body>
+</html>

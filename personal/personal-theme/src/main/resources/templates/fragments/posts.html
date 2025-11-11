@@ -1,0 +1,109 @@
+<!--
+ ~ Copyright 2022 youngmonkeys.org
+ ~ 
+ ~ Licensed under the ezyplatform, Version 1.0.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~ 
+ ~     https://youngmonkeys.org/licenses/ezyplatform-1.0.0.txt
+ ~ 
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="posts" class="container px-4 px-lg-5 posts-container">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+            <!-- Post preview-->
+            <div th:each="post, iterator : ${pagination.items}">
+                <div class="post-preview">
+                    <a th:href="${
+                        #strings.equals(post.type, 'POST')
+                            ? '/posts/' + post.slug
+                            : '/' + post.slug}">
+                        <h2 class="post-title" th:text="${post.title}"></h2>
+                    </a>
+                    <div class="post-meta">
+                        [[#{posted_by}]]
+                        <a th:if="${post.author != null}"
+                           th:href="${'/posts?author=' + post.author.uuid}"
+                           th:text="${post.author.name}">
+                            User
+                        </a>
+                        <span th:if="${post.author == null}">[[#{unknown_author}]]</span>
+                        [[${#strings.toLowerCase(#messages.msg('post_at'))}]]
+                        <span class="date-time-string" th:text="${post.createdAt}"></span>
+                        <br/>
+                        <div th:if="${#lists.size(post.terms) > 0}">
+                            [[#{categorized_as}]]
+                            <i th:each="term, iterator : ${post.terms}">
+                                <a th:href="'/posts?term=' + ${term.slug}"
+                                   th:text="${term.name}">
+                                </a><i
+                                    th:text="${iterator.index == #lists.size(post.terms) - 1 ? '' : ', '}"></i>
+                            </i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <!-- Divider-->
+                <hr class="my-4"/>
+                <!-- Pager-->
+                <div class="d-flex justify-content-between mb-4">
+                    <div th:if="${pagination.pageToken.next != null}">
+                        <a id="olderPostsButton" class="btn btn-primary text-uppercase">
+                            [[#{older_sign}]] [[#{older_posts}]]
+                        </a>
+                    </div>
+                    <div th:if="${pagination.pageToken.next == null}">
+                    </div>
+                    <div th:if="${pagination.pageToken.prev != null}">
+                        <a id="newerPostsButton" class="btn btn-primary text-uppercase">
+                            [[#{newer_posts}]] [[#{newer_sign}]]
+                        </a>
+                    </div>
+                    <div th:if="${pagination.pageToken.prev == null}">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script th:fragment="scripts" th:inline="javascript">
+/*<![CDATA[*/
+var pagination = /*[[${pagination}]]*/;
+/*]]>*/
+
+let currentHref = window.location.href;
+
+let setNextButtonHref = function (currentHref, nextToken) {
+    if (nextToken) {
+        let nextUrl = new URL(currentHref);
+        nextUrl.searchParams.set("nextPageToken", nextToken);
+        nextUrl.searchParams.delete("prevPageToken");
+        $("#olderPostsButton").attr("href", nextUrl.href);
+    }
+}
+
+let setPrevButtonHref = function (currentHref, prevToken) {
+    if (prevToken) {
+        let prevUrl = new URL(currentHref);
+        prevUrl.searchParams.set("prevPageToken", prevToken);
+        prevUrl.searchParams.delete("nextPageToken");
+        $("#newerPostsButton").attr("href", prevUrl.href);
+    }
+}
+
+setNextButtonHref(currentHref, pagination?.pageToken?.next);
+setPrevButtonHref(currentHref, pagination?.pageToken?.prev);
+</script>
+</body>
+</html>
