@@ -104,11 +104,7 @@
 </th:block>
 
 <!-- OPTIONAL SCRIPTS -->
-<script layout:fragment="import-scripts" th:remove="tag"></script>
-<script layout:fragment="pre-main-scripts" type="text/javascript"></script>
-<script layout:fragment="scripts" type="text/javascript"></script>
-<script layout:fragment="post-scripts" type="text/javascript"></script>
-
+<th:block layout:fragment="import-scripts" th:remove="tag" />
 <script th:inline="javascript">
 /*<![CDATA[*/
 var showRegister = /*[[${showRegister}]]*/ '';
@@ -117,9 +113,9 @@ var loggedIn = /*[[${loggedIn}]]*/ '';
 var userStatus = /*[[${user != null ? user.status : ''}]]*/ '';
 /*]]>*/
 </script>
-<script layout:fragment="pre-main-scripts" type="text/javascript"></script>
-<script layout:fragment="scripts" type="text/javascript"></script>
-<script layout:fragment="post-scripts" type="text/javascript"></script>
+<th:block layout:fragment="pre-main-scripts" />
+<th:block layout:fragment="scripts" />
+<th:block layout:fragment="post-scripts" />
 <script>
 $( document ).ready(function() {
 	ezyweb.formatDateStringElements();
@@ -131,17 +127,36 @@ $( document ).ready(function() {
 		ezyweb.appendLangParameterToLinks(ezyweb.lang);
     }
 });
+
+var superRedirectToLogin = ezyweb.redirectToLogin;
+ezyweb.redirectToLogin = function() {
+	if (typeof showLoginModal === 'function') {
+		showLoginModal()
+	} else {
+		superRedirectToLogin();
+	}
+}
+
+var addBookToCart = function(bookId) {
+	registerProductToShoppingCartRequest = {
+		onSuccessCallback: fetchShoppingCartProductCount
+	};
+	registerProductToShoppingCart(bookId);
+}
 </script>
 <th:block th:if="${loggedIn != true}">
-	<script th:replace="~{ezylogin/login :: scripts}"></script>
-	<script th:replace="~{ezylogin/register :: scripts}"></script>
-	<script th:replace="~{ezylogin/forgot-password :: scripts}"></script>
+	<th:block th:replace="~{ezylogin/login :: scripts}" />
+	<th:block th:replace="~{ezylogin/register :: scripts}" />
+	<th:block th:replace="~{ezylogin/forgot-password :: scripts}" />
 </th:block>
-<script th:replace="~{ezycommon/alert :: scripts}"></script>
-<script th:replace="~{ezycommon/toast :: scripts}"></script>
-<script th:replace="~{fragments/header :: scripts}"></script>
+<th:block th:replace="~{ezycommon/alert :: scripts}" />
+<th:block th:replace="~{ezycommon/toast :: scripts}" />
+<th:block th:replace="~{fragments/header :: scripts}" />
 <th:block th:if="${loggedIn == true}">
 	<th:block th:replace="~{ezyaccount/notification :: scripts}" />
+	<th:block th:replace="~{ecommerce/checkout/scripts :: common}" />
+	<th:block th:replace="~{ecommerce/checkout/scripts :: register-product}" />
+	<th:block th:replace="~{ecommerce/shopping-cart/scripts :: product-count}" />
 </th:block>
 <th:block th:if="${commonFragments.get('header') != null && !#strings.isEmpty(commonFragments.get('header').additionalFoot)}">
 	<ezy:block ezy:utext="${commonFragments.get('header').additionalFoot}" />
@@ -152,5 +167,12 @@ $( document ).ready(function() {
 <th:block th:if="${commonFragments.get('footer') != null && !#strings.isEmpty(commonFragments.get('footer').additionalFoot)}">
 	<ezy:block ezy:utext="${commonFragments.get('footer').additionalFoot}" />
 </th:block>
+<script>
+$(document).ready(function () {
+	if (loggedIn) {
+		fetchShoppingCartProductCount();
+	}
+});
+</script>
 </body>
 </html>

@@ -4,9 +4,6 @@
       xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{ezytheme}">
-<head>
-    <link rel="stylesheet" ezy:vhref="/css/general.css">
-</head>
 <body>
 <div layout:fragment="content" class="container book-details">
     <div>
@@ -27,10 +24,12 @@
         </div>
         <div>
             <div>
-                <button type="button" class="btn btn-outline-primary">
+                <button type="button" class="btn btn-outline-primary"
+                        th:attr="onclick=|addBookToCart(${book.id})|">
                     [[#{add_to_cart}]]
                 </button>
-                <button type="button" class="btn btn-primary">
+                <button type="button" class="btn btn-primary"
+                        th:attr="onclick=|registerProductToShoppingCart(${book.id})|">
                     [[#{buy_now}]]
                 </button>
             </div>
@@ -38,7 +37,6 @@
     </div>
 </div>
 <script layout:fragment="scripts" th:inline="javascript">
-
 </script>
 </body>
 </html>
