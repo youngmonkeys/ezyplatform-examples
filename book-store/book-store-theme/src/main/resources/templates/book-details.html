@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{ezytheme}">
+<head>
+    <link rel="stylesheet" ezy:vhref="/css/general.css">
+</head>
+<body>
+<div layout:fragment="content" class="container book-details">
+    <div>
+        <div>
+            <div>
+                <img th:if="${book.bannerImage != null}"
+                     th:src="${book.bannerImage.getUrlOrNull()}">
+            </div>
+        </div>
+        <div>
+            <div>
+                <h3>[[${book_name}]]</h3>
+            </div>
+            <div>
+                <h3>[[#{description}]]</h3>
+                <div th:utext="${book.description}"></div>
+            </div>
+        </div>
+        <div>
+            <div>
+                <button type="button" class="btn btn-outline-primary">
+                    [[#{add_to_cart}]]
+                </button>
+                <button type="button" class="btn btn-primary">
+                    [[#{buy_now}]]
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script layout:fragment="scripts" th:inline="javascript">
+
+</script>
+</body>
+</html>

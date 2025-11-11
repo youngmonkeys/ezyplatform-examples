@@ -7,12 +7,15 @@ import com.tvd12.ezyhttp.server.core.annotation.RequestParam;
 import com.tvd12.ezyhttp.server.core.view.View;
 import lombok.Setter;
 import org.youngmonkeys.bookstore.constant.BookStoreProductCategoryType;
+import org.youngmonkeys.bookstore.constant.BookStoreProductType;
+import org.youngmonkeys.bookstore.web.controller.service.WebBookControllerService;
+import org.youngmonkeys.bookstore.web.response.WebBookDetailsResponse;
 import org.youngmonkeys.ecommerce.entity.ProductCategoryStatus;
+import org.youngmonkeys.ecommerce.entity.ProductStatus;
 import org.youngmonkeys.ecommerce.model.ProductCategoryModel;
 import org.youngmonkeys.ecommerce.model.ProductCurrencyModel;
 import org.youngmonkeys.ecommerce.pagination.DefaultProductFilter;
 import org.youngmonkeys.ecommerce.pagination.DefaultProductPriceFilter;
-import org.youngmonkeys.ecommerce.response.ProductResponse;
 import org.youngmonkeys.ecommerce.web.controller.service.WebProductCategoryControllerService;
 import org.youngmonkeys.ecommerce.web.controller.service.WebProductControllerService;
 import org.youngmonkeys.ecommerce.web.response.WebProductResponse;
@@ -28,7 +31,10 @@ import java.util.Collections;
 public class StoreController {
 
     @EzyAutoBind
-    private WebProductCurrencyService productCurrencyService;
+    private WebBookControllerService bookControllerService;
+
+    @EzyAutoBind
+    private WebProductCurrencyService currencyService;
 
     @EzyAutoBind
     private WebLanguageControllerService languageControllerService;
@@ -54,39 +60,36 @@ public class StoreController {
     ) {
         String language = languageControllerService
             .getLanguageCodeOrDefault(request);
-        ProductCurrencyModel defaultCurrency = productCurrencyService
+        ProductCurrencyModel currency = currencyService
             .getDefaultCurrency();
         PaginationModel<WebProductResponse> books = productControllerService
             .getWebProductPagination(
                 language,
                 DefaultProductFilter.builder()
+                    .productType(BookStoreProductType.BOOK.toString())
+                    .status(ProductStatus.PUBLISHED.toString())
                     .build(),
-                DefaultProductPriceFilter.builder().build(),
+                DefaultProductPriceFilter.builder()
+                    .productType(BookStoreProductType.BOOK.toString())
+                    .productStatus(ProductStatus.PUBLISHED.toString())
+                    .build(),
                 sortOrder,
                 nextPageToken,
                 prevPageToken,
                 lastPage,
                 limit,
-                defaultCurrency
+                currency
         );
-        return View
-            .builder()
-            .template("store")
+        return newStoreViewBuilder(books, currency.getId())
             .addVariable("pageTitle", "store")
-            .addVariable("books", books)
-            .addVariable("currencyId", defaultCurrency.getId())
-            .addVariable("categories",
-                productCategoryControllerService.getProductCategoryMenusByTypeAndStatuses(
-                    BookStoreProductCategoryType.BOOK.toString(),
-                    Collections.singletonList(ProductCategoryStatus.SHOW.toString())
-                ))
             .build();
     }
 
-    @DoGet("/book-categories/{categoryName}")
-    public View categoryGet(
+    @DoGet("store/books/categories/{id}")
+    public View storeBooksCategoriesIdCat(
         HttpServletRequest request,
-        @PathVariable("categoryName") String categoryName,
+        @PathVariable long categoryId,
+        @RequestParam("currencyId") long currencyId,
         @RequestParam(value = "sortOrder") String sortOrder,
         @RequestParam(value = "nextPageToken") String nextPageToken,
         @RequestParam(value = "prevPageToken") String prevPageToken,
@@ -94,12 +97,11 @@ public class StoreController {
         @RequestParam(value = "limit", defaultValue = "12") int limit
     ) {
         ProductCategoryModel category = productCategoryValidator
-            .validateCategoryName(categoryName);
+            .validateCategoryId(categoryId);
         String language = languageControllerService
             .getLanguageCodeOrDefault(request);
-        ProductCurrencyModel defaultCurrency = productCurrencyService
-            .getDefaultCurrency();
-        long categoryId = category.getId();
+        ProductCurrencyModel currency = currencyService
+            .getCurrencyByIdOrDefault(currencyId);
         PaginationModel<WebProductResponse> books = productControllerService
             .getWebProductPagination(
                 language,
@@ -114,32 +116,46 @@ public class StoreController {
                 prevPageToken,
                 lastPage,
                 limit,
-                defaultCurrency
+                currency
         );
-        return View
-            .builder()
-            .template("store")
-            .addVariable("pageTitle", categoryName)
-            .addVariable("books", books)
-            .addVariable("categories",
-                productCategoryControllerService.getProductCategoryMenusByTypeAndStatuses(
-                    BookStoreProductCategoryType.BOOK.toString(),
-                    Collections.singletonList(ProductCategoryStatus.SHOW.toString()))
-            )
-            .addVariable("currencyId", defaultCurrency.getId())
+        return newStoreViewBuilder(books, currencyId)
+            .addVariable("pageTitle", category.getDisplayName())
             .build();
     }
 
-    @DoGet("/api/v1/books/{bookId}")
-    public ProductResponse getProductById(
-        @PathVariable("bookId") long bookId,
+    @DoGet("/store/books/{bookId}")
+    public View storeBooksBookIdGet(
+        @PathVariable long bookId,
         @RequestParam("currencyId") long currencyId
     ) {
-        ProductCurrencyModel currency = productCurrencyService
+        ProductCurrencyModel currency = currencyService
             .getCurrencyByIdOrDefault(currencyId);
-        return productControllerService.getProductById(
-            bookId,
-            currency
-        );
+        WebBookDetailsResponse book = bookControllerService
+            .getBookDetailsById(bookId);
+        return View.builder()
+            .template("book-details")
+            .addVariable("pageTitle", book.getName())
+            .addVariable("book", book)
+            .addVariable("currencyId", currency.getId())
+            .build();
+    }
+
+    private View.Builder newStoreViewBuilder(
+        PaginationModel<WebProductResponse> books,
+        long currencyId
+    ) {
+        return View.builder()
+            .template("store")
+            .addVariable("currencyId", currencyId)
+            .addVariable("books", books)
+            .addVariable("categories",
+                productCategoryControllerService
+                    .getProductCategoryMenusByTypeAndStatuses(
+                        BookStoreProductCategoryType.BOOK.toString(),
+                        Collections.singletonList(
+                            ProductCategoryStatus.SHOW.toString()
+                        )
+                    )
+            );
     }
 }

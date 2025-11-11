@@ -1,8 +1,9 @@
-package org.youngmonkeys.bookstore.web.controller.service;
+package org.youngmonkeys.bookstore.web.controller.decorator;
 
 import com.tvd12.ezyfox.bean.annotation.EzySingleton;
 import lombok.AllArgsConstructor;
 import org.youngmonkeys.bookstore.web.converter.WebBookStoreModelToResponseConverter;
+import org.youngmonkeys.bookstore.web.response.WebBookDetailsResponse;
 import org.youngmonkeys.bookstore.web.response.WebBookResponse;
 import org.youngmonkeys.ecommerce.model.ProductBookModel;
 import org.youngmonkeys.ecommerce.model.ProductModel;
@@ -14,6 +15,7 @@ import org.youngmonkeys.ezyplatform.model.MediaNameModel;
 import org.youngmonkeys.ezyplatform.rx.Reactive;
 import org.youngmonkeys.ezyplatform.web.service.WebMediaService;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -80,6 +82,46 @@ public class WebBookModelDecorator {
                             ),
                             PostModel.builder().build()
                         )
+                    )
+                );
+            });
+    }
+
+    public WebBookDetailsResponse decorateToBookResponse(
+        ProductModel model
+    ) {
+        long productId = model.getId();
+        long bannerId = model.getBannerImageId();
+        Set<Long> mediaIds = new HashSet<>();
+        if (bannerId > ZERO_LONG) {
+            mediaIds.add(bannerId);
+        }
+        long descriptionPostId = productDescriptionService
+            .getProductDescriptionPostIdById(productId);
+        return Reactive.multiple()
+            .register("book", () ->
+                productBookService.getProductBookById(productId)
+            )
+            .register("mediaById", () ->
+                mediaService.getMediaNameMapByIds(mediaIds)
+            )
+            .register("description", () ->
+                postService.getPostById(
+                    descriptionPostId
+                )
+            )
+            .blockingGet(map -> {
+                Map<Long, MediaNameModel> mediaById = map.get("mediaById");
+                return modelToResponseConverter.toBookDetailsResponse(
+                    model,
+                         map.get(
+                        "bookById",
+                        ProductBookModel.builder().build()
+                    ),
+                    mediaById.get(bannerId),
+                        map.get(
+                        "description",
+                        PostModel.builder().build()
                     )
                 );
             });
