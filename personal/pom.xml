@@ -30,9 +30,7 @@
     <modules>
         <module>personal-sdk</module>
         <module>personal-theme</module>
-        <module>personal-socket-plugin</module>
         <module>personal-admin-plugin</module>
-        <module>personal-socket-app</module>
         <module>personal-web-plugin</module>
     </modules>
 
