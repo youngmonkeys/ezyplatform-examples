@@ -20,5 +20,5 @@ import com.tvd12.ezyhttp.server.core.annotation.ExceptionHandler;
 import org.youngmonkeys.ezyplatform.web.controller.WebGlobalExceptionHandler;
 
 @ExceptionHandler
-public class BookStoreGlobalExceptionHandler extends WebGlobalExceptionHandler {
+public class WebBookStoreGlobalExceptionHandler extends WebGlobalExceptionHandler {
 }

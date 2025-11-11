@@ -20,5 +20,5 @@ import com.tvd12.ezyfox.bean.annotation.EzySingleton;
 import org.youngmonkeys.ezyplatform.web.controller.WebGlobalErrorHandler;
 
 @EzySingleton
-public class BookStoreGlobalErrorHandler extends WebGlobalErrorHandler {
+public class WebBookStoreGlobalErrorHandler extends WebGlobalErrorHandler {
 }

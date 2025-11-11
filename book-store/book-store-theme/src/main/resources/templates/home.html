@@ -18,23 +18,21 @@
 <html
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:th="http://www.thymeleaf.org"
-        xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout"
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         layout:decorate="~{ezytheme}">
 <body>
 <div layout:fragment="content">
     <div class="container">
-        <div class="main-book">
+        <div th:each="topBook : ${topBooks}" class="main-book">
             <div class="description-item">
                 <h1 class="display-2 text-dark">
-                    Programming principles
+                    [[${topBook.name}]]
                 </h1>
-                <p class="lead">
-                    Nguyên tắc ra những quy định, chuẩn mực hoặc các công thức hay kết luận là những điều cơ bản phải tuân theo. Nó định nghĩa tổng quát. Trong lập trình, nguyên tắc là những chỉ dẫn hay quy chuẩn cơ bản để khuyến khích các lập trình viên trong một nhóm tuân theo.
-                </p>
+                <div class="lead" th:utext="${topBook.shortedDescription}"></div>
             </div>
             <div class="image-item">
-                <img ezy:vsrc="/images/book-programming-principles.jpg">
+                <img th:if="${topBook.bannerImage != null}"
+                     th:src="${topBook.bannerImage.getUrlOrNull()}">
             </div>
         </div>
     </div>

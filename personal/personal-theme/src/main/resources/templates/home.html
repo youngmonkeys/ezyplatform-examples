@@ -40,12 +40,15 @@
         <div class="container">
             <div class="blog">
                 <h2 class="h2">Latest Blog Post</h2>
-                <div class="blog-card-group">
+                <div class="blog-card-group" id="blogListBody">
                     <th:block th:each="blog : ${pagination.items}">
                         <th:block th:replace="~{fragments/blog-item :: content(blog=${blog})}"></th:block>
                     </th:block>
                 </div>
-                <button class="btn load-more">Load More</button>
+                <button type="button" class="btn load-more"
+                        onclick="fetchBlogList('next')">
+                    [[#{load_more}]]
+                </button>
             </div>
             <!--
               - ASIDE
@@ -148,6 +151,8 @@
 </div>
 <script layout:fragment="scripts" th:inline="javascript">
 /*<![CDATA[*/
+var lastBlogPageToken = {};
+lastBlogPageToken.next = /*[[${pagination.pageToken.next}]]*/ '';
 ezyweb.messages.subscribe_successfully = /*[[#{subscribe_successfully}]]*/;
 /*]]>*/
 
@@ -170,6 +175,95 @@ var onSubscribeClick = function() {
         ezyweb.processGetApiErrors(e);
     });
 }
+
+//================ blog list =============
+var fetchBlogList = (action) => {
+    const params = new URLSearchParams({ limit: 12 });
+    if (action === 'next') {
+        if (lastBlogPageToken.next) {
+            params.append('nextPageToken', lastBlogPageToken.next);
+        } else {
+            return;
+        }
+    }
+    $.ajax({
+        url: `/api/v1/blogs?${params.toString()}`,
+        type: 'GET',
+        dataType: 'json'
+    })
+    .done((data) => {
+        lastBlogPageToken = data.pageToken;
+        const html = buildBlogListBodyHtml(data.items || []);
+        if (action === 'next') {
+            $('#blogListBody').append(html);
+        } else {
+            $('#blogListBody').html(html);
+        }
+        if (!data?.continuation.hasNext) {
+            $('#nextButtonContainer').remove();
+        }
+    })
+    .fail((e) => {
+        ezyweb.processGetApiErrors(e);
+    });
+};
+
+const buildBlogListBodyHtml = (blogList = []) => {
+    let html = '';
+    blogList.forEach((blog) => {
+        html += buildBlogListItemHtml(blog);
+    });
+    return html;
+};
+
+const buildBlogListItemHtml = (blog) => {
+    const authorName = blog.author?.name || 'Author';
+    const readingMinutes = blog.readingMinutes ?? 3;
+
+    return `
+        <div class="blog-card">
+            <div class="blog-card-banner">
+                ${blog.featuredImage ? `
+                    <img src="${ezyweb.extractMediaUrl(blog.featuredImage)}"
+                         alt="${blog.featuredImage.originalName || ''}"
+                         width="250"
+                         class="blog-banner-img">
+                ` : ''}
+            </div>
+            <div class="blog-content-wrapper">
+                <button class="blog-topic text-tiny">
+                    ${blog.category?.name || ''}
+                </button>
+                <h3>
+                    <a href="/blog/${blog.slug}" class="h3">
+                        ${blog.title || ''}
+                    </a>
+                </h3>
+                <div class="blog-text">
+                    ${blog.shortedContent || ''}
+                </div>
+                <div class="wrapper-flex">
+                    <div class="profile-wrapper">
+                        <img src="/images/author.png" alt="${authorName}" width="50">
+                    </div>
+                    <div class="wrapper">
+                        <a href="/author/${blog.author?.uuid || '#'}" class="h4">
+                            ${authorName}
+                        </a>
+                        <p class="text-sm">
+                            <time class="date-time-minute-string">
+                                ${ezyweb.formatTimeStamp(blog.publishedAt)}
+                            </time>
+                            <span class="separator"></span>
+                            <ion-icon name="time-outline"></ion-icon>
+                            <time datetime="PT${readingMinutes}M">${readingMinutes} min</time>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+};
 </script>
 </body>
 </html>
