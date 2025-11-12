@@ -6,6 +6,18 @@
     width: 50%;
 }
 
+.main-book .description-item .lead {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    overflow: hidden;
+}
+
+.main-book .description-item .author {
+    margin-top: 12px;
+    font-size: 2rem;
+}
+
 .main-book .image-item {
     width: 50%;
     display: flex;

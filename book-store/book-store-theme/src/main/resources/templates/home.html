@@ -22,6 +22,7 @@
         layout:decorate="~{ezytheme}">
 <body>
 <div layout:fragment="content">
+    <div class="common-spacing-1"></div>
     <div class="container">
         <div th:each="topBook : ${topBooks}" class="main-book">
             <div class="description-item">
@@ -29,6 +30,7 @@
                     [[${topBook.name}]]
                 </h1>
                 <div class="lead" th:utext="${topBook.shortedDescription}"></div>
+                <p class="author text-muted mb-0" th:text="${topBook.authorName}"></p>
             </div>
             <div class="image-item">
                 <img th:if="${topBook.bannerImage != null}"
@@ -36,7 +38,6 @@
             </div>
         </div>
     </div>
-    <div class="spacing-elements"></div>
 </div>
 </body>
 </html>
