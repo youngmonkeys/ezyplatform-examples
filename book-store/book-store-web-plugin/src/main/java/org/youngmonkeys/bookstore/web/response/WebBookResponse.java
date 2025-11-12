@@ -11,6 +11,8 @@ public class WebBookResponse {
     private String code;
     private String name;
     private String authorName;
+    private String authorUuid;
     private MediaNameModel bannerImage;
     private String shortedDescription;
+    private String publisher;
 }

@@ -24,4 +24,5 @@ import org.youngmonkeys.ezyplatform.web.controller.api.WebApiNotificationControl
 @Api
 @Authenticated
 @Controller("/api/v1")
-public class ApiBookStoreNotificationController extends WebApiNotificationController {}
+public class ApiBookStoreNotificationController
+    extends WebApiNotificationController {}

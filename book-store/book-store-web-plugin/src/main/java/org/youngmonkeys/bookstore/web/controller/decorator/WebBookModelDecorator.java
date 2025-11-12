@@ -12,8 +12,10 @@ import org.youngmonkeys.ecommerce.web.service.WebProductDescriptionService;
 import org.youngmonkeys.ezyarticle.sdk.model.PostModel;
 import org.youngmonkeys.ezyarticle.web.service.WebPostService;
 import org.youngmonkeys.ezyplatform.model.MediaNameModel;
+import org.youngmonkeys.ezyplatform.model.UserModel;
 import org.youngmonkeys.ezyplatform.rx.Reactive;
 import org.youngmonkeys.ezyplatform.web.service.WebMediaService;
+import org.youngmonkeys.ezyplatform.web.service.WebUserService;
 
 import java.util.HashSet;
 import java.util.List;
@@ -32,6 +34,7 @@ public class WebBookModelDecorator {
     private final WebPostService postService;
     private final WebProductBookService productBookService;
     private final WebProductDescriptionService productDescriptionService;
+    private final WebUserService userService;
     private final WebBookStoreModelToResponseConverter
         modelToResponseConverter;
 
@@ -42,6 +45,14 @@ public class WebBookModelDecorator {
             models,
             ProductModel::getId
         );
+        Map<Long, ProductBookModel> bookById = productBookService
+            .getProductBookMapByIds(productIds);
+        Set<Long> userIds = bookById
+            .values()
+            .stream()
+            .map(ProductBookModel::getAuthorUserId)
+            .filter(it -> it > 0)
+            .collect(Collectors.toSet());
         Set<Long> mediaIds = models
             .stream()
             .map(ProductModel::getBannerImageId)
@@ -52,8 +63,8 @@ public class WebBookModelDecorator {
                 productIds
             );
         return Reactive.multiple()
-            .register("bookById", () ->
-                productBookService.getProductBookMapByIds(productIds)
+            .register("userById", () ->
+                userService.getUserMapByIds(userIds)
             )
             .register("mediaById", () ->
                 mediaService.getMediaNameMapByIds(mediaIds)
@@ -64,15 +75,20 @@ public class WebBookModelDecorator {
                 )
             )
             .blockingGet(map -> {
-                Map<Long, ProductBookModel> bookById = map.get("bookById");
+                Map<Long, UserModel> userById = map.get("userById");
                 Map<Long, MediaNameModel> mediaById = map.get("mediaById");
                 Map<Long, PostModel> descriptionById = map.get("descriptionById");
-                return newArrayList(models, it ->
-                    modelToResponseConverter.toBookResponse(
+                return newArrayList(models, it -> {
+                    ProductBookModel book = bookById.getOrDefault(
+                        it.getId(),
+                        ProductBookModel.builder().build()
+                    );
+                    return modelToResponseConverter.toBookResponse(
                         it,
-                        bookById.getOrDefault(
-                            it.getId(),
-                            ProductBookModel.builder().build()
+                        book,
+                        userById.getOrDefault(
+                            book.getAuthorUserId(),
+                            UserModel.builder().build()
                         ),
                         mediaById.get(it.getBannerImageId()),
                         descriptionById.getOrDefault(
@@ -82,8 +98,8 @@ public class WebBookModelDecorator {
                             ),
                             PostModel.builder().build()
                         )
-                    )
-                );
+                    );
+                });
             });
     }
 

@@ -9,6 +9,7 @@ import org.youngmonkeys.ecommerce.model.ProductModel;
 import org.youngmonkeys.ezyarticle.sdk.model.PostModel;
 import org.youngmonkeys.ezyarticle.web.manager.WebPostDecoratorManager;
 import org.youngmonkeys.ezyplatform.model.MediaNameModel;
+import org.youngmonkeys.ezyplatform.model.UserModel;
 
 @EzySingleton
 @AllArgsConstructor
@@ -19,15 +20,17 @@ public class WebBookStoreModelToResponseConverter {
     public WebBookResponse toBookResponse(
         ProductModel model,
         ProductBookModel book,
+        UserModel author,
         MediaNameModel bannerImage,
         PostModel descriptionPost
     ) {
         return WebBookResponse.builder()
             .id(model.getId())
             .name(model.getProductName())
-            .authorName(book.getAuthor())
+            .authorName(author.getDisplayName())
             .bannerImage(bannerImage)
             .shortedDescription(descriptionPost.getShortedContent())
+            .publisher(book.getPublisher())
             .build();
     }
 
