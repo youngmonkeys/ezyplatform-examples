@@ -6,12 +6,16 @@ import org.youngmonkeys.bookstore.web.converter.WebBookStoreModelToResponseConve
 import org.youngmonkeys.bookstore.web.response.WebBookDetailsResponse;
 import org.youngmonkeys.bookstore.web.response.WebBookResponse;
 import org.youngmonkeys.ecommerce.model.ProductBookModel;
+import org.youngmonkeys.ecommerce.model.ProductCurrencyModel;
 import org.youngmonkeys.ecommerce.model.ProductModel;
+import org.youngmonkeys.ecommerce.model.ProductPriceModel;
 import org.youngmonkeys.ecommerce.web.service.WebProductBookService;
 import org.youngmonkeys.ecommerce.web.service.WebProductDescriptionService;
+import org.youngmonkeys.ecommerce.web.service.WebProductPriceService;
 import org.youngmonkeys.ezyarticle.sdk.model.PostModel;
 import org.youngmonkeys.ezyarticle.web.service.WebPostService;
 import org.youngmonkeys.ezyplatform.model.MediaNameModel;
+import org.youngmonkeys.ezyplatform.model.PaginationModel;
 import org.youngmonkeys.ezyplatform.model.UserModel;
 import org.youngmonkeys.ezyplatform.rx.Reactive;
 import org.youngmonkeys.ezyplatform.web.service.WebMediaService;
@@ -24,6 +28,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.tvd12.ezyfox.io.EzyLists.newArrayList;
+import static com.tvd12.ezyfox.io.EzyMaps.newHashMap;
 import static org.youngmonkeys.ezyplatform.constant.CommonConstants.ZERO_LONG;
 
 @EzySingleton
@@ -34,12 +39,15 @@ public class WebBookModelDecorator {
     private final WebPostService postService;
     private final WebProductBookService productBookService;
     private final WebProductDescriptionService productDescriptionService;
+    private final WebProductPriceService productPriceService;
     private final WebUserService userService;
     private final WebBookStoreModelToResponseConverter
         modelToResponseConverter;
 
-    public List<WebBookResponse> decorateToBookResponse(
-        List<ProductModel> models
+    @SuppressWarnings("MethodLength")
+    public List<WebBookResponse> decorateToBookResponses(
+        List<ProductModel> models,
+        ProductCurrencyModel currency
     ) {
         List<Long> productIds = newArrayList(
             models,
@@ -74,10 +82,18 @@ public class WebBookModelDecorator {
                     descriptionPostIdByProductId.values()
                 )
             )
+            .register("priceByProductId", () ->
+                productPriceService.getProductPriceMap(
+                    productIds,
+                    currency.getId()
+                )
+            )
             .blockingGet(map -> {
                 Map<Long, UserModel> userById = map.get("userById");
                 Map<Long, MediaNameModel> mediaById = map.get("mediaById");
                 Map<Long, PostModel> descriptionById = map.get("descriptionById");
+                Map<Long, ProductPriceModel> priceByProductId = map
+                    .get("priceByProductId");
                 return newArrayList(models, it -> {
                     ProductBookModel book = bookById.getOrDefault(
                         it.getId(),
@@ -97,14 +113,20 @@ public class WebBookModelDecorator {
                                 ZERO_LONG
                             ),
                             PostModel.builder().build()
-                        )
+                        ),
+                        priceByProductId.getOrDefault(
+                            it.getId(),
+                            ProductPriceModel.ZERO
+                        ),
+                        currency
                     );
                 });
             });
     }
 
-    public WebBookDetailsResponse decorateToBookResponse(
-        ProductModel model
+    public WebBookDetailsResponse decorateToBookDetailsResponse(
+        ProductModel model,
+        ProductCurrencyModel currency
     ) {
         long productId = model.getId();
         long bannerId = model.getBannerImageId();
@@ -122,8 +144,12 @@ public class WebBookModelDecorator {
                 mediaService.getMediaNameMapByIds(mediaIds)
             )
             .register("description", () ->
-                postService.getPostById(
-                    descriptionPostId
+                postService.getPostById(descriptionPostId)
+            )
+            .register("productPrice", () ->
+                productPriceService.getProductPrice(
+                    productId,
+                    currency.getId()
                 )
             )
             .blockingGet(map -> {
@@ -138,8 +164,37 @@ public class WebBookModelDecorator {
                         map.get(
                         "description",
                         PostModel.builder().build()
-                    )
+                    ),
+                    map.get(
+                        "productPrice",
+                        ProductPriceModel.ZERO
+                    ),
+                    currency
                 );
             });
+    }
+
+    public Map<Long, WebBookResponse> decorateToBookResponseByIdMap(
+        List<ProductModel> models,
+        ProductCurrencyModel currency
+    ) {
+        return newHashMap(
+            decorateToBookResponses(models, currency),
+            WebBookResponse::getId
+        );
+    }
+
+    public PaginationModel<WebBookResponse> decorateToBookPaginationResponse(
+        PaginationModel<ProductModel> pagination,
+        ProductCurrencyModel currency
+    ) {
+        Map<Long, WebBookResponse> productResponseById =
+            decorateToBookResponseByIdMap(
+                pagination.getItems(),
+                currency
+            );
+        return pagination.map(
+            it -> productResponseById.get(it.getId())
+        );
     }
 }

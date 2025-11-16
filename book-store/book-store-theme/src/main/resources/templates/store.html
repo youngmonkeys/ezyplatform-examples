@@ -40,31 +40,38 @@
         </div>
         <div class="col-lg-9 col-md-8">
             <div class="books">
-                <a th:each="book : ${books.items}" class="book"
-                   th:href="${'/store/books/' + book.id}">
-                    <div class="book-image">
-                        <img src="/images/book-programming-principles.jpg" alt="book image">
-                    </div>
+                <div th:each="book : ${books.items}" class="book">
+                    <a class="book-image"
+                       th:href="${'/store/books/' + book.id}">
+                        <img th:if="${book.bannerImage != null}"
+                             th:src="${book.bannerImage.getUrlOrNull()}"
+                             alt="book image">
+                    </a>
                     <div class="book-content">
                         <div th:if="${book.discountPercent > 0}" class="book-tags">
                             <span class="discount-percent"
                                   th:text="${'- ' + book.discountPercent + ' %'}"></span>
                         </div>
-                        <p class="book-title" th:text="${book.name}"></p>
+                        <a th:href="${'/store/books/' + book.id}"
+                           class="book-title">
+                            [[${book.name}]]
+                        </a>
                         <div class="book-author">
                             <span class="author-title">[[#{author}]]</span>
-                            <span class="author-name">[[#{author}]]</span>
+                            <a th:href="${'/authors/' + book.authorUuid}" class="author-name">
+                                [[${book.authorName}]]
+                            </a>
                         </div>
                         <div class="prices">
-                            <span>
+                            <span class="price">
                                 [[${book.formattedPriceIncludeSymbol}]]
                             </span>
-                            <span>
+                            <span class="original-price">
                                 [[${book.formattedOriginalPriceIncludeSymbol}]]
                             </span>
                         </div>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
     </div>

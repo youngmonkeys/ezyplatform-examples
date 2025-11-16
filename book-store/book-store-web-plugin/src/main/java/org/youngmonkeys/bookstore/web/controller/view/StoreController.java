@@ -10,6 +10,7 @@ import org.youngmonkeys.bookstore.constant.BookStoreProductCategoryType;
 import org.youngmonkeys.bookstore.constant.BookStoreProductType;
 import org.youngmonkeys.bookstore.web.controller.service.WebBookControllerService;
 import org.youngmonkeys.bookstore.web.response.WebBookDetailsResponse;
+import org.youngmonkeys.bookstore.web.response.WebBookResponse;
 import org.youngmonkeys.ecommerce.entity.ProductCategoryStatus;
 import org.youngmonkeys.ecommerce.entity.ProductStatus;
 import org.youngmonkeys.ecommerce.model.ProductCategoryModel;
@@ -17,8 +18,6 @@ import org.youngmonkeys.ecommerce.model.ProductCurrencyModel;
 import org.youngmonkeys.ecommerce.pagination.DefaultProductFilter;
 import org.youngmonkeys.ecommerce.pagination.DefaultProductPriceFilter;
 import org.youngmonkeys.ecommerce.web.controller.service.WebProductCategoryControllerService;
-import org.youngmonkeys.ecommerce.web.controller.service.WebProductControllerService;
-import org.youngmonkeys.ecommerce.web.response.WebProductResponse;
 import org.youngmonkeys.ecommerce.web.service.WebProductCurrencyService;
 import org.youngmonkeys.ecommerce.web.validator.WebProductCategoryValidator;
 import org.youngmonkeys.ezyplatform.model.PaginationModel;
@@ -40,9 +39,6 @@ public class StoreController {
     private WebLanguageControllerService languageControllerService;
 
     @EzyAutoBind
-    private WebProductControllerService productControllerService;
-
-    @EzyAutoBind
     private WebProductCategoryControllerService productCategoryControllerService;
 
     @EzyAutoBind
@@ -58,13 +54,10 @@ public class StoreController {
         @RequestParam(value = "lastPage") boolean lastPage,
         @RequestParam(value = "limit", defaultValue = "12") int limit
     ) {
-        String language = languageControllerService
-            .getLanguageCodeOrDefault(request);
         ProductCurrencyModel currency = currencyService
             .getDefaultCurrency();
-        PaginationModel<WebProductResponse> books = productControllerService
-            .getWebProductPagination(
-                language,
+        PaginationModel<WebBookResponse> books = bookControllerService
+            .getBookPagination(
                 DefaultProductFilter.builder()
                     .productType(BookStoreProductType.BOOK.toString())
                     .status(ProductStatus.PUBLISHED.toString())
@@ -102,9 +95,8 @@ public class StoreController {
             .getLanguageCodeOrDefault(request);
         ProductCurrencyModel currency = currencyService
             .getCurrencyByIdOrDefault(currencyId);
-        PaginationModel<WebProductResponse> books = productControllerService
-            .getWebProductPagination(
-                language,
+        PaginationModel<WebBookResponse> books = bookControllerService
+            .getBookPagination(
                 DefaultProductFilter.builder()
                     .inclusiveCategoryId(categoryId)
                     .build(),
@@ -131,7 +123,7 @@ public class StoreController {
         ProductCurrencyModel currency = currencyService
             .getCurrencyByIdOrDefault(currencyId);
         WebBookDetailsResponse book = bookControllerService
-            .getBookDetailsById(bookId);
+            .getBookDetailsById(bookId, currency);
         return View.builder()
             .template("book-details")
             .addVariable("pageTitle", book.getName())
@@ -141,7 +133,7 @@ public class StoreController {
     }
 
     private View.Builder newStoreViewBuilder(
-        PaginationModel<WebProductResponse> books,
+        PaginationModel<WebBookResponse> books,
         long currencyId
     ) {
         return View.builder()

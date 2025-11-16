@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import org.youngmonkeys.ezyplatform.model.MediaNameModel;
 
+import java.math.BigDecimal;
+
 @Getter
 @Builder
 public class WebBookDetailsResponse {
@@ -13,4 +15,11 @@ public class WebBookDetailsResponse {
     private String authorName;
     private MediaNameModel bannerImage;
     private String description;
+    private String originalPrice;
+    private String formattedOriginalPriceIncludeIsoCode;
+    private String formattedOriginalPriceIncludeSymbol;
+    private String price;
+    private String formattedPriceIncludeIsoCode;
+    private String formattedPriceIncludeSymbol;
+    private BigDecimal discountPercent;
 }
