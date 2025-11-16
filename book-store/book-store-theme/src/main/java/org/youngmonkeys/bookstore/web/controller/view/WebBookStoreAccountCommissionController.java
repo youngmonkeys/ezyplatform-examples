@@ -14,15 +14,20 @@
  * limitations under the License.
 */
 
-package org.youngmonkeys.bookstore.web.controller.api;
+package org.youngmonkeys.bookstore.web.controller.view;
 
-import com.tvd12.ezyhttp.server.core.annotation.Api;
 import com.tvd12.ezyhttp.server.core.annotation.Authenticated;
 import com.tvd12.ezyhttp.server.core.annotation.Controller;
-import org.youngmonkeys.ezyplatform.web.controller.api.WebApiNotificationController;
+import lombok.AllArgsConstructor;
+import org.youngmonkeys.ecommerce.web.controller.view.WebCommissionController;
 
-@Api
 @Authenticated
-@Controller("/api/v1")
-public class ApiBookStoreNotificationController
-    extends WebApiNotificationController {}
+@Controller("/account")
+@AllArgsConstructor
+public class WebBookStoreAccountCommissionController extends WebCommissionController {
+
+    @Override
+    protected String getCommissionTemplate() {
+        return "account/commission";
+    }
+}

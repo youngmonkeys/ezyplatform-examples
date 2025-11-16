@@ -1,0 +1,245 @@
+<!--
+ ~ Copyright 2022 youngmonkeys.org
+ ~ 
+ ~ Licensed under the ezyplatform, Version 1.0.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~ 
+ ~     https://youngmonkeys.org/licenses/ezyplatform-1.0.0.txt
+ ~ 
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{ezytheme}">
+<body>
+<div layout:fragment="content" class="row mt-3 ms-md-5 me-md-5">
+    <div class="col-lg-2 col-md-0">
+        <aside th:replace="~{account/sidebar :: account-sidebar}"></aside>
+    </div>
+    <div class="col-lg-7 col-md-12">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-lg-8 col-md-12 d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <h3 class="mb-0">[[#{collection}]]</h3>
+                        </div>
+                        <div th:replace="~{account/menu-button :: account-menu-button}"></div>
+                    </div>
+                    <div class="col-md-4 col-sm-0">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 spacing-title-content"></div>
+            <div class="col-12">
+                <div class="row" id="projectListBody"></div>
+            </div>
+            <div class="col-12 text-center mt-4 pagination-arrows">
+                <span id="firstPageButton" data-bs-toggle="tooltip" th:title="#{first_page}">
+                    <i class="fas fa-chevron-left"></i>
+                </span>
+                <span id="prevPageButton" data-bs-toggle="tooltip" th:title="#{previous_page}">
+                    <i class="fas fa-angle-double-left"></i>
+                </span>
+                <a>|</a>
+                <span id="nextPageButton" data-bs-toggle="tooltip" th:title="#{next_page}">
+                    <i class="fas fa-angle-double-right"></i>
+                </span>
+                <span id="lastPageButton" data-bs-toggle="tooltip" th:title="#{last_page}">
+                    <i class="fas fa-chevron-right"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-0 d-none d-lg-flex flex-column">
+        <div>
+            <label class="mb-0">[[#{refine_by}]]</label>
+            <hr class="mt-0 mb-4"/>
+        </div>
+        <div class="input-group">
+            <input type="search" class="form-control rounded" th:placeholder="#{search}"
+                   aria-label="Search" aria-describedby="search-addon"
+                   th:value="${projectsSearchKeyword}"
+                   oninput="onSearchProjectsKeyDown(this);"
+                   onkeydown="onSearchProjectsKeyDown(this);">
+            <a class="btn btn-outline btn-outline-primary">
+                [[#{search}]]
+            </a>
+        </div>
+    </div>
+</div>
+<script layout:fragment="scripts" th:inline="javascript">
+/*<![CDATA[*/
+var projectsSearchKeyword = /*[[${projectsSearchKeyword}]]*/;
+ezyweb.messages.author = /*[[#{author}]]*/;
+ezyweb.messages.collected_at = /*[[#{collected_at}]]*/;
+ezyweb.messages.remove = /*[[#{remove}]]*/;
+ezyweb.messages.version = /*[[#{version}]]*/;
+/*]]>*/
+
+$(document).ready(() => {
+    $('[data-bs-toggle="tooltip"]').tooltip();
+});
+
+// ================== search ===================
+var onSearchProjectsKeyDown = function(e) {
+    projectsSearchKeyword = $(e).val();
+    if(event.key === 'Enter' || !projectsSearchKeyword) {
+        fetchProjectList();
+    }
+}
+
+// ================== remove collected project ===================
+var removeCollectedProject = function(projectName) {
+    $.ajax({
+        type: "DELETE",
+        url: '/api/v1/user/collection/' + projectName,
+        data: {projectName: projectName},
+        success: function (data) {
+            fetchProjectList('current');
+        },
+        error: function (data, e) {
+            ezyweb.processUpdateApiErrors({}, data);
+        }
+    });
+}
+
+// ========== project pagination ===========
+$('#firstPageButton').click(() => {
+    fetchProjectList('first');
+});
+$('#lastPageButton').click(() => {
+    fetchProjectList('last');
+});
+$('#nextPageButton').click(() => {
+    fetchProjectList('next');
+});
+$('#prevPageButton').click(() => {
+    fetchProjectList('prev');
+});
+
+// ========== projects =============
+var lastProjectPageToken = {};
+var lastProjectQueryString;
+var fetchProjectList = function(action) {
+    var queryString = '';
+    if (action == 'current') {
+        if (lastProjectQueryString) {
+            queryString = lastProjectQueryString;
+        }
+    } else if (action == 'next') {
+        if (lastProjectPageToken.next) {
+            queryString += '&nextPageToken=' + lastProjectPageToken.next;
+        } else {
+            return;
+        }
+    } else if (action == 'prev') {
+        if (lastProjectPageToken.prev) {
+            queryString += '&prevPageToken=' + lastProjectPageToken.prev;
+        } else {
+            return;
+        }
+    } else if (action == 'last') {
+        queryString += '&lastPage=true';
+    }
+    var uri = lastProjectPageToken.next || lastProjectPageToken.prev
+        ? ''
+        : '/latest-active';
+    $.ajax({
+        url: `/api/v1/user/collection?limit=6${queryString}`,
+        type: 'GET',
+        dataType: 'json'
+    })
+    .done(function(data) {
+        lastProjectPageToken = data.pageToken;
+        lastProjectQueryString = queryString;
+        $('#projectListBody').html(
+            buildProjectListBodyHtml(data.items)
+        );
+        if (data.continuation.hasNext) {
+            $('#nextPageButton').removeClass('text-secondary');
+        } else {
+            $('#nextPageButton').addClass('text-secondary');
+        }
+        if (data.continuation.hasPrevious) {
+            $('#prevPageButton').removeClass('text-secondary');
+        } else {
+            $('#prevPageButton').addClass('text-secondary');
+        }
+        $(window).scrollTop(0);
+    })
+    .fail(function(e) {
+        ezyweb.processGetApiErrors(e);
+    });
+}
+var buildProjectListBodyHtml = function(projects) {
+    var html = '';
+    projects.forEach((project, index) => {
+        html += buildProjectListItemHtml(project, index, projects.length);
+    });
+    return html;
+}
+var buildProjectListItemHtml = function(project, index, size) {
+    var html = `
+        <div class="col-md-12 project-small ${index == size - 1 ? 'last-child' : ''}">
+            <div class="row">
+                <div class="col-md-5 d-flex">
+                    <a href="${'/market/items/' + project.name}">
+                        <img src="${project.iconImageUrl == null ? '' : project.iconImageUrl}" width="64" height="64">
+                    </a>
+                    <div class="d-flex flex-column ms-3">
+                        <label>${project.displayName}</label>
+                        <label>${project.category.displayName}</label>
+                        <div>
+                            <label>${ezyweb.messages.collected_at}: </label>
+                            <span class="date-string">${ezyweb.formatTimeStamp(project.collectedAt, 'YYYY-MM-DD')}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-md-4 mt-md-0 mt-3">
+                    <div class="d-flex flex-column">
+                <span>
+                    <label>${ezyweb.messages.author}: </label>
+                    <span>${project.author.name}</span>
+                </span>
+    `;
+    if (project.latestVersion) {
+        html += `
+                <span>
+                    <label>${ezyweb.messages.version}: </label>
+                    <span>${project.latestVersion.name}</span> • <span class="date-string">${ezyweb.formatTimeStamp(project.latestVersion.updatedAt, 'YYYY-MM-DD')}</span>
+                </span>
+        `;
+    }
+    html += `
+                        <span>${project.componentsString}</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-3 d-flex flex-column mt-md-0 mt-3">
+                    <button type="button" class="btn btn-outline btn-outline-danger p-1"
+                            onclick="removeCollectedProject('${project.name}')">
+                        ${ezyweb.messages.remove}
+                        <i class="fas fa-unlink"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    return html;
+}
+
+$(document).ready(() => {
+    fetchProjectList();
+});
+</script>
+</body>
+</html>

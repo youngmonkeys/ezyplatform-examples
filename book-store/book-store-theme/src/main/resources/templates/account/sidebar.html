@@ -1,0 +1,59 @@
+<!--
+ ~ Copyright 2022 youngmonkeys.org
+ ~ 
+ ~ Licensed under the ezyplatform, Version 1.0.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~ 
+ ~     https://youngmonkeys.org/licenses/ezyplatform-1.0.0.txt
+ ~ 
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<aside th:fragment="account-sidebar" class="account-sidebar">
+    <div class="d-none d-lg-block">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview">
+            <li class="nav-item">
+                <a class="nav-link" href="/account">
+                    <i class="nav-icon fas fa-user-circle"></i> [[#{my_profile}]]
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link d-flex justify-content-between align-items-center" href="/account/inbox">
+                    <span><i class="nav-icon fas fa-inbox"></i> [[#{inbox}]]</span>
+                    <small class="rounded text-center ps-1 pe-1 bg-warning letter-count">0</small>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link d-flex justify-content-between align-items-center" href="/account/collection">
+                    <span><i class="nav-icon fas fa-boxes"></i> [[#{collection}]]</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/account/commission">
+                  <i class="nav-icon fa-solid fa-coins"></i> [[#{your_commission}]]
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/orders">
+                    <i class="nav-icon fa-solid fa-receipt"></i> [[#{you_have_purchased}]]
+                </a>
+            </li>
+            <li th:if="${loggedIn == true}" class="nav-item">
+                <a class="nav-link" href="#" onclick="ezyweb.logout();">
+                    <i class="nav-icon fas fa-sign-out-alt"></i> [[#{logout}]]
+                </a>
+            </li>
+        </ul>
+    </div>
+</aside>
+</body>
+</html>

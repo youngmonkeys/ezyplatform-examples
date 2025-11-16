@@ -14,14 +14,12 @@
  * limitations under the License.
 */
 
-package org.youngmonkeys.bookstore.web.controller.api;
+package org.youngmonkeys.bookstore.web.controller.view;
 
-import com.tvd12.ezyhttp.server.core.annotation.Api;
 import com.tvd12.ezyhttp.server.core.annotation.Authenticated;
 import com.tvd12.ezyhttp.server.core.annotation.Controller;
-import org.youngmonkeys.ezyplatform.web.controller.api.WebApiLetterController;
+import org.youngmonkeys.ezyaccount.web.controller.view.AccountController;
 
-@Api
 @Authenticated
-@Controller("/api/v1")
-public class ApiBookStoreLetterController extends WebApiLetterController {}
+@Controller
+public class WebBookStoreAccountController extends AccountController {}

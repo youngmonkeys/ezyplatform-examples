@@ -1,0 +1,47 @@
+<!--
+ ~ Copyright 2022 youngmonkeys.org
+ ~ 
+ ~ Licensed under the ezyplatform, Version 1.0.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~ 
+ ~     https://youngmonkeys.org/licenses/ezyplatform-1.0.0.txt
+ ~ 
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{ezytheme}">
+<head>
+    <link rel="stylesheet" type="text/css" ezy:vhref="/ezyaccount/css/style.css" />
+</head>
+<body>
+<div layout:fragment="content" class="row mt-3">
+    <div class="col-md-2 col-0">
+        <aside th:replace="~{account/sidebar :: account-sidebar}"></aside>
+    </div>
+    <div class="col-md-8 col-12">
+        <div class="row">
+            <div class="col-md-12 d-flex justify-content-between align-items-center">
+                <a class="d-flex align-items-center text-secondary text-decoration-none" href="/account/inbox">
+                    <h3>[[#{inbox}]]</h3>
+                    <h5 class="ps-1"><i class="fas fa-external-link-alt"></i></h5>
+                </a>
+                <div th:replace="~{account/menu-button :: account-menu-button}"></div>
+            </div>
+            <th:block th:replace="~{ezyaccount/inbox-letter :: content}"></th:block>
+        </div>
+    </div>
+    <div class="col-md-2 col-sm-0"></div>
+</div>
+</body>
+</html>
