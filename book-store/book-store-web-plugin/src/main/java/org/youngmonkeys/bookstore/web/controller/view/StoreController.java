@@ -47,7 +47,6 @@ public class StoreController {
 
     @DoGet("/store")
     public View storeGet(
-        HttpServletRequest request,
         @RequestParam(value = "sortOrder") String sortOrder,
         @RequestParam(value = "nextPageToken") String nextPageToken,
         @RequestParam(value = "prevPageToken") String prevPageToken,
