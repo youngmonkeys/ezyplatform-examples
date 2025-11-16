@@ -72,8 +72,8 @@ public class WebBookStoreModelToResponseConverter {
         BigDecimal originalPriceValue = price.getOriginalPrice();
         String description = postDecoratorManager
             .decorateContent(
-                descriptionPost.getContent(),
-                descriptionPost.getContentType()
+                descriptionPost.getContentType(),
+                descriptionPost.getContent()
             );
         return WebBookDetailsResponse.builder()
             .id(model.getId())

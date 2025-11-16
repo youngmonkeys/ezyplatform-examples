@@ -1,0 +1,127 @@
+.book-details {
+    padding: 40px 0 60px;
+}
+
+.book-details .card-panel {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 28px 32px;
+    height: 100%;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.1);
+    border: 1px solid rgba(15, 23, 42, 0.05);
+}
+
+.book-details-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #eef2ff, #f8fafc);
+}
+
+.book-details-image img {
+    width: 100%;
+    border-radius: 18px;
+    object-fit: cover;
+    box-shadow: 0 25px 35px rgba(15, 23, 42, 0.18);
+}
+
+.book-details-content {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.book-details-header .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #2563eb;
+    margin-bottom: 8px;
+}
+
+.book-details-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.book-details-description h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 8px;
+}
+
+.book-details-description .description-body {
+    line-height: 1.7;
+    color: #1e293b;
+}
+
+.book-details-checkout {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.book-details-price .price {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.book-details-price .price-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.book-details-price .original-price {
+    font-size: 1rem;
+    color: #9ca3af;
+    text-decoration: line-through;
+}
+
+.book-details-price .discount-badge {
+    background: #fee2e2;
+    color: #dc2626;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+}
+
+.book-details-note {
+    font-size: 0.95rem;
+    color: #475569;
+    margin: 0;
+}
+
+.book-details-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.book-details-actions .btn {
+    padding: 14px;
+    font-weight: 600;
+    border-radius: 14px;
+}
+
+@media (max-width: 991.98px) {
+    .book-details .card-panel {
+        margin-bottom: 20px;
+    }
+
+    .book-details-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .book-details-actions .btn {
+        flex: 1 1 200px;
+    }
+}

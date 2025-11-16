@@ -1,37 +1,58 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{ezytheme}">
 <body>
 <div layout:fragment="content" class="container book-details">
-    <div>
-        <div>
-            <div>
+    <div class="row align-items-start">
+        <div class="col-lg-3">
+            <div class="book-details-image card-panel">
                 <img th:if="${book.bannerImage != null}"
-                     th:src="${book.bannerImage.getUrlOrNull()}">
+                     th:src="${book.bannerImage.getUrlOrNull()}"
+                     alt="book cover">
             </div>
         </div>
-        <div>
-            <div>
-                <h3>[[${book_name}]]</h3>
-            </div>
-            <div>
-                <h3>[[#{description}]]</h3>
-                <div th:utext="${book.description}"></div>
+        <div class="col-lg-5">
+            <div class="book-details-content card-panel">
+                <div class="book-details-header">
+                    <p class="eyebrow">[[#{book_details}]]</p>
+                    <h1 class="book-details-title">[[${book_name}]]</h1>
+                </div>
+                <div class="book-details-description">
+                    <h4>[[#{description}]]</h4>
+                    <div class="description-body" th:utext="${book.description}"></div>
+                </div>
             </div>
         </div>
-        <div>
-            <div>
-                <button type="button" class="btn btn-outline-primary"
-                        th:attr="onclick=|addBookToCart(${book.id})|">
-                    [[#{add_to_cart}]]
-                </button>
-                <button type="button" class="btn btn-primary"
-                        th:attr="onclick=|registerProductToShoppingCart(${book.id})|">
-                    [[#{buy_now}]]
-                </button>
+        <div class="col-lg-4">
+            <div class="book-details-checkout card-panel">
+                <div class="book-details-price">
+                    <div class="price">[[${book.formattedPriceIncludeSymbol}]]</div>
+                    <div class="price-meta">
+                        <span class="original-price"
+                              th:if="${book.discountPercent > 0}">
+                            [[${book.formattedOriginalPriceIncludeSymbol}]]
+                        </span>
+                        <span class="discount-badge"
+                              th:if="${book.discountPercent > 0}">
+                            [[${'- ' + book.discountPercent + ' %'}]]
+                        </span>
+                    </div>
+                </div>
+                <p class="book-details-note">
+                    Secure checkout · Instant access
+                </p>
+                <div class="book-details-actions">
+                    <button type="button" class="btn btn-outline-primary"
+                            th:attr="onclick=|addBookToCart(${book.id})|">
+                        [[#{add_to_cart}]]
+                    </button>
+                    <button type="button" class="btn btn-primary"
+                            th:attr="onclick=|registerProductToShoppingCart(${book.id})|">
+                        [[#{buy_now}]]
+                    </button>
+                </div>
             </div>
         </div>
     </div>
