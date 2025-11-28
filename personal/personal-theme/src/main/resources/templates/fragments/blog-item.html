@@ -41,8 +41,8 @@
                         </time>
                         <span class="separator"></span>
                         <ion-icon name="time-outline"></ion-icon>
-                        <time th:attr="datetime=${'PT 3M'}">
-                            3 [[#{minute_short}]]
+                        <time>
+                            [[${readTimeInMinutesByPostId.getOrDefault(blog.id, 1L)}]] [[#{minute_short}]]
                         </time>
                     </p>
                 </div>

@@ -18,10 +18,12 @@ import org.youngmonkeys.ezyplatform.model.PaginationModel;
 import org.youngmonkeys.ezyplatform.web.controller.service.WebLanguageControllerService;
 import org.youngmonkeys.ezyplatform.web.service.WebSettingService;
 import org.youngmonkeys.ezyplatform.web.validator.WebCommonValidator;
+import org.youngmonkeys.personal.web.service.WebPersonalPostWordCountService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static com.tvd12.ezyfox.io.EzyLists.newArrayList;
 import static org.youngmonkeys.ezyplatform.util.StringConverters.trimOrNull;
 import static org.youngmonkeys.ezysupport.constant.EzySupportConstants.SETTING_NAME_BANNER_IMAGE_URL;
 
@@ -32,10 +34,13 @@ public class PersonalHomeController {
     private WebPageFragmentManager pageFragmentManager;
 
     @EzyAutoBind
-    private WebLanguageControllerService languageControllerService;
+    private WebPersonalPostWordCountService postWordCountService;
 
     @EzyAutoBind
     private WebSettingService settingService;
+
+    @EzyAutoBind
+    private WebLanguageControllerService languageControllerService;
 
     @EzyAutoBind
     private WebPostControllerService postControllerService;
@@ -84,11 +89,20 @@ public class PersonalHomeController {
                 TermType.TAG.toString(),
                 50
             );
+        List<WebPostContentResponse> posts = pagination.getItems();
+        List<Long> postIds = newArrayList(
+            posts,
+            WebPostContentResponse::getId
+        );
         return View.builder()
             .template("home")
             .addVariable("pagination", pagination)
             .addVariable("topCategories", topCategories)
             .addVariable("topTags", topTags)
+            .addVariable(
+                "readTimeInMinutesByPostId",
+                postWordCountService.getReadTimeInMinutesByPostIds(postIds)
+            )
             .addVariable(
                 "headingFragments",
                 pageFragmentManager.getPageFragmentMap(
