@@ -32,7 +32,6 @@
                     <div class="shape shape-1"></div>
                     <div class="shape shape-2"></div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -50,15 +49,9 @@
                     [[#{load_more}]]
                 </button>
             </div>
-            <!--
-              - ASIDE
-            -->
             <div class="aside">
-
                 <div class="topics">
-
                     <h2 class="h2">[[#{topics}]]</h2>
-
                     <a th:each="topCategory : ${topCategories}"
                        th:href="${'/topics/' + topCategory.slug}"
                        class="topic-btn">
@@ -68,71 +61,48 @@
                         </div>
                         <p>[[${topCategory.name}]]</p>
                     </a>
-
                 </div>
-
                 <div class="tags">
-
                     <h2 class="h2">Tags</h2>
-
                     <div class="wrapper">
-
                         <button th:each="topTag : ${topTags}"
                                 type="button" class="hashtag">
                             #[[${topTag.name}]]
                         </button>
-
                     </div>
-
                 </div>
-
                 <div class="contact">
-
                     <h2 class="h2">Let's Talk</h2>
-
                     <div class="wrapper">
-
                         <p>
                             Do you want to learn more about how I can help your company overcome problems? Let us have a
                             conversation.
                         </p>
-
                         <ul class="social-link">
-
                             <li>
                                 <a href="#" class="icon-box discord">
                                     <ion-icon name="logo-discord"></ion-icon>
                                 </a>
                             </li>
-
                             <li>
                                 <a href="#" class="icon-box twitter">
                                     <ion-icon name="logo-twitter"></ion-icon>
                                 </a>
                             </li>
-
                             <li>
                                 <a href="#" class="icon-box facebook">
                                     <ion-icon name="logo-facebook"></ion-icon>
                                 </a>
                             </li>
-
                         </ul>
-
                     </div>
-
                 </div>
-
                 <div class="newsletter">
-
                     <h2 class="h2">Newsletter</h2>
-
                     <div class="wrapper">
-
                         <p>
                             Subscribe to our newsletter to be among the first to keep up with the latest updates.
                         </p>
-
                         <form id="subscribeForm" onsubmit="return false;">
                             <input type="email" name="email" th:placeholder="#{email_address}" required
                                    onkeydown="onKeydownToSubscribe();">
@@ -140,11 +110,8 @@
                                 [[#{subscribe}]]
                             </button>
                         </form>
-
                     </div>
-
                 </div>
-
             </div>
         </div>
     </div>

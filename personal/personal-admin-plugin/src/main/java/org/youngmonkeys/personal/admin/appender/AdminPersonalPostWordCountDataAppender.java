@@ -3,30 +3,26 @@ package org.youngmonkeys.personal.admin.appender;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tvd12.ezyfox.bean.annotation.EzySingleton;
 import com.tvd12.ezyfox.util.EzyMapBuilder;
-import com.tvd12.ezyfox.util.Next;
+import org.youngmonkeys.ezyarticle.admin.appender.AdminAbstractPostHistoryAppender;
+import org.youngmonkeys.ezyarticle.admin.repo.AdminPostHistoryRepository;
 import org.youngmonkeys.ezyarticle.sdk.entity.PostHistory;
-import org.youngmonkeys.ezyplatform.admin.appender.AdminDataAppender;
+import org.youngmonkeys.ezyarticle.sdk.result.SimplePostHistoryResult;
 import org.youngmonkeys.ezyplatform.admin.event.AdminEventHandlerManager;
 import org.youngmonkeys.ezyplatform.admin.service.AdminSettingService;
 import org.youngmonkeys.ezyplatform.time.ClockProxy;
-import org.youngmonkeys.personal.admin.repo.AdminPersonalPostHistoryRepository;
 import org.youngmonkeys.personal.admin.repo.AdminPersonalPostWordCountRepository;
 import org.youngmonkeys.personal.entity.PersonalPostWordCount;
 
 import java.util.Arrays;
-import java.util.List;
 
-import static com.tvd12.ezyfox.io.EzyLists.last;
-import static org.youngmonkeys.ezyplatform.constant.CommonConstants.LIMIT_100_RECORDS;
 import static org.youngmonkeys.personal.constant.PersonalConstants.INTERNAL_EVENT_NAME_POST_WORD_COUNT;
 
 @EzySingleton
 public class AdminPersonalPostWordCountDataAppender
-    extends AdminDataAppender<PostHistory, PersonalPostWordCount, Long> {
+    extends AdminAbstractPostHistoryAppender<PersonalPostWordCount> {
 
     private final ClockProxy clock;
     private final AdminEventHandlerManager eventHandlerManager;
-    private final AdminPersonalPostHistoryRepository postHistoryRepository;
     private final AdminPersonalPostWordCountRepository postWordCountRepository;
 
     public AdminPersonalPostWordCountDataAppender(
@@ -34,13 +30,16 @@ public class AdminPersonalPostWordCountDataAppender
         AdminEventHandlerManager eventHandlerManager,
         ObjectMapper objectMapper,
         AdminSettingService settingService,
-        AdminPersonalPostHistoryRepository postHistoryRepository,
+        AdminPostHistoryRepository postHistoryRepository,
         AdminPersonalPostWordCountRepository postWordCountRepository
     ) {
-        super(objectMapper, settingService);
+        super(
+            objectMapper,
+            settingService,
+            postHistoryRepository
+        );
         this.clock = clock;
         this.eventHandlerManager = eventHandlerManager;
-        this.postHistoryRepository = postHistoryRepository;
         this.postWordCountRepository = postWordCountRepository;
     }
 
@@ -63,14 +62,16 @@ public class AdminPersonalPostWordCountDataAppender
 
     @Override
     protected PersonalPostWordCount toDataRecord(
-        PostHistory value
+        SimplePostHistoryResult value
     ) {
-        long postId = value.getParentId();
-        String content = value.getContent();
+        long historyId = value.getId();
+        PostHistory postHistory = getPostHistoryById(historyId);
+        String content = postHistory.getContent();
         long wordCount = Arrays
             .stream(content.trim().split("\\s+"))
-           .filter(s -> !s.isEmpty())
-           .count();
+            .filter(s -> !s.isEmpty())
+            .count();
+        long postId = value.getParentId();
         logger.info(
             "post history id: {}, post id: {}, word count: {}",
             value.getId(),
@@ -82,31 +83,6 @@ public class AdminPersonalPostWordCountDataAppender
         entity.setWordCount(wordCount);
         entity.setUpdatedAt(clock.nowDateTime());
         return entity;
-    }
-
-    @Override
-    protected List<PostHistory> filterValueList(
-        List<PostHistory> valueList
-    ) {
-        return valueList;
-    }
-
-    @Override
-    protected List<PostHistory> getValueList(Long pageToken) {
-        return postHistoryRepository.findByIdGt(
-            pageToken,
-            Next.limit(LIMIT_100_RECORDS)
-        );
-    }
-
-    @Override
-    protected Long extractNewLastPageToken(
-        List<PostHistory> valueList,
-        Long currentLastPageToken
-    ) {
-         return valueList.isEmpty()
-            ? currentLastPageToken
-            : last(valueList).getId();
     }
 
     @Override
