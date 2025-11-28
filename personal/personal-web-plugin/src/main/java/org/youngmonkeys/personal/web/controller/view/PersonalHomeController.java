@@ -12,7 +12,7 @@ import org.youngmonkeys.ezyarticle.sdk.pagination.DefaultPostFilter;
 import org.youngmonkeys.ezyarticle.web.controller.service.WebPostControllerService;
 import org.youngmonkeys.ezyarticle.web.controller.service.WebTermControllerService;
 import org.youngmonkeys.ezyarticle.web.manager.WebPageFragmentManager;
-import org.youngmonkeys.ezyarticle.web.response.WebPostItemResponse;
+import org.youngmonkeys.ezyarticle.web.response.WebPostContentResponse;
 import org.youngmonkeys.ezyarticle.web.response.WebTermResponse;
 import org.youngmonkeys.ezyplatform.model.PaginationModel;
 import org.youngmonkeys.ezyplatform.web.controller.service.WebLanguageControllerService;
@@ -49,6 +49,7 @@ public class PersonalHomeController {
     @DoGet("/")
     public View home(
         HttpServletRequest request,
+        @RequestParam(value = "keyword") String keyword,
         @RequestParam(value = "sortOrder") String sortOrder,
         @RequestParam(value = "nextPageToken") String nextPageToken,
         @RequestParam(value = "prevPageToken") String prevPageToken,
@@ -56,18 +57,18 @@ public class PersonalHomeController {
         @RequestParam(value = "limit", defaultValue = "12") int limit
     ) {
         commonValidator.validatePageSize(limit);
-        DefaultPostFilter filter = DefaultPostFilter
+        DefaultPostFilter.Builder filterBuilder = DefaultPostFilter
             .builder()
             .postType(PostType.BLOG.toString())
-            .postStatus(PostStatus.PUBLISHED.toString())
-            .build();
-        String language = languageControllerService
+            .postStatus(PostStatus.PUBLISHED.toString());
+        String languageCode = languageControllerService
             .getLanguageCodeOrDefault(request);
-        PaginationModel<WebPostItemResponse> pagination = postControllerService
-            .getPostItemPagination(
-                filter,
-                language,
+        PaginationModel<WebPostContentResponse> pagination = postControllerService
+            .getPublishedBlogPagination(
+                filterBuilder,
                 sortOrder,
+                keyword,
+                languageCode,
                 nextPageToken,
                 prevPageToken,
                 lastPage,
@@ -92,7 +93,7 @@ public class PersonalHomeController {
                 "headingFragments",
                 pageFragmentManager.getPageFragmentMap(
                     "main_page_heading",
-                    language
+                    languageCode
                 )
             )
             .addVariable(

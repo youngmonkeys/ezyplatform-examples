@@ -11,18 +11,18 @@
                  width="250" class="blog-banner-img">
         </div>
         <div class="blog-content-wrapper">
-            <button class="blog-topic text-tiny">
-                <th:block th:if="${blog.category != null}">
-                    [[${blog.category.name}]]
+            <a class="blog-topic text-tiny"
+               th:href="${blog.terms.size() > 0 ? ('/blogs/' + blog.terms[0].slug) : 'javascript:void(0)'}">
+                <th:block th:if="${blog.terms.size() > 0}">
+                    [[${blog.terms[0].name}]]
                 </th:block>
-            </button>
+            </a>
             <h3>
                 <a th:href="${'/blog/' + blog.slug}" class="h3">
                     [[${blog.title}]]
                 </a>
             </h3>
-            <div class="blog-text" th:text="${blog.shortedContent}">
-            </div>
+            <div class="blog-text" th:text="${blog.shortedContent}"></div>
             <div class="wrapper-flex">
                 <div class="profile-wrapper">
                     <img src="/images/author.png"
