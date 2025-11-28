@@ -41,8 +41,8 @@
                         </time>
                         <span class="separator"></span>
                         <ion-icon name="time-outline"></ion-icon>
-                        <time th:attr="datetime=${'PT' + (blog.readingMinutes != null ? blog.readingMinutes : 3) + 'M'}">
-                            [[${blog.readingMinutes != null ? blog.readingMinutes : 3}]] [[#{minute_short}]]
+                        <time th:attr="datetime=${'PT 3M'}">
+                            3 [[#{minute_short}]]
                         </time>
                     </p>
                 </div>
