@@ -84,9 +84,6 @@ $( document ).ready(function() {
 <th:block th:if="${commonFragments.get('header') != null && !#strings.isEmpty(commonFragments.get('header').additionalFoot)}">
 	<ezy:block ezy:utext="${commonFragments.get('header').additionalFoot}" />
 </th:block>
-<th:block th:if="${commonFragments.get('header') == null || #strings.isEmpty(commonFragments.get('header').additionalFoot)}">
-	<th:block th:replace="~{fragments/header :: scripts}" />
-</th:block>
 <th:block th:if="${commonFragments.get('footer') != null && !#strings.isEmpty(commonFragments.get('footer').additionalFoot)}">
 	<ezy:block ezy:utext="${commonFragments.get('footer').additionalFoot}" />
 </th:block>
