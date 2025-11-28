@@ -60,6 +60,8 @@ var fetchBlogList = (action) => {
         if (!data.continuation.hasNext) {
             $('#loadMoreBlogButton').remove();
         }
+        var postIds = data.items.map((it) => it.id);
+        fetchPostReadingTimeInMinutes(postIds);
     })
     .fail((e) => {
         ezyweb.processGetApiErrors(e);
@@ -76,9 +78,6 @@ const buildBlogListBodyHtml = (blogList = []) => {
 
 const buildBlogListItemHtml = (blog) => {
     const authorName = blog.author?.name || ezyweb.messages.author;
-    const readingMinutes = blog.readingMinutes ?? 3;
-    const minuteLabel = ezyweb.messages.minute_short || 'min';
-
     return `
         <div class="blog-card">
             <div class="blog-card-banner">
@@ -116,13 +115,29 @@ const buildBlogListItemHtml = (blog) => {
                             </time>
                             <span class="separator"></span>
                             <ion-icon name="time-outline"></ion-icon>
-                            <time datetime="PT${readingMinutes}M">${readingMinutes} ${minuteLabel}</time>
+                            <time><span id="post-reading-time-${blog.id}"></span> ${ezyweb.messages.minute_short}</time>
                         </p>
                     </div>
                 </div>
             </div>
         </div>
     `;
+};
+
+var fetchPostReadingTimeInMinutes = (postIds) => {
+    $.ajax({
+        url: `/api/v1/posts/read-time-in-minutes?postIds=${postIds.join(',')}`,
+        type: 'GET',
+        dataType: 'json'
+    })
+    .done((data) => {
+        Object.entries(data).forEach(([k, v]) => {
+            $(`#post-reading-time-${k}`).text(v);
+        });
+    })
+    .fail((e) => {
+        ezyweb.processGetApiErrors(e);
+    });
 };
 </script>
 <script th:fragment="subscribe" th:inline="javascript">
