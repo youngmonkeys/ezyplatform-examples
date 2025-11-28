@@ -38,7 +38,7 @@
     <div class="main">
         <div class="container">
             <div class="blog">
-                <h2 class="h2">Latest Blog Post</h2>
+                <h2 class="h2">[[#{latest_blog_posts}]]</h2>
                 <div class="blog-card-group" id="blogListBody">
                     <th:block th:each="blog : ${pagination.items}">
                         <th:block th:replace="~{fragments/blog-item :: content(blog=${blog})}"></th:block>
@@ -63,7 +63,7 @@
                     </a>
                 </div>
                 <div class="tags">
-                    <h2 class="h2">Tags</h2>
+                    <h2 class="h2">[[#{tags}]]</h2>
                     <div class="wrapper">
                         <button th:each="topTag : ${topTags}"
                                 type="button" class="hashtag">
@@ -72,12 +72,9 @@
                     </div>
                 </div>
                 <div class="contact">
-                    <h2 class="h2">Let's Talk</h2>
+                    <h2 class="h2">[[#{lets_talk}]]</h2>
                     <div class="wrapper">
-                        <p>
-                            Do you want to learn more about how I can help your company overcome problems? Let us have a
-                            conversation.
-                        </p>
+                        <p>[[#{contact_description}]]</p>
                         <ul class="social-link">
                             <li>
                                 <a href="#" class="icon-box discord">
@@ -98,11 +95,9 @@
                     </div>
                 </div>
                 <div class="newsletter">
-                    <h2 class="h2">Newsletter</h2>
+                    <h2 class="h2">[[#{newsletter}]]</h2>
                     <div class="wrapper">
-                        <p>
-                            Subscribe to our newsletter to be among the first to keep up with the latest updates.
-                        </p>
+                        <p>[[#{newsletter_description}]]</p>
                         <form id="subscribeForm" onsubmit="return false;">
                             <input type="email" name="email" th:placeholder="#{email_address}" required
                                    onkeydown="onKeydownToSubscribe();">
@@ -121,6 +116,8 @@
 var lastBlogPageToken = {};
 lastBlogPageToken.next = /*[[${pagination.pageToken.next}]]*/ '';
 ezyweb.messages.subscribe_successfully = /*[[#{subscribe_successfully}]]*/;
+ezyweb.messages.author = /*[[#{author}]]*/ 'Author';
+ezyweb.messages.minute_short = /*[[#{minute_short}]]*/ 'min';
 /*]]>*/
 
 var onKeydownToSubscribe = function() {
@@ -184,8 +181,9 @@ const buildBlogListBodyHtml = (blogList = []) => {
 };
 
 const buildBlogListItemHtml = (blog) => {
-    const authorName = blog.author?.name || 'Author';
+    const authorName = blog.author?.name || ezyweb.messages.author;
     const readingMinutes = blog.readingMinutes ?? 3;
+    const minuteLabel = ezyweb.messages.minute_short || 'min';
 
     return `
         <div class="blog-card">
@@ -223,7 +221,7 @@ const buildBlogListItemHtml = (blog) => {
                             </time>
                             <span class="separator"></span>
                             <ion-icon name="time-outline"></ion-icon>
-                            <time datetime="PT${readingMinutes}M">${readingMinutes} min</time>
+                            <time datetime="PT${readingMinutes}M">${readingMinutes} ${minuteLabel}</time>
                         </p>
                     </div>
                 </div>

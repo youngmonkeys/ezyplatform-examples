@@ -25,19 +25,25 @@
             </div>
             <div class="wrapper-flex">
                 <div class="profile-wrapper">
-                    <img src="/images/author.png" alt="Julia Walker" width="50">
+                    <img src="/images/author.png"
+                         th:alt="${blog.author != null ? blog.author.name : #messages.msg('author')}"
+                         width="50">
                 </div>
                 <div class="wrapper">
-                    <a th:href="${'/author/' + blog.author.uuid}" class="h4">
+                    <a th:if="${blog.author != null}"
+                       th:href="${'/author/' + blog.author.uuid}" class="h4">
                         [[${blog.author.name}]]
                     </a>
+                    <span th:if="${blog.author == null}" class="h4">[[#{author}]]</span>
                     <p class="text-sm">
                         <time class="date-time-minute-string">
                             [[${blog.publishedAt}]]
                         </time>
                         <span class="separator"></span>
                         <ion-icon name="time-outline"></ion-icon>
-                        <time datetime="PT3M">3 min</time>
+                        <time th:attr="datetime=${'PT' + (blog.readingMinutes != null ? blog.readingMinutes : 3) + 'M'}">
+                            [[${blog.readingMinutes != null ? blog.readingMinutes : 3}]] [[#{minute_short}]]
+                        </time>
                     </p>
                 </div>
             </div>

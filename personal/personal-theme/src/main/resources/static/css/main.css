@@ -1,23 +1,19 @@
-/*-----------------------------------*\ 
+/*-----------------------------------*\
   #style.css
 \*-----------------------------------*/
 
 /**
- * copyright 2022 @codewithsadee 
+ * copyright 2022 @codewithsadee
  */
 
-
-
-
-
-/*-----------------------------------*\ 
+/*-----------------------------------*\
   #CUSTOM PROPERTY
 \*-----------------------------------*/
 
 .light-theme {
 
   /**
-   * light theme colors 
+   * light theme colors
    */
 
   --background-primary: hsl(0, 0%, 100%);
@@ -37,7 +33,7 @@
 .dark-theme {
 
   /**
-   * dark theme colors 
+   * dark theme colors
    */
 
   --background-primary: hsl(218, 23%, 23%);
@@ -55,17 +51,14 @@
 }
 
 :root {
-
   /**
    * color
    */
-
   --white: hsl(0, 0%, 100%);
 
   /**
-   * typography 
+   * typography
    */
-
   --fs-base: 0.85rem;
   --fs-1: 1.875rem;
   --fs-2: 1.5rem;
@@ -74,18 +67,12 @@
   --fs-5: 0.75rem;
 
   /**
-   * spacing 
+   * spacing
    */
-
   --py: 5rem;
-
 }
 
-
-
-
-
-/*-----------------------------------*\ 
+/*-----------------------------------*\
   #RESET
 \*-----------------------------------*/
 
@@ -144,7 +131,7 @@ html {
 
 
 
-/*-----------------------------------*\ 
+/*-----------------------------------*\
   #BASE STYLE
 \*-----------------------------------*/
 
@@ -180,11 +167,7 @@ html {
 
 .text-tiny { font-size: var(--fs-5); }
 
-
-
-
-
-/*-----------------------------------*\ 
+/*-----------------------------------*\
   #REUSED STYLE
 \*-----------------------------------*/
 
@@ -219,11 +202,7 @@ html {
 
 .btn-secondary:hover { border-color: var(--accent); }
 
-
-
-
-
-/*-----------------------------------*\ 
+/*-----------------------------------*\
   #Extra style for dark theme
 \*-----------------------------------*/
 
@@ -243,10 +222,7 @@ html {
 
 .dark-theme .aside .h2 { color: var(--foreground-primary); }
 
-
-
-
-/*-----------------------------------*\ 
+/*-----------------------------------*\
   #HEADER
 \*-----------------------------------*/
 
@@ -345,7 +321,7 @@ header .btn-group {
 
 
 
-/*-----------------------------------*\ 
+/*-----------------------------------*\
   #HERO SECTION
 \*-----------------------------------*/
 
@@ -385,7 +361,7 @@ header .btn-group {
 
 
 
-/*-----------------------------------*\ 
+/*-----------------------------------*\
   #BLOG SECTION
 \*-----------------------------------*/
 
@@ -491,7 +467,7 @@ header .btn-group {
 
 
 
-/*-----------------------------------*\ 
+/*-----------------------------------*\
   #ASIDE
 \*-----------------------------------*/
 
@@ -501,7 +477,7 @@ header .btn-group {
 
 
 
-/*-----------------------------------*\ 
+/*-----------------------------------*\
   #FOOTER
 \*-----------------------------------*/
 
@@ -554,7 +530,7 @@ footer .wrapper { text-align: center; }
 
 
 
-/*-----------------------------------*\ 
+/*-----------------------------------*\
   #MEDIA QUERIES
 \*-----------------------------------*/
 
@@ -567,7 +543,7 @@ footer .wrapper { text-align: center; }
   :root {
 
     /**
-     * typography 
+     * typography
      */
 
     --fs-base: 0.90rem;
@@ -576,7 +552,7 @@ footer .wrapper { text-align: center; }
 
 
   /**
-   * BLOG 
+   * BLOG
    */
 
   .blog-card {
@@ -599,10 +575,6 @@ footer .wrapper { text-align: center; }
 
 }
 
-
-
-
-
 /**
  * responsive for larger than 650px screen
  */
@@ -612,7 +584,7 @@ footer .wrapper { text-align: center; }
   :root {
 
     /**
-     * typography 
+     * typography
      */
 
     --fs-1: 2.25rem;
@@ -622,7 +594,7 @@ footer .wrapper { text-align: center; }
 
 
   /**
-   * REUSED STYLE 
+   * REUSED STYLE
    */
 
   .container { padding: 0 30px; }
@@ -630,15 +602,13 @@ footer .wrapper { text-align: center; }
 
 
   /**
-   * HEADER 
+   * HEADER
    */
 
   .navbar { padding: 30px 0; }
 
-
-
   /**
-   * BLOG 
+   * BLOG
    */
 
   .blog .h2 {
@@ -695,10 +665,8 @@ footer .wrapper { text-align: center; }
     gap: 0;
   }
 
-
-
   /**
-   * FOOTER 
+   * FOOTER
    */
 
   footer .container {
@@ -712,10 +680,6 @@ footer .wrapper { text-align: center; }
 
 }
 
-
-
-
-
 /**
  * responsive for larger than 768px screen
  */
@@ -723,16 +687,12 @@ footer .wrapper { text-align: center; }
 @media (min-width: 768px) {
 
   /**
-   * REUSED STYLE 
+   * REUSED STYLE
    */
 
   .container { max-width: 800px; }
 
 }
-
-
-
-
 
 /**
  * responsive for larger than 1024px screen
@@ -743,7 +703,7 @@ footer .wrapper { text-align: center; }
   :root {
 
     /**
-     * typography 
+     * typography
      */
 
     --fs-base: 1rem;
@@ -751,18 +711,14 @@ footer .wrapper { text-align: center; }
 
   }
 
-
-
   /**
-   * REUSED STYLE 
+   * REUSED STYLE
    */
 
   .container { max-width: 1150px; }
 
-
-
   /**
-   * HEADER 
+   * HEADER
    */
 
   header .btn-group { display: none; }
@@ -830,10 +786,8 @@ footer .wrapper { text-align: center; }
 
   .theme-btn-desktop.dark::before { left: calc(100% - 24px); }
 
-
-
   /**
-   * HERO 
+   * HERO
    */
 
   .hero { text-align: left; }
@@ -906,7 +860,7 @@ footer .wrapper { text-align: center; }
 
 
   /**
-   * MAIN 
+   * MAIN
    */
 
   .main .container {
@@ -918,7 +872,7 @@ footer .wrapper { text-align: center; }
 
 
   /**
-   * ASIDE 
+   * ASIDE
    */
 
   .aside {
@@ -1028,7 +982,7 @@ footer .wrapper { text-align: center; }
   .social-link .twitter { color: hsl(203, 89%, 53%); }
 
   .social-link .facebook { color: hsl(220, 46%, 48%); }
-  
+
   .social-link .icon-box:hover {
     background: var(--accent);
     color: var(--white);
@@ -1069,61 +1023,12 @@ footer .wrapper { text-align: center; }
     margin: auto; /* fallback for margin-inline */
   }
 
-
-
   /**
-   * FOOTER 
+   * FOOTER
    */
 
   .footer-title { font-size: 1.125rem; }
 
   .footer-link { margin-bottom: 0.3rem; }
 
-}
-
-/** blog details ***/
-.breadcrumb {
-    background-color: rgba(0, 0, 0, 0);
-    padding: 0;
-    margin: 0;
-}
-
-.page-header {
-    padding-top: 45px;
-    padding-bottom: 30px;
-}
-
-.page-header .breadcrumb {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.page-header .breadcrumb .title {
-    font-size: 32px;
-    text-transform: uppercase;
-    text-align: center;
-}
-
-.page-header .breadcrumb .link {
-    text-align: center;
-    padding-top: 20px;
-}
-
-.page-article img {
-    max-width: 100%;
-    margin-top: 12px;
-    margin-bottom: 12px;
-}
-
-.terms-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.terms-wrapper .terms {
-    display: flex;
-    align-items: center;
-    gap: 10px;
 }

@@ -34,7 +34,7 @@
                         <a th:if="${post.author != null}"
                            th:href="${'/posts?author=' + post.author.uuid}"
                            th:text="${post.author.name}">
-                            User
+                            [[#{author}]]
                         </a>
                         <span th:if="${post.author == null}">[[#{unknown_author}]]</span>
                         [[${#strings.toLowerCase(#messages.msg('post_at'))}]]
