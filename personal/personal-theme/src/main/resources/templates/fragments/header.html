@@ -48,58 +48,39 @@
             </div>
 
             <div class="mobile-nav">
-
                 <button class="nav-close-btn">
                     <ion-icon name="close-outline"></ion-icon>
                 </button>
-
                 <div class="wrapper">
-
-                    <p class="h3 nav-title">Main Menu</p>
-
+                    <p class="h3 nav-title">[[#{main_menu}]]</p>
                     <ul>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">Home</a>
+                            <a href="/" class="nav-link">[[#{home}]]</a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="#" class="nav-link">About Me</a>
+                            <a href="/about-us" class="nav-link">[[#{about_me}]]</a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="#" class="nav-link">Contact</a>
+                            <a href="/contact-us" class="nav-link">[[#{contact}]]</a>
                         </li>
                     </ul>
-
                 </div>
-
                 <div>
-
                     <p class="h3 nav-title">[[#{topics}]]</p>
-
                     <ul>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">Database</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">Accessibility</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">Web Performance</a>
+                        <li th:each="topCategory : ${topCategories}" class="nav-item">
+                            <a th:href="${'/topics/' + topCategory.slug}"
+                               class="nav-link">
+                                [[${topCategory.name}]]
+                            </a>
                         </li>
                     </ul>
-
                 </div>
-
             </div>
-
         </nav>
-
     </div>
 </div>
-<script th:fragment="scripts" type="text/javascript">
-</script>
 </body>
 </html>

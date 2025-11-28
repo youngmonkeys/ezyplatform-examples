@@ -8,6 +8,9 @@
 <head th:remove="tag">
 	<th:block th:if="${commonFragments.get('styles') == null || commonFragments.get('styles').content == 'styles'}">
 		<link rel="stylesheet" type="text/css" ezy:vhref="/css/main.css" />
+		<link rel="stylesheet" type="text/css" ezy:vhref="/css/common.css" />
+		<link rel="stylesheet" type="text/css" ezy:vhref="/css/blog-details.css" />
+		<link rel="stylesheet" type="text/css" ezy:vhref="/css/contact-us.css" />
 	</th:block>
 	<th:block th:if="${commonFragments.get('styles') != null && commonFragments.get('styles').content != 'styles'}">
         <ezy:block ezy:utext="${commonFragments.get('styles').content}" />
@@ -80,9 +83,6 @@ $( document ).ready(function() {
 </script>
 <th:block th:if="${commonFragments.get('header') != null && !#strings.isEmpty(commonFragments.get('header').additionalFoot)}">
 	<ezy:block ezy:utext="${commonFragments.get('header').additionalFoot}" />
-</th:block>
-<th:block th:if="${commonFragments.get('header') == null || #strings.isEmpty(commonFragments.get('header').additionalFoot)}">
-	<th:block th:replace="~{fragments/header :: scripts}" />
 </th:block>
 <th:block th:if="${commonFragments.get('footer') != null && !#strings.isEmpty(commonFragments.get('footer').additionalFoot)}">
 	<ezy:block ezy:utext="${commonFragments.get('footer').additionalFoot}" />

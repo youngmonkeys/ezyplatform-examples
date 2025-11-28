@@ -38,13 +38,15 @@
     <div class="main">
         <div class="container">
             <div class="blog">
-                <h2 class="h2">Latest Blog Post</h2>
+                <h2 class="h2">[[#{latest_blog_posts}]]</h2>
                 <div class="blog-card-group" id="blogListBody">
                     <th:block th:each="blog : ${pagination.items}">
-                        <th:block th:replace="~{fragments/blog-item :: content(blog=${blog})}"></th:block>
+                        <th:block th:replace="~{fragments/blog-item :: content(blog=${blog})}" />
                     </th:block>
                 </div>
-                <button type="button" class="btn load-more"
+                <button th:if="${pagination.continuation.hasNext}"
+                        type="button" class="btn load-more"
+                        id="loadMoreBlogButton"
                         onclick="fetchBlogList('next')">
                     [[#{load_more}]]
                 </button>
@@ -63,7 +65,7 @@
                     </a>
                 </div>
                 <div class="tags">
-                    <h2 class="h2">Tags</h2>
+                    <h2 class="h2">[[#{tags}]]</h2>
                     <div class="wrapper">
                         <button th:each="topTag : ${topTags}"
                                 type="button" class="hashtag">
@@ -72,12 +74,9 @@
                     </div>
                 </div>
                 <div class="contact">
-                    <h2 class="h2">Let's Talk</h2>
+                    <h2 class="h2">[[#{lets_talk}]]</h2>
                     <div class="wrapper">
-                        <p>
-                            Do you want to learn more about how I can help your company overcome problems? Let us have a
-                            conversation.
-                        </p>
+                        <p>[[#{contact_description}]]</p>
                         <ul class="social-link">
                             <li>
                                 <a href="#" class="icon-box discord">
@@ -98,11 +97,9 @@
                     </div>
                 </div>
                 <div class="newsletter">
-                    <h2 class="h2">Newsletter</h2>
+                    <h2 class="h2">[[#{newsletter}]]</h2>
                     <div class="wrapper">
-                        <p>
-                            Subscribe to our newsletter to be among the first to keep up with the latest updates.
-                        </p>
+                        <p>[[#{newsletter_description}]]</p>
                         <form id="subscribeForm" onsubmit="return false;">
                             <input type="email" name="email" th:placeholder="#{email_address}" required
                                    onkeydown="onKeydownToSubscribe();">
@@ -116,121 +113,9 @@
         </div>
     </div>
 </div>
-<script layout:fragment="scripts" th:inline="javascript">
-/*<![CDATA[*/
-var lastBlogPageToken = {};
-lastBlogPageToken.next = /*[[${pagination.pageToken.next}]]*/ '';
-ezyweb.messages.subscribe_successfully = /*[[#{subscribe_successfully}]]*/;
-/*]]>*/
-
-var onKeydownToSubscribe = function() {
-    if(event.key === 'Enter') {
-        onSubscribeClick();
-    }
-}
-
-var onSubscribeClick = function() {
-    var formData = ezyweb.formDataToObject('subscribeForm');
-    $.ajax({
-        type: 'POST',
-        url: '/api/v1/ezycrm/subscribe',
-        contentType: 'application/json',
-        data: JSON.stringify(formData)
-    }).done(function (menu) {
-        alert(ezyweb.messages.subscribe_successfully);
-    }).fail(function (e) {
-        ezyweb.processGetApiErrors(e);
-    });
-}
-
-//================ blog list =============
-var fetchBlogList = (action) => {
-    const params = new URLSearchParams({ limit: 12 });
-    if (action === 'next') {
-        if (lastBlogPageToken.next) {
-            params.append('nextPageToken', lastBlogPageToken.next);
-        } else {
-            return;
-        }
-    }
-    $.ajax({
-        url: `/api/v1/blogs?${params.toString()}`,
-        type: 'GET',
-        dataType: 'json'
-    })
-    .done((data) => {
-        lastBlogPageToken = data.pageToken;
-        const html = buildBlogListBodyHtml(data.items || []);
-        if (action === 'next') {
-            $('#blogListBody').append(html);
-        } else {
-            $('#blogListBody').html(html);
-        }
-        if (!data?.continuation.hasNext) {
-            $('#nextButtonContainer').remove();
-        }
-    })
-    .fail((e) => {
-        ezyweb.processGetApiErrors(e);
-    });
-};
-
-const buildBlogListBodyHtml = (blogList = []) => {
-    let html = '';
-    blogList.forEach((blog) => {
-        html += buildBlogListItemHtml(blog);
-    });
-    return html;
-};
-
-const buildBlogListItemHtml = (blog) => {
-    const authorName = blog.author?.name || 'Author';
-    const readingMinutes = blog.readingMinutes ?? 3;
-
-    return `
-        <div class="blog-card">
-            <div class="blog-card-banner">
-                ${blog.featuredImage ? `
-                    <img src="${ezyweb.extractMediaUrl(blog.featuredImage)}"
-                         alt="${blog.featuredImage.originalName || ''}"
-                         width="250"
-                         class="blog-banner-img">
-                ` : ''}
-            </div>
-            <div class="blog-content-wrapper">
-                <button class="blog-topic text-tiny">
-                    ${blog.category?.name || ''}
-                </button>
-                <h3>
-                    <a href="/blog/${blog.slug}" class="h3">
-                        ${blog.title || ''}
-                    </a>
-                </h3>
-                <div class="blog-text">
-                    ${blog.shortedContent || ''}
-                </div>
-                <div class="wrapper-flex">
-                    <div class="profile-wrapper">
-                        <img src="/images/author.png" alt="${authorName}" width="50">
-                    </div>
-                    <div class="wrapper">
-                        <a href="/author/${blog.author?.uuid || '#'}" class="h4">
-                            ${authorName}
-                        </a>
-                        <p class="text-sm">
-                            <time class="date-time-minute-string">
-                                ${ezyweb.formatTimeStamp(blog.publishedAt)}
-                            </time>
-                            <span class="separator"></span>
-                            <ion-icon name="time-outline"></ion-icon>
-                            <time datetime="PT${readingMinutes}M">${readingMinutes} min</time>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-};
-</script>
+<th:block layout:fragment="scripts" th:inline="javascript">
+    <th:block th:replace="~{fragments/scripts :: blog-list}" />
+    <th:block th:replace="~{fragments/scripts :: subscribe}" />
+</th:block>
 </body>
 </html>

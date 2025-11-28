@@ -12,16 +12,23 @@ import org.youngmonkeys.ezyarticle.sdk.pagination.DefaultPostFilter;
 import org.youngmonkeys.ezyarticle.web.controller.service.WebPostControllerService;
 import org.youngmonkeys.ezyarticle.web.controller.service.WebTermControllerService;
 import org.youngmonkeys.ezyarticle.web.manager.WebPageFragmentManager;
-import org.youngmonkeys.ezyarticle.web.response.WebPostItemResponse;
+import org.youngmonkeys.ezyarticle.web.response.WebPostContentResponse;
 import org.youngmonkeys.ezyarticle.web.response.WebTermResponse;
 import org.youngmonkeys.ezyplatform.model.PaginationModel;
+import org.youngmonkeys.ezyplatform.model.UuidNameModel;
 import org.youngmonkeys.ezyplatform.web.controller.service.WebLanguageControllerService;
 import org.youngmonkeys.ezyplatform.web.service.WebSettingService;
 import org.youngmonkeys.ezyplatform.web.validator.WebCommonValidator;
+import org.youngmonkeys.personal.web.service.WebPersonalAdminAvatarService;
+import org.youngmonkeys.personal.web.service.WebPersonalPostWordCountService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import static com.tvd12.ezyfox.io.EzyLists.newArrayList;
 import static org.youngmonkeys.ezyplatform.util.StringConverters.trimOrNull;
 import static org.youngmonkeys.ezysupport.constant.EzySupportConstants.SETTING_NAME_BANNER_IMAGE_URL;
 
@@ -32,10 +39,16 @@ public class PersonalHomeController {
     private WebPageFragmentManager pageFragmentManager;
 
     @EzyAutoBind
-    private WebLanguageControllerService languageControllerService;
+    private WebPersonalAdminAvatarService adminAvatarService;
+
+    @EzyAutoBind
+    private WebPersonalPostWordCountService postWordCountService;
 
     @EzyAutoBind
     private WebSettingService settingService;
+
+    @EzyAutoBind
+    private WebLanguageControllerService languageControllerService;
 
     @EzyAutoBind
     private WebPostControllerService postControllerService;
@@ -49,6 +62,7 @@ public class PersonalHomeController {
     @DoGet("/")
     public View home(
         HttpServletRequest request,
+        @RequestParam(value = "keyword") String keyword,
         @RequestParam(value = "sortOrder") String sortOrder,
         @RequestParam(value = "nextPageToken") String nextPageToken,
         @RequestParam(value = "prevPageToken") String prevPageToken,
@@ -56,18 +70,18 @@ public class PersonalHomeController {
         @RequestParam(value = "limit", defaultValue = "12") int limit
     ) {
         commonValidator.validatePageSize(limit);
-        DefaultPostFilter filter = DefaultPostFilter
+        DefaultPostFilter.Builder filterBuilder = DefaultPostFilter
             .builder()
             .postType(PostType.BLOG.toString())
-            .postStatus(PostStatus.PUBLISHED.toString())
-            .build();
-        String language = languageControllerService
+            .postStatus(PostStatus.PUBLISHED.toString());
+        String languageCode = languageControllerService
             .getLanguageCodeOrDefault(request);
-        PaginationModel<WebPostItemResponse> pagination = postControllerService
-            .getPostItemPagination(
-                filter,
-                language,
+        PaginationModel<WebPostContentResponse> pagination = postControllerService
+            .getPublishedBlogPagination(
+                filterBuilder,
                 sortOrder,
+                keyword,
+                languageCode,
                 nextPageToken,
                 prevPageToken,
                 lastPage,
@@ -83,16 +97,35 @@ public class PersonalHomeController {
                 TermType.TAG.toString(),
                 50
             );
+        List<WebPostContentResponse> posts = pagination.getItems();
+        List<Long> postIds = newArrayList(
+            posts,
+            WebPostContentResponse::getId
+        );
+        Set<String> authorUuids = posts
+            .stream()
+            .map(WebPostContentResponse::getAuthor)
+            .filter(Objects::nonNull)
+            .map(UuidNameModel::getUuid)
+            .collect(Collectors.toSet());
         return View.builder()
             .template("home")
             .addVariable("pagination", pagination)
             .addVariable("topCategories", topCategories)
             .addVariable("topTags", topTags)
             .addVariable(
+                "readTimeInMinutesByPostId",
+                postWordCountService.getReadTimeInMinutesByPostIds(postIds)
+            )
+            .addVariable(
+                "authorAvatarByUuid",
+                adminAvatarService.getAvatarMapByUuids(authorUuids)
+            )
+            .addVariable(
                 "headingFragments",
                 pageFragmentManager.getPageFragmentMap(
                     "main_page_heading",
-                    language
+                    languageCode
                 )
             )
             .addVariable(

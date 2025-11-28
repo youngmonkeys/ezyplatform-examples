@@ -1,0 +1,17 @@
+.page-article img {
+    max-width: 100%;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+.terms-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.terms-wrapper .terms {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}

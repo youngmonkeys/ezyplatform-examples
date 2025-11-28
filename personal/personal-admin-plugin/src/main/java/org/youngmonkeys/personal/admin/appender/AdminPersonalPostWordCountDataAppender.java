@@ -15,6 +15,8 @@ import org.youngmonkeys.personal.entity.PersonalPostWordCount;
 
 import java.util.Arrays;
 
+import static org.youngmonkeys.ezyarticle.sdk.util.Contents.removeHtmlFromContent;
+import static org.youngmonkeys.ezyplatform.util.Strings.emptyIfNull;
 import static org.youngmonkeys.personal.constant.PersonalConstants.INTERNAL_EVENT_NAME_POST_WORD_COUNT;
 
 @EzySingleton
@@ -66,7 +68,9 @@ public class AdminPersonalPostWordCountDataAppender
     ) {
         long historyId = value.getId();
         PostHistory postHistory = getPostHistoryById(historyId);
-        String content = postHistory.getContent();
+        String content = removeHtmlFromContent(
+            emptyIfNull(postHistory.getContent())
+        );
         long wordCount = Arrays
             .stream(content.trim().split("\\s+"))
             .filter(s -> !s.isEmpty())

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<script th:fragment="blog-list" th:inline="javascript">
+/*<![CDATA[*/
+var lastBlogPageToken = {};
+lastBlogPageToken.next = /*[[${pagination.pageToken.next}]]*/ '';
+var selectedTermSlug = /*[[${selectedTerm != null ? selectedTerm.slug : ''}]]*/ '';
+ezyweb.messages.author = /*[[#{author}]]*/ 'Author';
+ezyweb.messages.minute_short = /*[[#{minute_short}]]*/ 'min';
+/*]]>*/
+
+var onKeydownToSubscribe = function() {
+    if(event.key === 'Enter') {
+        onSubscribeClick();
+    }
+}
+
+var onSubscribeClick = function() {
+    var formData = ezyweb.formDataToObject('subscribeForm');
+    $.ajax({
+        type: 'POST',
+        url: '/api/v1/ezycrm/subscribe',
+        contentType: 'application/json',
+        data: JSON.stringify(formData)
+    }).done(function (menu) {
+        alert(ezyweb.messages.subscribe_successfully);
+    }).fail(function (e) {
+        ezyweb.processGetApiErrors(e);
+    });
+}
+
+//================ blog list =============
+var fetchBlogList = (action) => {
+    const params = new URLSearchParams({ limit: 12 });
+    if (selectedTermSlug) {
+        params.append('term', selectedTermSlug);
+    }
+    if (action === 'next') {
+        if (lastBlogPageToken.next) {
+            params.append('nextPageToken', lastBlogPageToken.next);
+        } else {
+            return;
+        }
+    }
+    $.ajax({
+        url: `/api/v1/blogs?${params.toString()}`,
+        type: 'GET',
+        dataType: 'json'
+    })
+    .done((data) => {
+        lastBlogPageToken = data.pageToken;
+        const html = buildBlogListBodyHtml(data.items || []);
+        if (action === 'next') {
+            $('#blogListBody').append(html);
+        } else {
+            $('#blogListBody').html(html);
+        }
+        if (!data.continuation.hasNext) {
+            $('#loadMoreBlogButton').remove();
+        }
+        var postIds = data.items.map((it) => it.id);
+        fetchPostReadingTimeInMinutes(postIds);
+
+        var uuids = [...new Set(
+          data.items
+              .map(it => it.author?.uuid)
+              .filter(Boolean)
+        )];
+        fetchPostAuthorAvatars(uuids);
+    })
+    .fail((e) => {
+        ezyweb.processGetApiErrors(e);
+    });
+};
+
+const buildBlogListBodyHtml = (blogList = []) => {
+    let html = '';
+    blogList.forEach((blog) => {
+        html += buildBlogListItemHtml(blog);
+    });
+    return html;
+};
+
+const buildBlogListItemHtml = (blog) => {
+    const authorName = blog.author?.name || ezyweb.messages.author;
+    return `
+        <div class="blog-card">
+            <div class="blog-card-banner">
+                ${blog.featuredImage ? `
+                    <img src="${ezyweb.extractMediaUrl(blog.featuredImage)}"
+                         alt="${blog.featuredImage.originalName || ''}"
+                         width="250"
+                         class="blog-banner-img">
+                ` : ''}
+            </div>
+            <div class="blog-content-wrapper">
+                <a class="blog-topic text-tiny"
+                   href="/blogs/${blog.terms[0]?.slug}">
+                    ${blog.terms[0]?.name || ''}
+                </a>
+                <h3>
+                    <a href="/blog/${blog.slug}" class="h3">
+                        ${blog.title || ''}
+                    </a>
+                </h3>
+                <div class="blog-text">
+                    ${blog.shortedContent || ''}
+                </div>
+                <div class="wrapper-flex">
+                    <div class="profile-wrapper">
+                        <img src="/images/author.png" alt="${authorName}" width="50"
+                             class="post-author-avatar-${blog.author?.uuid || ''}">
+                    </div>
+                    <div class="wrapper">
+                        <a href="/author/${blog.author?.uuid || '#'}" class="h4">
+                            ${authorName}
+                        </a>
+                        <p class="text-sm">
+                            <time class="date-time-minute-string">
+                                ${ezyweb.formatTimeStamp(blog.publishedAt)}
+                            </time>
+                            <span class="separator"></span>
+                            <ion-icon name="time-outline"></ion-icon>
+                            <time><span id="post-reading-time-${blog.id}"></span> ${ezyweb.messages.minute_short}</time>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+};
+
+var fetchPostReadingTimeInMinutes = (postIds) => {
+    $.ajax({
+        url: `/api/v1/posts/read-time-in-minutes?postIds=${postIds.join(',')}`,
+        type: 'GET',
+        dataType: 'json'
+    })
+    .done((data) => {
+        Object.entries(data).forEach(([k, v]) => {
+            $(`#post-reading-time-${k}`).text(v);
+        });
+    })
+    .fail((e) => {
+        ezyweb.processGetApiErrors(e);
+    });
+};
+
+var fetchPostAuthorAvatars = (uuids) => {
+    $.ajax({
+        url: `/api/v1/admins/avatars?uuids=${uuids.join(',')}`,
+        type: 'GET',
+        dataType: 'json'
+    })
+    .done((data) => {
+        Object.entries(data).forEach(([k, v]) => {
+            $(`.post-author-avatar-${k}`)
+                .prop('src', ezyweb.extractMediaUrl(v));
+        });
+    })
+    .fail((e) => {
+        ezyweb.processGetApiErrors(e);
+    });
+};
+</script>
+<script th:fragment="subscribe" th:inline="javascript">
+/*<![CDATA[*/
+ezyweb.messages.subscribe_successfully = /*[[#{subscribe_successfully}]]*/;
+/*]]>*/
+
+var onKeydownToSubscribe = function() {
+    if(event.key === 'Enter') {
+        onSubscribeClick();
+    }
+}
+
+var onSubscribeClick = function() {
+    var formData = ezyweb.formDataToObject('subscribeForm');
+    $.ajax({
+        type: 'POST',
+        url: '/api/v1/ezycrm/subscribe',
+        contentType: 'application/json',
+        data: JSON.stringify(formData)
+    }).done(function (menu) {
+        alert(ezyweb.messages.subscribe_successfully);
+    }).fail(function (e) {
+        ezyweb.processGetApiErrors(e);
+    });
+}
+</script>
+</body>
+</html>

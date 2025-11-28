@@ -11,33 +11,39 @@
                  width="250" class="blog-banner-img">
         </div>
         <div class="blog-content-wrapper">
-            <button class="blog-topic text-tiny">
-                <th:block th:if="${blog.category != null}">
-                    [[${blog.category.name}]]
+            <a class="blog-topic text-tiny"
+               th:href="${blog.terms.size() > 0 ? ('/blogs/' + blog.terms[0].slug) : 'javascript:void(0)'}">
+                <th:block th:if="${blog.terms.size() > 0}">
+                    [[${blog.terms[0].name}]]
                 </th:block>
-            </button>
+            </a>
             <h3>
                 <a th:href="${'/blog/' + blog.slug}" class="h3">
                     [[${blog.title}]]
                 </a>
             </h3>
-            <div class="blog-text" th:text="${blog.shortedContent}">
-            </div>
+            <div class="blog-text" th:text="${blog.shortedContent}"></div>
             <div class="wrapper-flex">
                 <div class="profile-wrapper">
-                    <img src="/images/author.png" alt="Julia Walker" width="50">
+                    <img th:src="${blog.author != null && authorAvatarByUuid.get(blog.author.uuid) != null ? authorAvatarByUuid.get(blog.author.uuid).getUrlOrDefault('/images/author.png') : '/images/author.png'}"
+                         th:alt="${blog.author != null ? blog.author.name : #messages.msg('author')}"
+                         width="50">
                 </div>
                 <div class="wrapper">
-                    <a th:href="${'/author/' + blog.author.uuid}" class="h4">
+                    <a th:if="${blog.author != null}"
+                       th:href="${'/author/' + blog.author.uuid}" class="h4">
                         [[${blog.author.name}]]
                     </a>
+                    <span th:if="${blog.author == null}" class="h4">[[#{author}]]</span>
                     <p class="text-sm">
                         <time class="date-time-minute-string">
                             [[${blog.publishedAt}]]
                         </time>
                         <span class="separator"></span>
                         <ion-icon name="time-outline"></ion-icon>
-                        <time datetime="PT3M">3 min</time>
+                        <time>
+                            [[${readTimeInMinutesByPostId.getOrDefault(blog.id, 1L)}]] [[#{minute_short}]]
+                        </time>
                     </p>
                 </div>
             </div>

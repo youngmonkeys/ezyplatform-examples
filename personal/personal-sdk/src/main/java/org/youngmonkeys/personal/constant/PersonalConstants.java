@@ -8,6 +8,8 @@ public final class PersonalConstants {
     public static final String INTERNAL_EVENT_NAME_POST_WORD_COUNT =
         "personal_post_word_count";
 
+    public static final int READ_WORDS_PER_MINUTE = 200;
+
     public static final String META_KEY_TIME_TO_READ = "time_to_read";
 
     private PersonalConstants() {}

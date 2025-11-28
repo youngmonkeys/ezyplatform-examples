@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{ezytheme}">
+<body>
+<div layout:fragment="content" class="page-wrapper">
+    <div class="container">
+        <section class="page-header">
+            <div th:replace="~{fragments/breadcrumb :: content(title=#{blogs}, backText=#{back_to_home}, backUrl='/')}"></div>
+        </section>
+        <section class="page-content page-blogs">
+            <div class="blog-card-group" id="blogListBody">
+                <th:block th:each="blog : ${pagination.items}">
+                    <th:block th:replace="~{fragments/blog-item :: content(blog=${blog})}"></th:block>
+                </th:block>
+            </div>
+            <button th:if="${pagination.continuation.hasNext}" type="button" class="btn load-more" id="loadMoreBlogButton" onclick="fetchBlogList('next')">
+                [[#{load_more}]]
+            </button>
+        </section>
+    </div>
+</div>
+<th:block layout:fragment="scripts">
+    <th:block th:replace="~{fragments/scripts :: blog-list}" />
+</th:block>
+</body>
+</html>
