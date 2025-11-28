@@ -4,29 +4,28 @@ import com.tvd12.ezyhttp.server.core.annotation.Controller;
 import com.tvd12.ezyhttp.server.core.annotation.DoGet;
 import com.tvd12.ezyhttp.server.core.annotation.RequestParam;
 import lombok.AllArgsConstructor;
+import org.youngmonkeys.ezyplatform.model.MediaNameModel;
 import org.youngmonkeys.ezyplatform.web.validator.WebCommonValidator;
-import org.youngmonkeys.personal.web.service.WebPersonalPostWordCountService;
+import org.youngmonkeys.personal.web.service.WebPersonalAdminAvatarService;
 
 import java.util.Map;
 import java.util.Set;
 
 @Controller("/api/v1")
 @AllArgsConstructor
-public class PersonalWebApiPostController {
+public class PersonalWebApiAdminController {
 
-    private final WebPersonalPostWordCountService postWordCountService;
+    private final WebPersonalAdminAvatarService adminAvatarService;
     private final WebCommonValidator commonValidator;
 
-    @DoGet("/posts/read-time-in-minutes")
-    public Map<Long, Long> postsReadTimeInMinutesGet(
-        @RequestParam Set<Long> postIds
+    @DoGet("/admins/avatars")
+    public Map<String, MediaNameModel> adminsAvatarsGet(
+        @RequestParam Set<String> uuids
     ) {
         commonValidator.validateCollectionSize(
-            "postIds",
-            postIds
+            "uuids",
+            uuids
         );
-        return postWordCountService.getReadTimeInMinutesByPostIds(
-            postIds
-        );
+        return adminAvatarService.getAvatarMapByUuids(uuids);
     }
 }

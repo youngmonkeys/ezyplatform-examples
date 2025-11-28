@@ -62,6 +62,13 @@ var fetchBlogList = (action) => {
         }
         var postIds = data.items.map((it) => it.id);
         fetchPostReadingTimeInMinutes(postIds);
+
+        var uuids = [...new Set(
+          data.items
+              .map(it => it.author?.uuid)
+              .filter(Boolean)
+        )];
+        fetchPostAuthorAvatars(uuids);
     })
     .fail((e) => {
         ezyweb.processGetApiErrors(e);
@@ -103,7 +110,8 @@ const buildBlogListItemHtml = (blog) => {
                 </div>
                 <div class="wrapper-flex">
                     <div class="profile-wrapper">
-                        <img src="/images/author.png" alt="${authorName}" width="50">
+                        <img src="/images/author.png" alt="${authorName}" width="50"
+                             class="post-author-avatar-${blog.author?.uuid || ''}">
                     </div>
                     <div class="wrapper">
                         <a href="/author/${blog.author?.uuid || '#'}" class="h4">
@@ -133,6 +141,23 @@ var fetchPostReadingTimeInMinutes = (postIds) => {
     .done((data) => {
         Object.entries(data).forEach(([k, v]) => {
             $(`#post-reading-time-${k}`).text(v);
+        });
+    })
+    .fail((e) => {
+        ezyweb.processGetApiErrors(e);
+    });
+};
+
+var fetchPostAuthorAvatars = (uuids) => {
+    $.ajax({
+        url: `/api/v1/admins/avatars?uuids=${uuids.join(',')}`,
+        type: 'GET',
+        dataType: 'json'
+    })
+    .done((data) => {
+        Object.entries(data).forEach(([k, v]) => {
+            $(`.post-author-avatar-${k}`)
+                .prop('src', ezyweb.extractMediaUrl(v));
         });
     })
     .fail((e) => {
