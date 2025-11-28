@@ -6,8 +6,10 @@
     <div class="container">
         <div class="wrapper">
             <a href="#" class="footer-logo">
-                <img src="/images/logo-light.svg" alt="SimpleBlog Logo" width="150" class="logo-light">
-                <img src="/images/logo-dark.svg" alt="SimpleBlog Logo" width="150" class="logo-dark">
+                <img th:src="${siteLogoUrl != null ? siteLogoUrl : '/images/logo-light.svg'}"
+                     alt="Light Logo" width="150" class="logo-light">
+                <img th:src="${siteLogoWithoutTextUrl != null ? siteLogoWithoutTextUrl : '/images/logo-dark.svg'}"
+                     alt="Dark Logo" width="150" class="logo-dark">
             </a>
 
             <p class="footer-text">
@@ -19,7 +21,7 @@
             <p class="footer-title">[[#{quick_links}]]</p>
             <ul>
                 <li>
-                    <a href="#" class="footer-link">[[#{advertise_with_us}]]</a>
+                    <a href="/posts/advertise-with-us" class="footer-link">[[#{advertise_with_us}]]</a>
                 </li>
                 <li>
                     <a href="/about-us" class="footer-link">[[#{about_me}]]</a>
@@ -47,7 +49,7 @@
     </div>
 
     <p class="copyright">
-        &copy; [[#{copyright_prefix}]] <a href="#">[[${siteName}]]</a>
+        &copy; [[#{copyright_prefix}]] <a href="/">[[${siteName}]]</a>
     </p>
 </footer>
 </body>
