@@ -17,7 +17,24 @@
 package org.youngmonkeys.personal.web.controller.view;
 
 import com.tvd12.ezyhttp.server.core.annotation.Controller;
+import com.tvd12.ezyhttp.server.core.view.View;
+import lombok.AllArgsConstructor;
 import org.youngmonkeys.ezyarticle.web.controller.view.BlogController;
+import org.youngmonkeys.personal.web.view.WebPersonalBlogsViewDecorator;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
-public class WebPersonalBlogController extends BlogController {}
+@AllArgsConstructor
+public class WebPersonalBlogController extends BlogController {
+
+    private final WebPersonalBlogsViewDecorator blogsViewDecorator;
+
+    @Override
+    protected void decorateBlogView(
+        HttpServletRequest request,
+        View view
+    ) {
+        blogsViewDecorator.decorateBlogView(view);
+    }
+}

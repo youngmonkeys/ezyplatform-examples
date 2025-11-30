@@ -55,7 +55,7 @@
                 <div class="topics">
                     <h2 class="h2">[[#{topics}]]</h2>
                     <a th:each="topCategory : ${topCategories}"
-                       th:href="${'/topics/' + topCategory.slug}"
+                       th:href="${'/blogs/' + topCategory.slug}"
                        class="topic-btn">
                         <div class="icon-box">
                             <img th:if="${topCategory.titleImage != null}"
@@ -67,10 +67,10 @@
                 <div class="tags">
                     <h2 class="h2">[[#{tags}]]</h2>
                     <div class="wrapper">
-                        <button th:each="topTag : ${topTags}"
-                                type="button" class="hashtag">
+                        <a th:each="topTag : ${topTags}" class="hashtag"
+                           th:href="${'/blogs/' + topTag.slug}">
                             #[[${topTag.name}]]
-                        </button>
+                        </a>
                     </div>
                 </div>
                 <div class="contact">
