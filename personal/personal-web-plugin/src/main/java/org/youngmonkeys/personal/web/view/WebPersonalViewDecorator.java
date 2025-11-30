@@ -23,6 +23,7 @@ import org.youngmonkeys.ezyarticle.web.manager.WebPageFragmentManager;
 import org.youngmonkeys.ezyplatform.web.controller.service.WebLanguageControllerService;
 import org.youngmonkeys.ezyplatform.web.service.WebSettingService;
 import org.youngmonkeys.ezyplatform.web.view.WebViewDecorator;
+import org.youngmonkeys.ezysupport.web.service.WebSocialNetworkService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -35,6 +36,7 @@ public class WebPersonalViewDecorator extends WebViewDecorator {
 
     private final WebPageFragmentManager pageFragmentManager;
     private final WebSettingService settingService;
+    private final WebSocialNetworkService socialNetworkService;
     private final WebLanguageControllerService languageControllerService;
 
     @SuppressWarnings("MethodLength")
@@ -61,6 +63,10 @@ public class WebPersonalViewDecorator extends WebViewDecorator {
                 "common",
                 languageCode
             )
+        );
+        view.setVariable(
+            "socialNetworkMapByDisplayName",
+            socialNetworkService.getActivatedSocialNetworksMapByDisplayName()
         );
     }
 

@@ -78,18 +78,21 @@
                     <div class="wrapper">
                         <p>[[#{contact_description}]]</p>
                         <ul class="social-link">
-                            <li>
-                                <a href="#" class="icon-box discord">
+                            <li th:if="${socialNetworkMapByDisplayName.get('Discord') != null}">
+                                <a th:href="${socialNetworkMapByDisplayName.get('Discord').profileUrl}"
+                                   class="icon-box discord">
                                     <ion-icon name="logo-discord"></ion-icon>
                                 </a>
                             </li>
-                            <li>
-                                <a href="#" class="icon-box twitter">
+                            <li th:if="${socialNetworkMapByDisplayName.get('X'.toString()) != null}">
+                                <a th:href="${socialNetworkMapByDisplayName.get('X'.toString()).profileUrl}"
+                                   class="icon-box twitter">
                                     <ion-icon name="logo-twitter"></ion-icon>
                                 </a>
                             </li>
-                            <li>
-                                <a href="#" class="icon-box facebook">
+                            <li th:if="${socialNetworkMapByDisplayName.get('Facebook') != null}">
+                                <a th:href="${socialNetworkMapByDisplayName.get('Facebook').profileUrl}"
+                                    class="icon-box facebook">
                                     <ion-icon name="logo-facebook"></ion-icon>
                                 </a>
                             </li>
