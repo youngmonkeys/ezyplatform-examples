@@ -1,0 +1,97 @@
+<!--
+ ~ Copyright 2022 youngmonkeys.org
+ ~ 
+ ~ Licensed under the ezyplatform, Version 1.0.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~ 
+ ~     https://youngmonkeys.org/licenses/ezyplatform-1.0.0.txt
+ ~ 
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{ezytheme}">
+<head>
+    <link rel="stylesheet" type="text/css" ezy:vhref="/ezyarticle/css/style.css" />
+</head>
+<body>
+<div layout:fragment="content" class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="col-12 mt-4 d-md-none d-block">
+                <a href="/blogs">
+                    <i class="fa-solid fa-angles-left"></i>
+                    [[#{back_to_blogs}]]
+                </a>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="post-content-wrapper">
+                <div class="post-title-wrapper">
+                    <div class="d-md-flex d-block justify-content-between align-items-center">
+                        <h1 class="post-title">[[${blog.title}]]</h1>
+                        <a href="/blogs" class="text-nowrap d-md-inline-block d-none">
+                            <i class="fa-solid fa-angles-left"></i>
+                            [[#{back_to_blogs}]]
+                        </a>
+                    </div>
+                    <div class="post-item-metadata">
+                        <div>
+                            [[#{posted_by_first_upper}]]:
+                            <th:block th:if="${blog.authorType.toString() == 'ADMIN'}">
+                                [[${blog.author.name}]]
+                            </th:block>
+                            <th:block th:if="${blog.authorType.toString() == 'USER'}">
+                                <a th:href="${'/authors/' + blog.author.uuid}">
+                                    [[${blog.author.name}]]
+                                </a>
+                            </th:block>
+                        </div>
+                        <div>
+                            [[#{date}]]:
+                            <span class="date-string">[[${blog.publishedAt}]]</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-terms-wrapper">
+                    <a th:each="term : ${blog.terms}" th:href="${'/blogs/' + term.slug}"
+                       class="post-term">
+                        [[${term.name}]]
+                    </a>
+                </div>
+                <div class="post-content clickable-images"
+                     id="post-content-body"
+                     th:utext="${blog.content}">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="post-table-of-contents-wrapper">
+                <h3 class="table-of-contents-title">[[#{table_of_contents}]]</h3>
+                <div id="post-table-of-contents"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block layout:fragment="modals">
+    <th:block th:replace="~{ezyarticle/image-modal :: content}" />
+</th:block>
+<script layout:fragment="scripts">
+ezyweb.disableAutoCreateNumbering = true;
+</script>
+<th:block layout:fragment="post-scripts">
+    <script th:replace="~{ezyarticle/image-modal :: scripts}" />
+    <script th:replace="~{ezyarticle/scripts :: table-of-contents}" />
+</th:block>
+</body>
+</html>

@@ -149,6 +149,54 @@
             <scope>system</scope>
             <systemPath>${ezyplatform.home}/admin/plugins/ezyaccount/lib/ezyaccount-admin-plugin-${ezyaccount.version}.jar</systemPath>
         </dependency>
+    <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyrating-sdk</artifactId>
+            <version>${ezyrating.version}</version>
+        <scope>system</scope>
+            <systemPath>${ezyplatform.home}/admin/plugins/ezyrating/lib/ezyrating-sdk-${ezyrating.version}.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyrating-admin-plugin</artifactId>
+            <version>${ezyrating.version}</version>
+            <scope>system</scope>
+            <systemPath>${ezyplatform.home}/admin/plugins/ezyrating/lib/ezyrating-admin-plugin-${ezyrating.version}.jar</systemPath>
+        </dependency>
+    <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezymarketing-sdk</artifactId>
+            <version>${ezymarketing.version}</version>
+        <scope>system</scope>
+            <systemPath>${ezyplatform.home}/admin/plugins/ezymarketing/lib/ezymarketing-sdk-${ezymarketing.version}.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezymarketing-admin-plugin</artifactId>
+            <version>${ezymarketing.version}</version>
+            <scope>system</scope>
+            <systemPath>${ezyplatform.home}/admin/plugins/ezymarketing/lib/ezymarketing-admin-plugin-${ezymarketing.version}.jar</systemPath>
+        </dependency>
+    <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezychat-sdk</artifactId>
+            <version>${ezychat.version}</version>
+        <scope>system</scope>
+            <systemPath>${ezyplatform.home}/admin/plugins/ezychat/lib/ezychat-sdk-${ezychat.version}.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyplatform-test-sdk</artifactId>
+            <version>${ezy.platform.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezychat-admin-plugin</artifactId>
+            <version>${ezychat.version}</version>
+            <scope>system</scope>
+            <systemPath>${ezyplatform.home}/admin/plugins/ezychat/lib/ezychat-admin-plugin-${ezychat.version}.jar</systemPath>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>
@@ -190,6 +238,15 @@
                     </resource>
                 <resource>
                         <directory>${ezyplatform.home}/admin/plugins/ezyaccount/resources</directory>
+                    </resource>
+                <resource>
+                        <directory>${ezyplatform.home}/admin/plugins/ezyrating/resources</directory>
+                    </resource>
+                <resource>
+                        <directory>${ezyplatform.home}/admin/plugins/ezymarketing/resources</directory>
+                    </resource>
+                <resource>
+                        <directory>${ezyplatform.home}/admin/plugins/ezychat/resources</directory>
                     </resource>
                 </resources>
             </build>

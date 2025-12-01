@@ -195,6 +195,48 @@
             <version>${ezy.platform.version}</version>
             <scope>test</scope>
         </dependency>
+    <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyrating-sdk</artifactId>
+            <version>${ezyrating.version}</version>
+        <scope>system</scope>
+            <systemPath>${ezyplatform.home}/web/plugins/ezyrating/lib/ezyrating-sdk-${ezyrating.version}.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyrating-web-plugin</artifactId>
+            <version>${ezyrating.version}</version>
+            <scope>system</scope>
+            <systemPath>${ezyplatform.home}/web/plugins/ezyrating/lib/ezyrating-web-plugin-${ezyrating.version}.jar</systemPath>
+        </dependency>
+    <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezymarketing-sdk</artifactId>
+            <version>${ezymarketing.version}</version>
+        <scope>system</scope>
+            <systemPath>${ezyplatform.home}/web/plugins/ezymarketing/lib/ezymarketing-sdk-${ezymarketing.version}.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezymarketing-web-plugin</artifactId>
+            <version>${ezymarketing.version}</version>
+            <scope>system</scope>
+            <systemPath>${ezyplatform.home}/web/plugins/ezymarketing/lib/ezymarketing-web-plugin-${ezymarketing.version}.jar</systemPath>
+        </dependency>
+    <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezychat-sdk</artifactId>
+            <version>${ezychat.version}</version>
+        <scope>system</scope>
+            <systemPath>${ezyplatform.home}/web/plugins/ezychat/lib/ezychat-sdk-${ezychat.version}.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezychat-web-plugin</artifactId>
+            <version>${ezychat.version}</version>
+            <scope>system</scope>
+            <systemPath>${ezyplatform.home}/web/plugins/ezychat/lib/ezychat-web-plugin-${ezychat.version}.jar</systemPath>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>
@@ -236,6 +278,15 @@
                     </resource>
                 <resource>
                         <directory>${ezyplatform.home}/web/plugins/ezyaccount/resources</directory>
+                    </resource>
+                <resource>
+                        <directory>${ezyplatform.home}/web/plugins/ezyrating/resources</directory>
+                    </resource>
+                <resource>
+                        <directory>${ezyplatform.home}/web/plugins/ezymarketing/resources</directory>
+                    </resource>
+                <resource>
+                        <directory>${ezyplatform.home}/web/plugins/ezychat/resources</directory>
                     </resource>
                 </resources>
             </build>

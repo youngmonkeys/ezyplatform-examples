@@ -1,0 +1,165 @@
+<!--
+ ~ Copyright 2022 youngmonkeys.org
+ ~
+ ~ Licensed under the ezyplatform, Version 1.0.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~   https://youngmonkeys.org/licenses/ezyplatform-1.0.0.txt
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{ezytheme}">
+<body>
+<div layout:fragment="content" class="container mt-3 mb-3">
+  <div class="row">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-8 overflow-wrap-anywhere">
+      <div class="input-group input-group-lg my-3">
+        <input type="search" class="form-control rounded-0"
+               th:placeholder="#{keyword}" id="newsSearchKeyword"
+               th:aria-label="keyword" aria-describedby="news-search-input"
+               th:value="${newsSearchKeyword}"
+               onkeydown="onKeydownToSearchNewsItems(this);">
+        <span class="input-group-text rounded-0 text-primary" id="news-search-input">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </span>
+      </div>
+      <div class="row" id="newsListBody">
+        <div th:each="news : ${pagination.items}" class="col-md-12">
+          <a class="post-item" th:href="${'/news/' + news.slug}">
+            <div class="post-item-thumbnail">
+              <img th:src="${news.featuredImage != null ? news.featuredImage.getUrlOrDefault('/images/logo.png') : '/images/logo.png'}">
+            </div>
+            <div class="post-item-content-wrapper">
+              <h4 class="post-item-title">
+                [[${news.title}]]
+              </h4>
+              <div class="post-item-content">
+                [[${news.shortedContent}]]
+              </div>
+              <div class="post-item-metadata">
+                [[#{posted_date_first_upper}]]:
+                <span class="date-string">[[${news.publishedAt}]]</span>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div th:if="${pagination.continuation.hasNext}"  class="col-12 d-flex justify-content-center py-3" id="nextButtonContainer">
+        <button type="button" class="btn btn-outline-primary px-5" onclick="fetchNewsList('next')">
+          [[#{load_mores}]]
+        </button>
+      </div>
+    </div>
+    <div class="col-lg-2"></div>
+  </div>
+</div>
+<script layout:fragment="scripts" th:inline="javascript">
+/*<![CDATA[*/
+var newsSearchKeyword = /*[[${newsSearchKeyword}]]*/ '';
+var lastNewsPageToken = {};
+lastNewsPageToken.next = /*[[${pagination.pageToken.next}]]*/ '';
+/*]]>*/
+
+//================ search ================
+var onKeydownToSearchNewsItems = function(e) {
+  if(event.key === 'Enter') {
+        newsSearchKeyword = $(e).val();
+        fetchNewsList();
+        changeBrowserUrl();
+    }
+}
+
+var changeBrowserUrl = function() {
+    var params = [];
+    if (newsSearchKeyword) {
+        params.push('keyword=' + newsSearchKeyword);
+    }
+    if (ezyweb.lang) {
+        params.push('lang=' + ezyweb.lang);
+    }
+    var url = '/news';
+    if (params.length) {
+        url += '?' + params.join('&');
+    }
+    window.history.pushState({}, '', url);
+}
+
+//================ news list =============
+var fetchNewsList = function (action) {
+  var queryString = '';
+  if (newsSearchKeyword) {
+    queryString += '&keyword=' + newsSearchKeyword;
+  }
+  if (action == 'next') {
+    if (lastNewsPageToken.next) {
+      queryString += '&nextPageToken=' + lastNewsPageToken.next;
+    } else {
+      return;
+    }
+  }
+  if (ezyweb.lang) {
+    queryString += '&lang=' + ezyweb.lang;
+  }
+  $.ajax({
+    url: '/api/v1/news?limit=12' + queryString,
+    type: 'GET',
+    dataType: 'json'
+  })
+  .done(function (data) {
+    lastNewsPageToken = data.pageToken;
+    var html = buildNewsListBodyHtml(data.items);
+    if (action == 'next') {
+      $('#newsListBody').append(html);
+    } else {
+      $('#newsListBody').html(html);
+    }
+    if (!data.continuation.hasNext) {
+      $('#nextButtonContainer').remove();
+    }
+  })
+  .fail(function (e) {
+    ezyweb.processGetApiErrors(e);
+  });
+}
+
+var buildNewsListBodyHtml = function (newsList) {
+  var html = '';
+  newsList.forEach((news) => {
+    html += buildNewsListItemHtml(news);
+  });
+  return html;
+}
+
+var buildNewsListItemHtml = function (news) {
+  var html = `
+  <div class="col-md-12">
+    <a class="post-item" href="${'/news/' + news.slug}">
+      <div class="post-item-thumbnail">
+        <img src="${ezyweb.extractMediaUrl(news.featuredImage) || '/images/logo.png'}">
+      </div>
+      <div class="post-item-content-wrapper">
+        <h4 class="post-item-title">
+          ${news.title}
+        </h4>
+        <div class="post-item-content">${news.shortedContent}</div>
+      </div>
+    </a>
+  </div>
+  `;
+  return html;
+}
+</script>
+</body>
+</html>
