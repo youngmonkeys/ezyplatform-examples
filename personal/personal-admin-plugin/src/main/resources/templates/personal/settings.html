@@ -1,11 +1,77 @@
 <!DOCTYPE html>
 <html
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        layout:decorate="~{ezyadmin}">
-
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{ezyadmin}">
+<head>
+    <script>
+      var personal = {};
+    </script>
+</head>
 <body>
 <div layout:fragment="content" class="row">
+    <div class="col-md-3 col-5">
+        <span>[[#{post_word_count_appender}]]</span>
+    </div>
+    <div class="col-md-9 col-7">
+        <th:block th:replace="~{fragments/data-appender :: actions(dataAppenderName='personal_post_word_count')}" />
+    </div>
+    <div class="col-md-12">
+        <hr class="mb-4"/>
+    </div>
+    <div class="col-md-12">
+        <form id="updateSettingsForm">
+            <div class="form-group row">
+                <label for="allowCalculatePostReadTime" class="col-sm-3 col-form-label">[[#{post_comment_enable}]]</label>
+                <div class="col-lg-7 col-md-6 d-flex align-items-center">
+                    <input type="checkbox" name="allowCalculatePostReadTime" id="allowCalculatePostReadTime" class="wh-1rem"
+                           th:checked="${allowCalculatePostReadTime}">
+                </div>
+                <label id="allowCalculatePostReadTimeErrorLabel" class="col-lg-2 col-md-3 col-form-label text-danger d-none" for="allowCalculatePostReadTime">
+                    <i class="far fa-times-circle"></i> <span id="allowCalculatePostReadTimeError">[[#{invalid}]]</span>
+                </label>
+            </div>
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-2 mb-2">
+                    <button type="button" class="btn btn-primary btn-block" onclick="personal.updateSettings();">[[#{save}]]</button>
+                </div>
+                <div class="col-md-5"></div>
+                <!-- /.col -->
+            </div>
+        </form>
+    </div>
 </div>
+<th:block layout:fragment="modals">
+    <th:block th:replace="~{fragments/data-appender :: modals}" />
+</th:block>
+<script layout:fragment="scripts" th:inline="javascript">
+/*<![CDATA[*/
+ezyadmin.messages.save_successfully = /*[[#{save_successfully}]]*/;
+/*]]>*/
+
+// ================ settings ==================
+personal.updateSettings = function() {
+    var formData = ezyadmin.formDataToObject('updateSettingsForm');
+    formData.allowCalculatePostReadTime = $('#allowCalculatePostReadTime')
+        .prop('checked');
+    $.ajax({
+        type: 'PUT',
+        url: '/personal/api/v1/settings',
+        data: JSON.stringify(formData),
+        contentType: 'application/json',
+        success: function () {
+            ezyadmin.hideFormErrors(formData);
+            ezyadmin.shortToast('bg-success', ezyadmin.messages.save_successfully);
+        },
+        error: function (data, e) {
+            ezyadmin.processUpdateApiErrors(formData, data);
+        }
+    });
+}
+</script>
+<th:block layout:fragment="post-scripts">
+    <script th:replace="~{fragments/data-appender :: scripts}" />
+</th:block>
 </body>
 </html>

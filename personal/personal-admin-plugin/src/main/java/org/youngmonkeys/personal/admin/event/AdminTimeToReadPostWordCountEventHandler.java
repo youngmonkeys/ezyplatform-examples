@@ -4,6 +4,7 @@ import com.tvd12.ezyfox.bean.annotation.EzySingleton;
 import lombok.AllArgsConstructor;
 import org.youngmonkeys.ezyarticle.admin.service.AdminPostMetaService;
 import org.youngmonkeys.ezyplatform.event.AbstractEventHandler;
+import org.youngmonkeys.personal.admin.service.AdminPersonalSettingService;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -16,6 +17,7 @@ import static org.youngmonkeys.personal.constant.PersonalConstants.META_KEY_TIME
 public class AdminTimeToReadPostWordCountEventHandler
     extends AbstractEventHandler<Map<String, Object>, Void> {
 
+    private final AdminPersonalSettingService personalSettingService;
     private final AdminPostMetaService postMetaService;
 
     private static final BigDecimal READ_TIME_PER_WORD =
@@ -23,6 +25,11 @@ public class AdminTimeToReadPostWordCountEventHandler
 
     @Override
     protected void processEventData(Map<String, Object> data) {
+        boolean allow = personalSettingService
+            .isAllowCalculatePostReadTime();
+        if (!allow) {
+            return;
+        }
         long postId = (long) data.get("postId");
         long wordCount = (long) data.get("wordCount");
         long readTime = BigDecimal.valueOf(wordCount)

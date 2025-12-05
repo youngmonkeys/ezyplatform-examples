@@ -12,5 +12,8 @@ public final class PersonalConstants {
 
     public static final String META_KEY_TIME_TO_READ = "time_to_read";
 
+    public static final String SETTING_KEY_ALLOW_CALCULATE_POST_READ_TIME =
+        "allow_calculate_post_read_time";
+
     private PersonalConstants() {}
 }
