@@ -1,13 +1,11 @@
 package org.youngmonkeys.personal.web.view;
 
-import com.tvd12.ezyfox.bean.annotation.EzyAutoBind;
 import com.tvd12.ezyfox.bean.annotation.EzySingleton;
 import com.tvd12.ezyhttp.server.core.view.View;
 import lombok.AllArgsConstructor;
 import org.youngmonkeys.ezyarticle.web.response.WebPostContentResponse;
 import org.youngmonkeys.ezyplatform.model.PaginationModel;
 import org.youngmonkeys.ezyplatform.model.UuidNameModel;
-import org.youngmonkeys.ezyplatform.web.service.WebAdminService;
 import org.youngmonkeys.personal.web.service.WebPersonalAdminAvatarService;
 import org.youngmonkeys.personal.web.service.WebPersonalPostWordCountService;
 
