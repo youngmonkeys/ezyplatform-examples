@@ -24,18 +24,36 @@
 <div layout:fragment="content">
     <div class="common-spacing-1"></div>
     <div class="container">
-        <div th:each="topBook : ${topBooks}" class="main-book">
+        <div th:each="book : ${highlightBooks}" class="main-book">
             <div class="description-item">
                 <h1 class="display-2 text-dark">
-                    [[${topBook.name}]]
+                    [[${book.name}]]
                 </h1>
-                <div class="lead" th:utext="${topBook.shortedDescription}"></div>
-                <p class="author text-muted mb-0" th:text="${topBook.authorName}"></p>
+                <div class="lead" th:utext="${book.shortedDescription}"></div>
+                <p class="author text-muted mb-0" th:text="${book.authorName}"></p>
             </div>
             <div class="image-item">
-                <img th:if="${topBook.bannerImage != null}"
-                     th:src="${topBook.bannerImage.getUrlOrNull()}">
+                <img th:if="${book.bannerImage != null}"
+                     th:src="${book.bannerImage.getUrlOrNull()}">
             </div>
+        </div>
+    </div>
+    <div class="common-spacing-2"></div>
+    <div class="container">
+        <h1 class="mb-4">[[#{bestselling_books}]]</h1>
+        <div class="books">
+            <th:block th:each="book : ${bestsellingBooks}">
+                <th:block th:replace="~{fragments/book-item :: content(book=${book})}" />
+            </th:block>
+        </div>
+    </div>
+    <div class="common-spacing-2"></div>
+    <div class="container">
+        <h1 class="mb-4">[[#{new_book_s}]]</h1>
+        <div class="books">
+            <th:block th:each="book : ${newBooks}">
+                <th:block th:replace="~{fragments/book-item :: content(book=${book})}" />
+            </th:block>
         </div>
     </div>
 </div>

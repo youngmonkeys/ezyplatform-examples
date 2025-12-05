@@ -1,0 +1,56 @@
+<!--
+ ~ Copyright 2022 youngmonkeys.org
+ ~
+ ~ Licensed under the ezyplatform, Version 1.0.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~     https://youngmonkeys.org/licenses/ezyplatform-1.0.0.txt
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="content">
+	<div class="book">
+        <a class="book-image"
+           th:href="${'/store/books/' + book.id}">
+            <img th:if="${book.bannerImage != null}"
+                 th:src="${book.bannerImage.getUrlOrNull()}"
+                 alt="book image">
+        </a>
+        <div class="book-content">
+            <div th:if="${book.discountPercent > 0}" class="book-tags">
+                <span class="discount-percent"
+                      th:text="${'- ' + book.discountPercent + ' %'}"></span>
+            </div>
+            <a th:href="${'/store/books/' + book.id}"
+               class="book-title">
+                [[${book.name}]]
+            </a>
+            <div class="book-author">
+                <span class="author-title">[[#{author}]]</span>
+                <a th:href="${'/authors/' + book.authorUuid}" class="author-name">
+                    [[${book.authorName}]]
+                </a>
+            </div>
+            <div class="prices">
+                <span class="price">
+                    [[${book.formattedPriceIncludeSymbol}]]
+                </span>
+                <span class="original-price">
+                    [[${book.formattedOriginalPriceIncludeSymbol}]]
+                </span>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

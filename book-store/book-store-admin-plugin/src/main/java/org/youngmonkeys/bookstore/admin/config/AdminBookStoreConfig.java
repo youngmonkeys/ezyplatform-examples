@@ -70,8 +70,9 @@ public class AdminBookStoreConfig implements EzyBeanConfig {
     }
 
     private void registerProductCategoryTypes() {
-        productCategoryTypeManager.addProductCategoryType(
-            BookStoreProductCategoryType.BOOK.toString()
+        productCategoryTypeManager.addProductCategoryTypes(
+            BookStoreProductCategoryType.BOOK.toString(),
+            BookStoreProductCategoryType.TOP_BOOK.toString()
         );
     }
 }

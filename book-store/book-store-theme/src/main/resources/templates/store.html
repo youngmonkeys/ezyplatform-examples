@@ -40,38 +40,9 @@
         </div>
         <div class="col-lg-9 col-md-8">
             <div class="books">
-                <div th:each="book : ${books.items}" class="book">
-                    <a class="book-image"
-                       th:href="${'/store/books/' + book.id}">
-                        <img th:if="${book.bannerImage != null}"
-                             th:src="${book.bannerImage.getUrlOrNull()}"
-                             alt="book image">
-                    </a>
-                    <div class="book-content">
-                        <div th:if="${book.discountPercent > 0}" class="book-tags">
-                            <span class="discount-percent"
-                                  th:text="${'- ' + book.discountPercent + ' %'}"></span>
-                        </div>
-                        <a th:href="${'/store/books/' + book.id}"
-                           class="book-title">
-                            [[${book.name}]]
-                        </a>
-                        <div class="book-author">
-                            <span class="author-title">[[#{author}]]</span>
-                            <a th:href="${'/authors/' + book.authorUuid}" class="author-name">
-                                [[${book.authorName}]]
-                            </a>
-                        </div>
-                        <div class="prices">
-                            <span class="price">
-                                [[${book.formattedPriceIncludeSymbol}]]
-                            </span>
-                            <span class="original-price">
-                                [[${book.formattedOriginalPriceIncludeSymbol}]]
-                            </span>
-                        </div>
-                    </div>
-                </div>
+                <th:block th:each="book : ${books.items}">
+                    <th:block th:replace="~{fragments/book-item :: content(book=${book})}" />
+                </th:block>
             </div>
         </div>
     </div>
