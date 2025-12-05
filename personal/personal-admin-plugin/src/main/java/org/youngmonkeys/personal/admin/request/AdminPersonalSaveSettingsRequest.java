@@ -16,13 +16,8 @@
 
 package org.youngmonkeys.personal.admin.request;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.tvd12.ezyhttp.core.json.SetStringDeserializer;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Collections;
-import java.util.Set;
 
 @Getter
 @Setter
