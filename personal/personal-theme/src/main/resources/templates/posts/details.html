@@ -15,10 +15,10 @@
         <th:block th:utext="${pageFragments.get('content').content}" />
     </th:block>
     <th:block th:if="${pageFragments.get('content') == null || pageFragments.get('content').content == 'content'}">
-        <div class="container mt-3 mb-3">
+        <div class="container mt-3 mb-3 post-container">
             <div class="row">
                 <div class="col-md-12">
-                    <h3>[[${post.title}]]</h3>
+                    <h3 class="post-title-heading">[[${post.title}]]</h3>
                 </div>
                 <div class="col-md-12">
                     <hr class="mb-4"/>

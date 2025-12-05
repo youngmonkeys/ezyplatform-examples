@@ -1,0 +1,8 @@
+.about-us .about-us-title,
+.cookie-policy .cookie-policy-title,
+.terms-of-service .term-of-services-title,
+.post-container .post-title-heading,
+.privacy-policy .privacy-policy-title {
+    text-align: center;
+    font-size: 36px;
+}
