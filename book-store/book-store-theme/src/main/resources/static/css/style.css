@@ -25,8 +25,15 @@
     --heading-font: "Prata", Georgia, serif;
     --secondary-font: "Playfair Display", Georgia, serif;
 }
+body {
+    font-family: var(--body-font);
+    font-size: 16px;
+    line-height: 2;
+    color: var(--body-text-color);
+    background-color: var(--light-color);
+}
 a {
-    text-decoration: auto;
+    text-decoration: none;
 }
 a:hover {
     color: auto;

@@ -26,8 +26,8 @@ public class WebBookStoreApiBookController {
     private final WebBookControllerService bookControllerService;
     private final WebProductCurrencyService currencyService;
 
-    @DoGet("/store")
-    public PaginationModel<WebBookResponse> storeGet(
+    @DoGet("/books")
+    public PaginationModel<WebBookResponse> booksGet(
         @RequestParam(value = "categoryId") long categoryId,
         @RequestParam(value = "currencyId") long currencyId,
         @RequestParam(value = "keyword") String keyword,

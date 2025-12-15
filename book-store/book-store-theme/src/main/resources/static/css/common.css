@@ -1,32 +1,3 @@
-:root {
-    --accent-color: #C5A992;
-    --secondary-color: #C5A992;
-    --dark-color: #2f2f2f;
-    --light-color: #F3F2EC;
-    --body-text-color: #757575;
-    --light-text-color: #afafaf;
-    --dark-text-color: #2f2f2f;
-    --body-font: "Raleway", sans-serif;
-    --heading-font: "Prata", Georgia, serif;
-    --secondary-font: "Playfair Display", Georgia, serif;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-body {
-    font-family: var(--body-font);
-    font-size: 16px;
-    line-height: 2;
-    color: var(--body-text-color);
-    background-color: var(--light-color);
-}
-
-a {
-    text-decoration: none;
-}
-
 img {
     max-width: 100%;
     object-fit: cover;

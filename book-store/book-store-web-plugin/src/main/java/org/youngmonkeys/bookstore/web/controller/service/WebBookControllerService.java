@@ -43,23 +43,10 @@ public class WebBookControllerService {
         ProductCurrencyModel currency,
         int limit
     ) {
-        ProductCategoryModel category = productCategoryService
-            .getCategoryByName(CATEGORY_NAME_HIGHLIGHT_BOOK);
-        if (category == null) {
-            return Collections.emptyList();
-        }
-        List<Long> productIds = newArrayList(
-            productCategoryProductService.getProductCategoryProductsByCategory(
-                category.getId(),
-                limit
-            ),
-            ProductCategoryProductModel::getProductId
-        );
-        List<ProductModel> models = productService
-            .getProductsByIds(productIds);
-        return bookModelDecorator.decorateToBookResponses(
-            models,
-            currency
+        return getBooksByCategoryName(
+            CATEGORY_NAME_HIGHLIGHT_BOOK,
+            currency,
+            limit
         );
     }
 
@@ -67,23 +54,10 @@ public class WebBookControllerService {
         ProductCurrencyModel currency,
         int limit
     ) {
-        ProductCategoryModel category = productCategoryService
-            .getCategoryByName(CATEGORY_NAME_BESTSELLING_BOOK);
-        if (category == null) {
-            return Collections.emptyList();
-        }
-        List<Long> productIds = newArrayList(
-            productCategoryProductService.getProductCategoryProductsByCategory(
-                category.getId(),
-                limit
-            ),
-            ProductCategoryProductModel::getProductId
-        );
-        List<ProductModel> models = productService
-            .getProductsByIds(productIds);
-        return bookModelDecorator.decorateToBookResponses(
-            models,
-            currency
+        return getBooksByCategoryName(
+            CATEGORY_NAME_BESTSELLING_BOOK,
+            currency,
+            limit
         );
     }
 
@@ -91,8 +65,20 @@ public class WebBookControllerService {
         ProductCurrencyModel currency,
         int limit
     ) {
+        return getBooksByCategoryName(
+            CATEGORY_NAME_NEW_BOOK,
+            currency,
+            limit
+        );
+    }
+
+    public List<WebBookResponse> getBooksByCategoryName(
+        String categoryName,
+        ProductCurrencyModel currency,
+        int limit
+    ) {
         ProductCategoryModel category = productCategoryService
-            .getCategoryByName(CATEGORY_NAME_NEW_BOOK);
+            .getCategoryByName(categoryName);
         if (category == null) {
             return Collections.emptyList();
         }
