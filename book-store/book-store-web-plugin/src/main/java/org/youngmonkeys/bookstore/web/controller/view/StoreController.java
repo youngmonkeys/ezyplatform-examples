@@ -21,7 +21,6 @@ import org.youngmonkeys.ecommerce.web.controller.service.WebProductCategoryContr
 import org.youngmonkeys.ecommerce.web.service.WebProductCurrencyService;
 import org.youngmonkeys.ecommerce.web.validator.WebProductCategoryValidator;
 import org.youngmonkeys.ezyplatform.model.PaginationModel;
-import org.youngmonkeys.ezyplatform.web.controller.service.WebLanguageControllerService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
@@ -36,9 +35,6 @@ public class StoreController {
     private WebProductCurrencyService currencyService;
 
     @EzyAutoBind
-    private WebLanguageControllerService languageControllerService;
-
-    @EzyAutoBind
     private WebProductCategoryControllerService productCategoryControllerService;
 
     @EzyAutoBind
@@ -47,6 +43,7 @@ public class StoreController {
 
     @DoGet("/store")
     public View storeGet(
+        @RequestParam(value = "currencyId") long currencyId,
         @RequestParam(value = "sortOrder") String sortOrder,
         @RequestParam(value = "nextPageToken") String nextPageToken,
         @RequestParam(value = "prevPageToken") String prevPageToken,
@@ -54,7 +51,7 @@ public class StoreController {
         @RequestParam(value = "limit", defaultValue = "12") int limit
     ) {
         ProductCurrencyModel currency = currencyService
-            .getDefaultCurrency();
+            .getCurrencyByIdOrDefault(currencyId);
         PaginationModel<WebBookResponse> books = bookControllerService
             .getBookPagination(
                 DefaultProductFilter.builder()
@@ -90,8 +87,6 @@ public class StoreController {
     ) {
         ProductCategoryModel category = productCategoryValidator
             .validateCategoryId(categoryId);
-        String language = languageControllerService
-            .getLanguageCodeOrDefault(request);
         ProductCurrencyModel currency = currencyService
             .getCurrencyByIdOrDefault(currencyId);
         PaginationModel<WebBookResponse> books = bookControllerService
