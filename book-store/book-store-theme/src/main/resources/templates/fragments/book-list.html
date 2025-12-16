@@ -1,0 +1,165 @@
+<!--
+ ~ Copyright 2022 youngmonkeys.org
+ ~ 
+ ~ Licensed under the ezyplatform, Version 1.0.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~ 
+ ~     https://youngmonkeys.org/licenses/ezyplatform-1.0.0.txt
+ ~ 
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<script th:fragment="scripts" th:inline="javascript">
+/*<![CDATA[*/
+var storeCategoryId = 0;
+var bookSearchCategoryId = /*[[${category != null ? category.id : 0}]]*/ '';
+var bookSearchSortOrder = /*[[${bookSearchSortOrder}]]*/ '';
+var bookSearchKeyword = /*[[${bookSearchKeyword}]]*/ '';
+var lastBookPageToken = {};
+lastBookPageToken.next = /*[[${books.pageToken.next}]]*/ '';
+ezyweb.messages.author = /*[[#{author}]]*/ '';
+ezyweb.messages.load_mores = /*[[#{load_mores}]]*/ '';
+/*]]>*/
+
+var onKeydownToSearchBookItems = function(element) {
+    if (event.key === 'Enter') {
+        bookSearchKeyword = $(element).val();
+        fetchBookList();
+        changeStoreBrowserUrl();
+    }
+};
+
+var changeStoreBrowserUrl = function() {
+    var params = [];
+    if (bookSearchKeyword) {
+        params.push('keyword=' + bookSearchKeyword);
+    }
+    if (ezyweb.lang) {
+        params.push('lang=' + ezyweb.lang);
+    }
+    var url = window.location.pathname;
+    if (params.length) {
+        url += '?' + params.join('&');
+    }
+    window.history.pushState({}, '', url);
+};
+
+var fetchBookList = function(action) {
+    var queryString = '';
+    if (bookSearchCategoryId) {
+        queryString += '&categoryId=' + bookSearchCategoryId;
+    }
+    if (bookSearchSortOrder) {
+        queryString += '&sortOrder=' + bookSearchSortOrder;
+    }
+    if (bookSearchKeyword) {
+        queryString += '&keyword=' + bookSearchKeyword;
+    }
+    if (action == 'next') {
+        if (lastBookPageToken.next) {
+            queryString += '&nextPageToken=' + lastBookPageToken.next;
+        } else {
+            return;
+        }
+    }
+    $.ajax({
+        url: '/api/v1/books?limit=12' + queryString,
+        type: 'GET',
+        dataType: 'json'
+    })
+    .done(function(data) {
+        lastBookPageToken = data.pageToken || {};
+        var html = buildBookListBodyHtml(data.items);
+        if (action == 'next') {
+            $('#bookListBody').append(html);
+        } else {
+            $('#bookListBody').html(html);
+        }
+        renderNextButton(data.continuation && data.continuation.hasNext);
+    })
+    .fail(function(e) {
+        ezyweb.processGetApiErrors(e);
+    });
+};
+
+var renderNextButton = function(hasNext) {
+    var container = $('#nextButtonContainer');
+    if (hasNext) {
+        if (!container.length) {
+            var html = `
+            <div class="col-12 d-flex justify-content-center py-3" id="nextButtonContainer">
+                <button type="button" class="btn btn-outline-primary px-5" onclick="fetchBookList('next')">
+                    ${ezyweb.messages.load_mores}
+                </button>
+            </div>
+            `;
+            $('#bookListWrapper').append(html);
+        }
+    } else {
+        container.remove();
+    }
+};
+
+var buildBookListBodyHtml = function(bookList) {
+    var html = '';
+    bookList.forEach(function(book) {
+        html += buildBookListItemHtml(book);
+    });
+    return html;
+};
+
+var buildBookListItemHtml = function(book) {
+    var discountHtml = '';
+    if (book.discountPercent && Number(book.discountPercent) > 0) {
+        discountHtml = `
+            <div class="book-tags">
+                <span class="discount-percent">- ${book.discountPercent} %</span>
+            </div>
+        `;
+    }
+    var originalPriceHtml = book.formattedOriginalPriceIncludeSymbol
+        ? `<span class="original-price">
+                ${book.formattedOriginalPriceIncludeSymbol}
+           </span>`
+        : '';
+    var html = `
+    <div class="book">
+        <a class="book-image" href="${'/store/books/' + book.id}">
+            ${book.bannerImage
+                ? `<img src="${ezyweb.extractMediaUrl(book.bannerImage)}" alt="book image">`
+                : ''}
+        </a>
+        <div class="book-content">
+            ${discountHtml}
+            <a href="${'/store/books/' + book.id}" class="book-title">
+                ${book.name}
+            </a>
+            <div class="book-author">
+                <span class="author-title">${ezyweb.messages.author}</span>
+                <a href="${'/authors/' + book.authorUuid}" class="author-name">
+                    ${book.authorName}
+                </a>
+            </div>
+            <div class="prices">
+                <span class="price">
+                    ${book.formattedPriceIncludeSymbol}
+                </span>
+                ${originalPriceHtml}
+            </div>
+        </div>
+    </div>
+    `;
+    return html;
+};
+</script>
+</body>
+</html>
