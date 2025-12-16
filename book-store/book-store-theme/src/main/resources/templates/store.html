@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{ezytheme}">
 <body>
@@ -39,58 +38,174 @@
             </div>
         </div>
         <div class="col-lg-9 col-md-8">
-            <div class="books">
-                <th:block th:each="book : ${books.items}">
-                    <th:block th:replace="~{fragments/book-item :: content(book=${book})}" />
-                </th:block>
+            <div class="input-group input-group-lg mb-4">
+                <input type="search" class="form-control rounded-0"
+                       th:placeholder="#{keyword}" id="bookSearchKeyword"
+                       th:aria-label="keyword" aria-describedby="store-search-input"
+                       th:value="${bookSearchKeyword}"
+                       onkeydown="onKeydownToSearchBookItems(this);">
+                <span class="input-group-text rounded-0 text-primary" id="store-search-input">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+            </div>
+            <div id="bookListWrapper">
+                <div class="books" id="bookListBody">
+                    <th:block th:each="book : ${books.items}">
+                        <th:block th:replace="~{fragments/book-item :: content(book=${book})}" />
+                    </th:block>
+                </div>
+                <div th:if="${books.continuation.hasNext}"
+                     class="d-flex justify-content-center pt-5" id="nextButtonContainer">
+                    <button type="button" class="btn btn-outline-primary px-5" onclick="fetchBookList('next')">
+                        [[#{load_mores}]]
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 </div>
 <script layout:fragment="scripts" th:inline="javascript">
-    $(document).ready(function () {
-        $("#toggle-menu").click(function () {
-            $("#menu-items").toggle();
-        });
-    });
+/*<![CDATA[*/
+var storeCategoryId = 0;
+var bookSearchCategoryId = /*[[${category != null ? category.id : 0}]]*/ '';
+var bookSearchSortOrder = /*[[${bookSearchSortOrder}]]*/ '';
+var bookSearchKeyword = /*[[${bookSearchKeyword}]]*/ '';
+var lastBookPageToken = {};
+lastBookPageToken.next = /*[[${books.pageToken.next}]]*/ '';
+ezyweb.messages.author = /*[[#{author}]]*/ '';
+ezyweb.messages.load_mores = /*[[#{load_mores}]]*/ '';
+/*]]>*/
 
-    $(document).ready(function () {
-        $("#toggle-sub-menu").click(function () {
-            $("#sub-menu-items").toggle();
-        });
-    });
-
-    $(document).ready(function () {
-        $(".preview-book").click(function () {
-            var bookId = $(this).attr('id');
-            var currenCurrency = $("#currentCurrency").text();
-            $.ajax({
-                type: "GET",
-                url: "/api/v1/books/" + bookId,
-                data: {currencyId: currenCurrency},
-                success: function (data) {
-                    console.log(data);
-                    $("#bookName").text(data.productName);
-                    // $("#bookAuthor").text(data.author);
-                    $("#bookPrice").text(data.formattedPrice);
-                    $("#bookAmount").text(data.amount);
-                    $(".modal-backdrop").remove();
-                },
-                error: function (xhr) {
-                    alert("An error occurred: " + xhr.status + " " + xhr.statusText);
-                }
-            })
-            $("#previewModal").modal('show');
-        });
-        $(".close, .close-btn").click(function () {
-            $("#previewModal").modal('hide');
-        })
-    })
-
-    function changeImage(src) {
-        document.getElementById("mainImage").src = src;
+var onKeydownToSearchBookItems = function(element) {
+    if (event.key === 'Enter') {
+        bookSearchKeyword = $(element).val();
+        fetchBookList();
+        changeStoreBrowserUrl();
     }
+};
 
+var changeStoreBrowserUrl = function() {
+    var params = [];
+    if (bookSearchKeyword) {
+        params.push('keyword=' + bookSearchKeyword);
+    }
+    if (ezyweb.lang) {
+        params.push('lang=' + ezyweb.lang);
+    }
+    var url = window.location.pathname;
+    if (params.length) {
+        url += '?' + params.join('&');
+    }
+    window.history.pushState({}, '', url);
+};
+
+var fetchBookList = function(action) {
+    var queryString = '';
+    if (bookSearchCategoryId) {
+        queryString += '&categoryId=' + bookSearchCategoryId;
+    }
+    if (bookSearchSortOrder) {
+        queryString += '&sortOrder=' + bookSearchSortOrder;
+    }
+    if (bookSearchKeyword) {
+        queryString += '&keyword=' + bookSearchKeyword;
+    }
+    if (action == 'next') {
+        if (lastBookPageToken.next) {
+            queryString += '&nextPageToken=' + lastBookPageToken.next;
+        } else {
+            return;
+        }
+    }
+    $.ajax({
+        url: '/api/v1/books?limit=12' + queryString,
+        type: 'GET',
+        dataType: 'json'
+    })
+    .done(function(data) {
+        lastBookPageToken = data.pageToken || {};
+        var html = buildBookListBodyHtml(data.items);
+        if (action == 'next') {
+            $('#bookListBody').append(html);
+        } else {
+            $('#bookListBody').html(html);
+        }
+        renderNextButton(data.continuation && data.continuation.hasNext);
+    })
+    .fail(function(e) {
+        ezyweb.processGetApiErrors(e);
+    });
+};
+
+var renderNextButton = function(hasNext) {
+    var container = $('#nextButtonContainer');
+    if (hasNext) {
+        if (!container.length) {
+            var html = `
+            <div class="col-12 d-flex justify-content-center py-3" id="nextButtonContainer">
+                <button type="button" class="btn btn-outline-primary px-5" onclick="fetchBookList('next')">
+                    ${ezyweb.messages.load_mores}
+                </button>
+            </div>
+            `;
+            $('#bookListWrapper').append(html);
+        }
+    } else {
+        container.remove();
+    }
+};
+
+var buildBookListBodyHtml = function(bookList) {
+    var html = '';
+    bookList.forEach(function(book) {
+        html += buildBookListItemHtml(book);
+    });
+    return html;
+};
+
+var buildBookListItemHtml = function(book) {
+    var discountHtml = '';
+    if (book.discountPercent && Number(book.discountPercent) > 0) {
+        discountHtml = `
+            <div class="book-tags">
+                <span class="discount-percent">- ${book.discountPercent} %</span>
+            </div>
+        `;
+    }
+    var originalPriceHtml = book.formattedOriginalPriceIncludeSymbol
+        ? `<span class="original-price">
+                ${book.formattedOriginalPriceIncludeSymbol}
+           </span>`
+        : '';
+    var html = `
+    <div class="book">
+        <a class="book-image" href="${'/store/books/' + book.id}">
+            ${book.bannerImage
+                ? `<img src="${ezyweb.extractMediaUrl(book.bannerImage)}" alt="book image">`
+                : ''}
+        </a>
+        <div class="book-content">
+            ${discountHtml}
+            <a href="${'/store/books/' + book.id}" class="book-title">
+                ${book.name}
+            </a>
+            <div class="book-author">
+                <span class="author-title">${ezyweb.messages.author}</span>
+                <a href="${'/authors/' + book.authorUuid}" class="author-name">
+                    ${book.authorName}
+                </a>
+            </div>
+            <div class="prices">
+                <span class="price">
+                    ${book.formattedPriceIncludeSymbol}
+                </span>
+                ${originalPriceHtml}
+            </div>
+        </div>
+    </div>
+    `;
+    return html;
+};
 </script>
 </body>
 </html>

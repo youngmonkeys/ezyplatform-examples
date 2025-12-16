@@ -66,7 +66,10 @@ public class AdminBookStoreConfig implements EzyBeanConfig {
 
     private void registerProductTypes() {
         productTypeManager.addProductTypes(
-            BookStoreProductType.BOOK.toString()
+            newArrayList(
+                BookStoreProductType.values(),
+                Enum::toString
+            )
         );
     }
 

@@ -106,6 +106,7 @@ public class StoreController {
         );
         return newStoreViewBuilder(books, currencyId)
             .addVariable("pageTitle", category.getDisplayName())
+            .addVariable("category", category)
             .build();
     }
 

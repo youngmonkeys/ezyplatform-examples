@@ -28,7 +28,7 @@ public class WebBookStoreApiBookController {
 
     @DoGet("/books")
     public PaginationModel<WebBookResponse> booksGet(
-        @RequestParam(value = "categoryId") long categoryId,
+        @RequestParam(value = "categoryId") Long categoryId,
         @RequestParam(value = "currencyId") long currencyId,
         @RequestParam(value = "keyword") String keyword,
         @RequestParam(value = "sortOrder") String sortOrder,
