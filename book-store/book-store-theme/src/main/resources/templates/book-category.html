@@ -4,40 +4,12 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{ezytheme}">
 <body>
-<div layout:fragment="content" class="container-fluid store">
+<div layout:fragment="content" class="container store">
     <h1 class="page-title text-center py-5">
-        [[#{store}]]
+        [[#{category}]]: [[${category.displayName}]]
     </h1>
     <div class="row">
-        <div class="col-lg-3 col-md-4">
-            <div class="sidebar">
-                <h3>[[#{categories}]]</h3>
-                <div class="list-group  hidden-sm hidden-xs" id="list-group-l">
-                    <ul>
-                        <li th:each="menu : ${categories}">
-                            <a th:href="${'/store/books/categories/' + menu.category.name}">
-                                <span>[[${menu.category.displayName}]]</span>
-                            </a>
-                            <ul th:if="${menu.children.size() > 0}">
-                                <li th:each="menuItemLv1 : ${menu.children}">
-                                    <a th:href="${'/store/books/categories/' + menuItemLv1.category.name}">
-                                        <span th:text="${menuItemLv1.category.displayName}"></span>
-                                    </a>
-                                    <ul th:if="${menuItemLv1.children.size() > 0}">
-                                        <li th:each="menuItemLv2 : ${menuItemLv1.children}">
-                                            <a th:href="${'/store/books/categories/' + menuItemLv2.category.name}">
-                                                [[${menuItemLv2.category.displayName}]]
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-9 col-md-8">
+        <div class="col-12">
             <div class="input-group input-group-lg mb-4">
                 <input type="search" class="form-control rounded-start"
                        th:placeholder="#{keyword}" id="bookSearchKeyword"

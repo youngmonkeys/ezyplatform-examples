@@ -70,14 +70,15 @@ public class StoreController {
                 currency
         );
         return newStoreViewBuilder(books, currency.getId())
+            .template("store")
             .addVariable("pageTitle", "store")
             .build();
     }
 
     @DoGet("store/books/categories/{id}")
-    public View storeBooksCategoriesIdCat(
+    public View storeBooksCategoriesIdGet(
         HttpServletRequest request,
-        @PathVariable long categoryId,
+        @PathVariable String categoryName,
         @RequestParam("currencyId") long currencyId,
         @RequestParam(value = "sortOrder") String sortOrder,
         @RequestParam(value = "nextPageToken") String nextPageToken,
@@ -86,7 +87,8 @@ public class StoreController {
         @RequestParam(value = "limit", defaultValue = "12") int limit
     ) {
         ProductCategoryModel category = productCategoryValidator
-            .validateCategoryId(categoryId);
+            .validateCategoryName(categoryName);
+        long categoryId = category.getId();
         ProductCurrencyModel currency = currencyService
             .getCurrencyByIdOrDefault(currencyId);
         PaginationModel<WebBookResponse> books = bookControllerService
@@ -105,6 +107,7 @@ public class StoreController {
                 currency
         );
         return newStoreViewBuilder(books, currencyId)
+            .template("book-category")
             .addVariable("pageTitle", category.getDisplayName())
             .addVariable("category", category)
             .build();
@@ -132,7 +135,6 @@ public class StoreController {
         long currencyId
     ) {
         return View.builder()
-            .template("store")
             .addVariable("currencyId", currencyId)
             .addVariable("books", books)
             .addVariable("categories",
