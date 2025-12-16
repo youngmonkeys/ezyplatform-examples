@@ -27,6 +27,7 @@ import org.youngmonkeys.ezyplatform.admin.model.AddUserRoleNameModel;
 import org.youngmonkeys.ezyplatform.admin.service.AdminSettingService;
 import org.youngmonkeys.ezyplatform.admin.service.AdminUserRoleService;
 
+import static com.tvd12.ezyfox.io.EzyLists.newArrayList;
 import static org.youngmonkeys.bookstore.constant.BookStoreConstants.*;
 
 @EzyConfigurationAfter
@@ -71,8 +72,10 @@ public class AdminBookStoreConfig implements EzyBeanConfig {
 
     private void registerProductCategoryTypes() {
         productCategoryTypeManager.addProductCategoryTypes(
-            BookStoreProductCategoryType.BOOK.toString(),
-            BookStoreProductCategoryType.TOP_BOOK.toString()
+            newArrayList(
+                BookStoreProductCategoryType.values(),
+                Enum::toString
+            )
         );
     }
 }
