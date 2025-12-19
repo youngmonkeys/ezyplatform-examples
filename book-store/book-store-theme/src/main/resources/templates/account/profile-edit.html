@@ -33,13 +33,13 @@
         <div class="row">
             <div class="col-md-12 d-flex justify-content-between align-items-center">
                 <h3>[[#{edit_profile}]]</h3>
-                <div th:replace="~{account/menu-button :: account-menu-button}"></div>
+                <th:block th:replace="~{account/menu-button :: account-menu-button}" />
             </div>
             <div class="col-md-12">
                 <hr class="mb-4"/>
             </div>
             <div class="col-md-8">
-                <th:block th:replace="~{ezyaccount/profile-edit :: content}"></th:block>
+                <th:block th:replace="~{ezyaccount/profile-edit :: content}" />
             </div>
             <div class="col-md-4"></div>
         </div>
@@ -47,14 +47,14 @@
 </div>
 <th:block layout:fragment="modals">
     <th:block th:replace="~{ezyaccount/media-modal :: content}" />
-    <div th:replace="~{ezyaccount/edit-password-modal :: content}"></div>
+    <th:block th:replace="~{ezyaccount/edit-password-modal :: content}" />
 </th:block>
 <th:block layout:fragment="post-scripts">
-    <script th:replace="~{ezycommon/date-range-picker :: scripts}" />
-    <script th:replace="~{ezyaccount/media-modal :: scripts}"></script>
-    <script th:replace="~{ezyaccount/scripts :: update-avatar}"></script>
-    <script th:replace="~{ezyaccount/profile-edit :: scripts}"></script>
-    <script th:replace="~{ezyaccount/edit-password-modal :: scripts}"></script>
+    <th:block th:replace="~{ezycommon/date-range-picker :: scripts}" />
+    <th:block th:replace="~{ezyaccount/media-modal :: scripts}" />
+    <th:block th:replace="~{ezyaccount/scripts :: update-avatar}" />
+    <th:block th:replace="~{ezyaccount/profile-edit :: scripts}" />
+    <th:block th:replace="~{ezyaccount/edit-password-modal :: scripts}" />
 </th:block>
 </body>
 </html>

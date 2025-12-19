@@ -75,7 +75,7 @@ public class AdminPersonalPostWordCountDataAppender
             .stream(content.trim().split("\\s+"))
             .filter(s -> !s.isEmpty())
             .count();
-        long postId = value.getParentId();
+        long postId = value.getPostId();
         logger.info(
             "post history id: {}, post id: {}, word count: {}",
             value.getId(),

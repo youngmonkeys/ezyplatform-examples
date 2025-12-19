@@ -47,12 +47,12 @@
 </div>
 <th:block layout:fragment="modals">
     <th:block th:replace="~{ezyaccount/media-modal :: content}" />
-    <div th:replace="~{ezyaccount/edit-password-modal :: content}"></div>
+    <th:block th:replace="~{ezyaccount/edit-password-modal :: content}" />
 </th:block>
 <th:block layout:fragment="post-scripts">
-    <script th:replace="~{ezyaccount/scripts :: update-avatar}"></script>
-    <script th:replace="~{ezyaccount/media-modal :: scripts}"></script>
-    <script th:replace="~{ezyaccount/edit-password-modal :: scripts}"></script>
+    <th:block th:replace="~{ezyaccount/scripts :: update-avatar}" />
+    <th:block th:replace="~{ezyaccount/media-modal :: scripts}" />
+    <th:block th:replace="~{ezyaccount/edit-password-modal :: scripts}" />
 </th:block>
 </body>
 </html>

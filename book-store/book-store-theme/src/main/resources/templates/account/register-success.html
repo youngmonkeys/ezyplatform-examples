@@ -21,10 +21,11 @@
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         layout:decorate="~{ezytheme}">
 <body>
-<div layout:fragment="content" th:replace="~{ezylogin/register-success :: content}">
+<div layout:fragment="content">
+    <th:block th:replace="~{ezylogin/register-success :: content}" />
 </div>
 <th:block layout:fragment="post-scripts">
-    <script th:replace="~{ezylogin/register-success :: scripts}"></script>
+    <th:block th:replace="~{ezylogin/register-success :: scripts}" />
 </th:block>
 </body>
 </html>
