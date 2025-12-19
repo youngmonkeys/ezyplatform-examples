@@ -7,6 +7,9 @@
 
 <head th:remove="tag">
 	<th:block th:if="${commonFragments.get('styles') == null || commonFragments.get('styles').content == 'styles'}">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lexend:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 		<link rel="stylesheet" type="text/css" ezy:vhref="/css/main.css" />
 		<link rel="stylesheet" type="text/css" ezy:vhref="/css/common.css" />
@@ -46,7 +49,7 @@
 		</main>
 	</th:block>
 	<th:block th:if="${commonFragments.get('footer') != null && commonFragments.get('footer').content != 'footer'}">
-		<th:block th:utext="${commonFragments.get('footer').content}" />
+		<ezy:block ezy:utext="${commonFragments.get('footer').content}" />
 	</th:block>
 	<th:block th:if="${commonFragments.get('footer') == null || commonFragments.get('footer').content == 'footer'}">
 		<th:block th:replace="~{fragments/footer :: footer}" />
