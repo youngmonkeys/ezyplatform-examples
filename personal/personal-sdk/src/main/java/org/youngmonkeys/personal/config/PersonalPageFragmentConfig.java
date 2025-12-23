@@ -25,6 +25,10 @@ public class PersonalPageFragmentConfig implements EzyBeanConfig {
             "container"
         );
         pageFragmentManager.registerFragmentNames(
+            "blog_list",
+            "container"
+        );
+        pageFragmentManager.registerFragmentNames(
             "blog_details",
             "container"
         );
