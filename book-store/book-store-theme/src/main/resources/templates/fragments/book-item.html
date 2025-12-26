@@ -21,7 +21,7 @@
 <th:block th:fragment="content">
 	<div class="book">
         <a class="book-image"
-           th:href="${'/store/books/' + book.id}">
+           th:href="${'/store/books/' + book.code}">
             <img th:if="${book.bannerImage != null}"
                  th:src="${book.bannerImage.getUrlOrNull()}"
                  alt="book image">

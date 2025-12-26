@@ -133,7 +133,7 @@ var buildBookListItemHtml = function(book) {
         : '';
     var html = `
     <div class="book">
-        <a class="book-image" href="${'/store/books/' + book.id}">
+        <a class="book-image" href="${'/store/books/' + book.code}">
             ${book.bannerImage
                 ? `<img src="${ezyweb.extractMediaUrl(book.bannerImage)}" alt="book image">`
                 : ''}

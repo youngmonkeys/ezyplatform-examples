@@ -22,6 +22,7 @@ import com.tvd12.ezyhttp.server.core.view.ViewDecorator;
 import lombok.AllArgsConstructor;
 import org.youngmonkeys.ecommerce.web.service.WebShoppingCartService;
 import org.youngmonkeys.ezyarticle.web.manager.WebPageFragmentManager;
+import org.youngmonkeys.ezylogin.web.service.WebEzyLoginSettingService;
 import org.youngmonkeys.ezyplatform.model.UserModel;
 import org.youngmonkeys.ezyplatform.web.controller.service.WebLanguageControllerService;
 
@@ -32,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 public class BookStoreWebViewDecorator implements ViewDecorator {
 
     private final WebPageFragmentManager pageFragmentManager;
+    private final WebEzyLoginSettingService ezyLoginSettingService;
     private final WebShoppingCartService shoppingCartService;
     private final WebLanguageControllerService languageControllerService;
 
@@ -45,6 +47,11 @@ public class BookStoreWebViewDecorator implements ViewDecorator {
                 "common",
                 languageCode
             )
+        );
+
+        view.setVariable(
+            "allowAnonymousUser",
+            ezyLoginSettingService.isAllowAnonymousUser()
         );
 
         UserModel user = view.getVariable("user");

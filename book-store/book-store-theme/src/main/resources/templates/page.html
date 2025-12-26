@@ -117,6 +117,7 @@ var showRegister = /*[[${showRegister}]]*/ '';
 var showLogin = /*[[${showLogin}]]*/ '';
 var loggedIn = /*[[${loggedIn}]]*/ '';
 var userStatus = /*[[${user != null ? user.status : ''}]]*/ '';
+var allowAnonymousUser = /*[[${allowAnonymousUser}]]*/ '';
 /*]]>*/
 </script>
 <th:block layout:fragment="pre-main-scripts" />
@@ -144,10 +145,35 @@ ezyweb.redirectToLogin = function() {
 }
 
 var addBookToCart = function(bookId) {
-	registerProductToShoppingCartRequest = {
-		onSuccessCallback: fetchShoppingCartProductCount
+	var doAddBookTokCart = (callback) => {
+		registerProductToShoppingCartRequest = {
+			onSuccessCallback: callback
+		};
+		registerProductToShoppingCart(bookId);
 	};
-	registerProductToShoppingCart(bookId);
+	if (loggedIn) {
+		doAddBookTokCart(fetchShoppingCartProductCount);
+	} else {
+		anonymousUserLogin(() => {
+			doAddBookTokCart(() => location.reload());
+		});
+	}
+}
+
+var buyBookNow = function(bookId) {
+	var doAddBookTokCart = () => {
+		registerProductToShoppingCartRequest = {
+			onSuccessCallback: () => {
+				location = '/checkout/shopping-cart';
+			}
+		};
+		registerProductToShoppingCart(bookId);
+	};
+	if (loggedIn) {
+		doAddBookTokCart();
+	} else {
+		anonymousUserLogin(doAddBookTokCart);
+	}
 }
 </script>
 <th:block th:if="${loggedIn != true}">
@@ -161,9 +187,11 @@ var addBookToCart = function(bookId) {
 <th:block th:if="${loggedIn == true}">
 	<th:block th:replace="~{ezyaccount/notification :: scripts}" />
 	<th:block th:replace="~{ecommerce/checkout/scripts :: common}" />
-	<th:block th:replace="~{ecommerce/checkout/scripts :: register-product}" />
-	<th:block th:replace="~{ecommerce/shopping-cart/scripts :: product-count}" />
 </th:block>
+
+<th:block th:replace="~{ecommerce/checkout/scripts :: register-product}" />
+<th:block th:replace="~{ecommerce/shopping-cart/scripts :: product-count}" />
+
 <th:block th:if="${commonFragments.get('header') != null && !#strings.isEmpty(commonFragments.get('header').additionalFoot)}">
 	<ezy:block ezy:utext="${commonFragments.get('header').additionalFoot}" />
 </th:block>
