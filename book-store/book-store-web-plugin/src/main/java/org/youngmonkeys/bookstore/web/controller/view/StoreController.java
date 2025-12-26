@@ -8,7 +8,9 @@ import com.tvd12.ezyhttp.server.core.view.View;
 import lombok.Setter;
 import org.youngmonkeys.bookstore.constant.BookStoreProductCategoryType;
 import org.youngmonkeys.bookstore.constant.BookStoreProductType;
+import org.youngmonkeys.bookstore.web.controller.service.WebBookAuthorControllerService;
 import org.youngmonkeys.bookstore.web.controller.service.WebBookControllerService;
+import org.youngmonkeys.bookstore.web.response.WebBookAuthorDetailResponse;
 import org.youngmonkeys.bookstore.web.response.WebBookDetailsResponse;
 import org.youngmonkeys.bookstore.web.response.WebBookResponse;
 import org.youngmonkeys.ecommerce.entity.ProductCategoryStatus;
@@ -33,6 +35,9 @@ public class StoreController {
 
     @EzyAutoBind
     private WebProductCurrencyService currencyService;
+
+    @EzyAutoBind
+    private WebBookAuthorControllerService bookAuthorControllerService;
 
     @EzyAutoBind
     private WebProductCategoryControllerService productCategoryControllerService;
@@ -75,9 +80,8 @@ public class StoreController {
             .build();
     }
 
-    @DoGet("store/books/categories/{id}")
+    @DoGet("/store/books/categories/{id}")
     public View storeBooksCategoriesIdGet(
-        HttpServletRequest request,
         @PathVariable String categoryName,
         @RequestParam("currencyId") long currencyId,
         @RequestParam(value = "sortOrder") String sortOrder,
@@ -110,6 +114,41 @@ public class StoreController {
             .template("book-category")
             .addVariable("pageTitle", category.getDisplayName())
             .addVariable("category", category)
+            .build();
+    }
+
+    @DoGet("/authors/{uuid}")
+    public View authorUuidGet(
+        HttpServletRequest request,
+        @PathVariable String authorUuid,
+        @RequestParam("currencyId") long currencyId,
+        @RequestParam(value = "sortOrder") String sortOrder,
+        @RequestParam(value = "nextPageToken") String nextPageToken,
+        @RequestParam(value = "prevPageToken") String prevPageToken,
+        @RequestParam(value = "lastPage") boolean lastPage,
+        @RequestParam(value = "limit", defaultValue = "12") int limit
+    ) {
+        WebBookAuthorDetailResponse author = bookAuthorControllerService
+            .getAuthorDetailsByUuid(authorUuid);
+        ProductCurrencyModel currency = currencyService
+            .getCurrencyByIdOrDefault(currencyId);
+        PaginationModel<WebBookResponse> books = bookControllerService
+            .getBookPagination(
+                DefaultProductFilter.builder()
+                    .build(),
+                DefaultProductPriceFilter.builder()
+                    .build(),
+                sortOrder,
+                nextPageToken,
+                prevPageToken,
+                lastPage,
+                limit,
+                currency
+        );
+        return newStoreViewBuilder(books, currencyId)
+            .template("book-author")
+            .addVariable("pageTitle", author.getDisplayName())
+            .addVariable("author", author)
             .build();
     }
 

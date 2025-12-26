@@ -197,6 +197,20 @@
             <scope>system</scope>
             <systemPath>${ezyplatform.home}/admin/plugins/ezychat/lib/ezychat-admin-plugin-${ezychat.version}.jar</systemPath>
         </dependency>
+    <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezycrm-sdk</artifactId>
+            <version>${ezycrm.version}</version>
+        <scope>system</scope>
+            <systemPath>${ezyplatform.home}/admin/plugins/ezycrm/lib/ezycrm-sdk-${ezycrm.version}.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezycrm-admin-plugin</artifactId>
+            <version>${ezycrm.version}</version>
+            <scope>system</scope>
+            <systemPath>${ezyplatform.home}/admin/plugins/ezycrm/lib/ezycrm-admin-plugin-${ezycrm.version}.jar</systemPath>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>
@@ -247,6 +261,9 @@
                     </resource>
                 <resource>
                         <directory>${ezyplatform.home}/admin/plugins/ezychat/resources</directory>
+                    </resource>
+                <resource>
+                        <directory>${ezyplatform.home}/admin/plugins/ezycrm/resources</directory>
                     </resource>
                 </resources>
             </build>

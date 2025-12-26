@@ -288,6 +288,9 @@
                 <resource>
                         <directory>${ezyplatform.home}/web/plugins/ezychat/resources</directory>
                     </resource>
+                <resource>
+                        <directory>${ezyplatform.home}/web/plugins/ezycrm/resources</directory>
+                    </resource>
                 </resources>
             </build>
         </profile>

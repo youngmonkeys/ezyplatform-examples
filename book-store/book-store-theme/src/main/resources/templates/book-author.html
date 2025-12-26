@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{ezytheme}">
+<body>
+<div layout:fragment="content" class="store">
+    <div class="author-banner">
+        <h1 class="page-title text-center py-5">
+            [[#{author}]]: [[${author.displayName}]]
+        </h1>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="input-group input-group-lg mb-4">
+                    <input type="search" class="form-control rounded-start"
+                           th:placeholder="#{keyword}" id="bookSearchKeyword"
+                           th:aria-label="keyword" aria-describedby="store-search-input"
+                           th:value="${bookSearchKeyword}"
+                           onkeydown="onKeydownToSearchBookItems(this);">
+                    <span class="input-group-text rounded-end text-primary" id="store-search-input">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </span>
+                </div>
+                <div id="bookListWrapper">
+                    <div class="books" id="bookListBody">
+                        <th:block th:each="book : ${books.items}">
+                            <th:block th:replace="~{fragments/book-item :: content(book=${book})}" />
+                        </th:block>
+                    </div>
+                    <div th:if="${books.continuation.hasNext}"
+                         class="d-flex justify-content-center pt-5" id="nextButtonContainer">
+                        <button type="button" class="btn btn-outline-primary px-5 py-3" onclick="fetchBookList('next')">
+                            [[#{load_mores}]]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block layout:fragment="post-scripts">
+    <th:block th:replace="~{fragments/book-list :: scripts}" />
+</th:block>
+</body>
+</html>
