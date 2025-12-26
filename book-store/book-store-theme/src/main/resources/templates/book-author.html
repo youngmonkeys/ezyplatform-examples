@@ -4,15 +4,38 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{ezytheme}">
 <body>
-<div layout:fragment="content" class="store">
+<div layout:fragment="content" class="store author-container">
     <div class="author-banner">
-        <h1 class="page-title text-center py-5">
-            [[#{author}]]: [[${author.displayName}]]
-        </h1>
+        <div class="author-cover">
+            <img class="author-cover-image"
+                 th:src="${author.coverImage != null ? author.coverImage.getUrlOrDefault('/images/book-programming-principles.jpg') : '/images/book-programming-principles.jpg'}"
+                 th:alt="${author.displayName}" />
+        </div>
+        <div class="author-banner-content container">
+            <div class="author-avatar">
+                <img class="author-avatar-image"
+                     th:src="${author.avatarImage != null ? author.avatarImage.getUrlOrDefault('/images/logo.svg') : '/images/logo.svg'}"
+                     th:alt="${author.displayName}" />
+            </div>
+            <div class="author-meta">
+                <div class="author-label">[[#{author}]]</div>
+                <h1 class="author-name">[[${author.displayName}]]</h1>
+            </div>
+        </div>
     </div>
-    <div class="container">
+    <div class="container author-body-container">
         <div class="row">
-            <div class="col-12">
+            <div class="col-lg-4 order-lg-2 mb-4 mb-lg-0">
+                <div class="author-intro-card">
+                    <h2 class="author-intro-title">[[#{author}]]</h2>
+                    <p class="author-intro-text" th:text="${author.description}"></p>
+                    <a class="author-intro-link" th:if="${author.websiteUrl != null}"
+                       th:href="${author.websiteUrl}" target="_blank" rel="noopener">
+                        [[${author.websiteUrl}]]
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-8 order-lg-1">
                 <div class="input-group input-group-lg mb-4">
                     <input type="search" class="form-control rounded-start"
                            th:placeholder="#{keyword}" id="bookSearchKeyword"
