@@ -1,7 +1,6 @@
 package org.youngmonkeys.bookstore.web.controller.decorator;
 
 import com.tvd12.ezyfox.bean.annotation.EzySingleton;
-import com.tvd12.ezyfox.io.EzyMaps;
 import lombok.AllArgsConstructor;
 import org.youngmonkeys.bookstore.web.converter.WebBookStoreModelToResponseConverter;
 import org.youngmonkeys.bookstore.web.response.WebBookDetailsResponse;
@@ -13,7 +12,6 @@ import org.youngmonkeys.ecommerce.model.ProductPriceModel;
 import org.youngmonkeys.ecommerce.web.service.WebProductBookService;
 import org.youngmonkeys.ecommerce.web.service.WebProductDescriptionService;
 import org.youngmonkeys.ecommerce.web.service.WebProductPriceService;
-import org.youngmonkeys.ecommerce.web.service.WebProductService;
 import org.youngmonkeys.ezyarticle.sdk.model.PostModel;
 import org.youngmonkeys.ezyarticle.web.service.WebPostService;
 import org.youngmonkeys.ezyplatform.model.MediaNameModel;
@@ -23,7 +21,10 @@ import org.youngmonkeys.ezyplatform.rx.Reactive;
 import org.youngmonkeys.ezyplatform.web.service.WebMediaService;
 import org.youngmonkeys.ezyplatform.web.service.WebUserService;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.tvd12.ezyfox.io.EzyLists.newArrayList;
@@ -36,30 +37,12 @@ public class WebBookModelDecorator {
 
     private final WebMediaService mediaService;
     private final WebPostService postService;
-    private final WebProductService productService;
     private final WebProductBookService productBookService;
     private final WebProductDescriptionService productDescriptionService;
     private final WebProductPriceService productPriceService;
     private final WebUserService userService;
     private final WebBookStoreModelToResponseConverter
         modelToResponseConverter;
-
-    public List<WebBookResponse> decorateToBookResponses(
-        Collection<Long> bookIds,
-        ProductCurrencyModel currency
-    ) {
-        List<ProductModel> books = productService
-            .getProductsByIds(bookIds);
-        Map<Long, WebBookResponse> bookById = EzyMaps.newHashMap(
-            decorateToBookResponses(books, currency),
-            WebBookResponse::getId
-        );
-        return bookIds
-            .stream()
-            .map(bookById::get)
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
-    }
 
     @SuppressWarnings("MethodLength")
     public List<WebBookResponse> decorateToBookResponses(

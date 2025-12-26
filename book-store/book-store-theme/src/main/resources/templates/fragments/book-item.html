@@ -31,7 +31,7 @@
                 <span class="discount-percent"
                       th:text="${'- ' + book.discountPercent + ' %'}"></span>
             </div>
-            <a th:href="${'/store/books/' + book.id}"
+            <a th:href="${'/store/books/' + book.code}"
                class="book-title">
                 [[${book.name}]]
             </a>

@@ -80,7 +80,7 @@ public class StoreController {
             .build();
     }
 
-    @DoGet("/store/books/categories/{id}")
+    @DoGet("/store/books/categories/{name}")
     public View storeBooksCategoriesIdGet(
         @PathVariable String categoryName,
         @RequestParam("currencyId") long currencyId,
@@ -152,15 +152,15 @@ public class StoreController {
             .build();
     }
 
-    @DoGet("/store/books/{bookId}")
+    @DoGet("/store/books/{code}")
     public View storeBooksBookIdGet(
-        @PathVariable long bookId,
+        @PathVariable String bookCode,
         @RequestParam("currencyId") long currencyId
     ) {
         ProductCurrencyModel currency = currencyService
             .getCurrencyByIdOrDefault(currencyId);
         WebBookDetailsResponse book = bookControllerService
-            .getBookDetailsById(bookId, currency);
+            .getBookDetailsByCode(bookCode, currency);
         return View.builder()
             .template("book-details")
             .addVariable("pageTitle", book.getName())

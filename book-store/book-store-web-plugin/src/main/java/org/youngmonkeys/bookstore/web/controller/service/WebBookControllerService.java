@@ -97,12 +97,12 @@ public class WebBookControllerService {
         );
     }
 
-    public WebBookDetailsResponse getBookDetailsById(
-        long productId,
+    public WebBookDetailsResponse getBookDetailsByCode(
+        String productCode,
         ProductCurrencyModel currency
     ) {
-        ProductModel model = productService.getProductByIdAndStatus(
-            productId,
+        ProductModel model = productService.getProductByCodeAndStatus(
+            productCode,
             ProductStatus.PUBLISHED.toString()
         );
         if (model == null) {

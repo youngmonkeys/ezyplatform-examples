@@ -26,16 +26,23 @@
     <div class="container">
         <div th:each="book : ${highlightBooks}" class="main-book">
             <div class="description-item">
-                <h1 class="display-2 text-dark">
-                    [[${book.name}]]
-                </h1>
+                <a th:href="${'/store/books/' + book.code}">
+                    <h1 class="display-2 text-dark">
+                        [[${book.name}]]
+                    </h1>
+                </a>
                 <div class="lead" th:utext="${book.shortedDescription}"></div>
-                <p class="author text-muted mb-0" th:text="${book.authorName}"></p>
+                <div class="mt-4">
+                    <a class="author text-muted"
+                        th:href="${'/authors/' + book.authorUuid}">
+                        [[${book.authorName}]]
+                    </a>
+                </div>
             </div>
-            <div class="image-item">
+            <a class="image-item" th:href="${'/store/books/' + book.code}">
                 <img th:if="${book.bannerImage != null}"
                      th:src="${book.bannerImage.getUrlOrNull()}">
-            </div>
+            </a>
         </div>
     </div>
     <div class="common-spacing-2"></div>
