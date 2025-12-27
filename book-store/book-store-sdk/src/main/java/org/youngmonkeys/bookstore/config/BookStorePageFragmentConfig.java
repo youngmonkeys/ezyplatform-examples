@@ -41,12 +41,19 @@ public class BookStorePageFragmentConfig implements EzyBeanConfig {
             "container"
         );
         pageFragmentManager.registerFragmentNames(
+            "page_details",
+            "container",
+            "content"
+        );
+        pageFragmentManager.registerFragmentNames(
             "posts",
-            "container"
+            "container",
+            "content"
         );
         pageFragmentManager.registerFragmentNames(
             "post_details",
-            "container"
+            "container",
+            "content"
         );
     }
 }
