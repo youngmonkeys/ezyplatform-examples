@@ -24,6 +24,8 @@ public final class BookStoreConstants {
     public static final String CATEGORY_NAME_BESTSELLING_BOOK =
         "bestselling-book";
 
+    public static final int DEFAULT_BOOKS_LIMIT = 8;
+
     public static final String ROLE_AUTHOR_NAME = "book_author";
     public static final String ROLE_AUTHOR_DISPLAY_NAME = "Book Author";
 

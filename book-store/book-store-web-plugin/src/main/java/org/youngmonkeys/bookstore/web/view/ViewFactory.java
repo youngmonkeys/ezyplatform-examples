@@ -8,6 +8,8 @@ import org.youngmonkeys.ecommerce.model.ProductCurrencyModel;
 import org.youngmonkeys.ecommerce.web.service.WebProductCurrencyService;
 import org.youngmonkeys.ezyarticle.web.manager.WebPageFragmentManager;
 
+import static org.youngmonkeys.bookstore.constant.BookStoreConstants.DEFAULT_BOOKS_LIMIT;
+
 @EzySingleton
 @AllArgsConstructor
 public class ViewFactory {
@@ -29,21 +31,21 @@ public class ViewFactory {
                 "highlightBooks",
                 bookControllerService.getHighlightBooks(
                     currency,
-                    1
+                    DEFAULT_BOOKS_LIMIT
                 )
             )
             .addVariable(
                 "bestsellingBooks",
                 bookControllerService.getBestsellingBooks(
                     currency,
-                    6
+                    DEFAULT_BOOKS_LIMIT
                 )
             )
             .addVariable(
                 "newBooks",
                 bookControllerService.getNewBooks(
                     currency,
-                    6
+                    DEFAULT_BOOKS_LIMIT
                 )
             )
             .addVariable(

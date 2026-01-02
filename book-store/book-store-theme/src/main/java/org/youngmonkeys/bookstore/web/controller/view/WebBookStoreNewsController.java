@@ -20,4 +20,4 @@ import com.tvd12.ezyhttp.server.core.annotation.Controller;
 import org.youngmonkeys.ezyarticle.web.controller.view.NewsController;
 
 @Controller
-public class EzyBookStoreNewsController extends NewsController {}
+public class WebBookStoreNewsController extends NewsController {}

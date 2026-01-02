@@ -27,6 +27,8 @@ import org.youngmonkeys.ezyplatform.model.PaginationModel;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 
+import static org.youngmonkeys.bookstore.constant.BookStoreConstants.DEFAULT_BOOKS_LIMIT;
+
 @Setter
 public class StoreController {
 
@@ -161,11 +163,20 @@ public class StoreController {
             .getCurrencyByIdOrDefault(currencyId);
         WebBookDetailsResponse book = bookControllerService
             .getBookDetailsByCode(bookCode, currency);
+        long bookId = book.getId();
         return View.builder()
             .template("book-details")
             .addVariable("pageTitle", book.getName())
             .addVariable("book", book)
             .addVariable("currencyId", currency.getId())
+            .addVariable(
+                "sameAuthorBooks",
+                bookControllerService.randomSameAuthorBooksByBookId(
+                    bookId,
+                    currency,
+                    DEFAULT_BOOKS_LIMIT
+                )
+            )
             .build();
     }
 

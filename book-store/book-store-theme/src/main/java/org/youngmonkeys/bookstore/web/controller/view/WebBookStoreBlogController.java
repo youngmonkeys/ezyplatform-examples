@@ -20,4 +20,4 @@ import com.tvd12.ezyhttp.server.core.annotation.Controller;
 import org.youngmonkeys.ezyarticle.web.controller.view.BlogController;
 
 @Controller
-public class EzyBookStoreBlogController extends BlogController {}
+public class WebBookStoreBlogController extends BlogController {}

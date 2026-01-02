@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.youngmonkeys.bookstore.web.controller.decorator.WebBookModelDecorator;
 import org.youngmonkeys.bookstore.web.response.WebBookDetailsResponse;
 import org.youngmonkeys.bookstore.web.response.WebBookResponse;
+import org.youngmonkeys.bookstore.web.service.WebBookService;
 import org.youngmonkeys.ecommerce.entity.ProductStatus;
 import org.youngmonkeys.ecommerce.model.*;
 import org.youngmonkeys.ecommerce.pagination.*;
@@ -16,6 +17,7 @@ import org.youngmonkeys.ecommerce.web.service.WebProductService;
 import org.youngmonkeys.ezyplatform.exception.ResourceNotFoundException;
 import org.youngmonkeys.ezyplatform.model.PaginationModel;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ import static org.youngmonkeys.ezyplatform.pagination.PaginationModelFetchers.ge
 @AllArgsConstructor
 public class WebBookControllerService {
 
+    private final WebBookService bookService;
     private final WebProductService productService;
     private final WebProductCategoryService productCategoryService;
     private final WebProductCategoryProductService productCategoryProductService;
@@ -89,13 +92,33 @@ public class WebBookControllerService {
             ),
             ProductCategoryProductModel::getProductId
         );
+        return getBooksByIds(productIds, currency);
+    }
+
+    public List<WebBookResponse> getBooksByIds(
+        Collection<Long> bookIds,
+        ProductCurrencyModel currency
+    ) {
         List<ProductModel> models = productService
-            .getProductsByIds(productIds);
+            .getProductsByIds(bookIds);
         return bookModelDecorator.decorateToBookResponses(
             models,
             currency
         );
     }
+
+     public List<WebBookResponse> randomSameAuthorBooksByBookId(
+        long bookId,
+        ProductCurrencyModel currency,
+        int limit
+    ) {
+        List<Long> bookIds = bookService
+            .randomSameAuthorBookIdsByBookId(
+                bookId,
+                limit
+            );
+        return getBooksByIds(bookIds, currency);
+     }
 
     public WebBookDetailsResponse getBookDetailsByCode(
         String productCode,
