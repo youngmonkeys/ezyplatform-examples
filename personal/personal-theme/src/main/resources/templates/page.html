@@ -73,10 +73,10 @@
     <ezy:block ezy:utext="${commonFragments.get('scripts').content}" />
 </th:block>
 <!-- OPTIONAL SCRIPTS -->
-<script layout:fragment="import-scripts" th:remove="tag"></script>
-<script layout:fragment="pre-main-scripts" type="text/javascript"></script>
-<script layout:fragment="scripts" type="text/javascript"></script>
-<script layout:fragment="post-scripts" type="text/javascript"></script>
+<th:block layout:fragment="import-scripts" />
+<th:block layout:fragment="pre-main-scripts" />
+<th:block layout:fragment="scripts" />
+<th:block layout:fragment="post-scripts" />
 <script>
 $( document ).ready(function() {
 	ezyweb.formatDateStringElements();
