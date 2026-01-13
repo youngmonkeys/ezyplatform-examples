@@ -634,6 +634,7 @@ các bước cấu hình sau:
 ![Install dependencies](<docs/images/install-dependencies.png>)
 5) Chọn **Active & Restart** để kích hoạt module và khởi động lại Admin  
    (hoặc vào `Dashboard → Admin → Restart`).
+
 ![Restart admin](<docs/images/active-restart-admin.png>)
 
 
