@@ -288,7 +288,7 @@ Trước khi thực hiện export, cần đảm bảo project **Book Store đã 
 và các dependency tương ứng đã được cập nhật vào `pom.xml`.
 Thực hiện chỉnh sửa file module.properties
 📸 **Ảnh minh họa**: danh sách dependency sau khi link plugin.
-![Bổ sung dependency](docs/images/add-dependencies.png)
+![Bổ sung dependency](<docs/images/add-dependencies.png>)
 
 ---
 
@@ -301,12 +301,12 @@ export.bat
 ```
 
 📸 **Ảnh minh họa**: quá trình chạy script export.
-![Chạy export.bat](docs/images/run-export-bat.png)
+![Chạy export.bat](<docs/images/run-export-bat.png>)
 
 Sau khi hoàn tất, thư mục export sẽ được sinh ra, chứa các file cần thiết để deploy.
 
 📸 **Ảnh minh họa**: kết quả export thành công.
-![Kết quả export](docs/images/export-result.png)
+![Kết quả export](<docs/images/export-result.png>)
 
 ---
 
@@ -413,7 +413,7 @@ GRANT ALL PRIVILEGES ON book_store.*
 TO 'bookstore_user'@'localhost';
 ```
 
-![Cấp quyền database](docs/images/grant-db-privileges.png)
+![Cấp quyền database](<docs/images/grant-db-privileges.png>)
 
 ---
 
@@ -435,7 +435,7 @@ sudo systemctl reload nginx
 sudo systemctl restart nginx
 ```
 
-![Cài đặt Nginx](docs/images/install-nginx.png)
+![Cài đặt Nginx](<docs/images/install-nginx.png>)
 
 **Cấu hình reverse proxy cho domain** 
 
@@ -539,7 +539,7 @@ Test & reload:
 sudo nginx -t
 ```
  
-![Cấu hình SSL](docs/images/setting-nginx-success.png)
+![Cấu hình SSL](<docs/images/setting-nginx-success.png>)
 
 ```
 sudo systemctl reload nginx
@@ -557,7 +557,7 @@ sudo certbot
 
 Sau khi sử dụng certbot xong có thể file cấu hình `/etc/nginx/sites-enabled/admin.bookstore.com` sẽ bị thay đổi thế này:
 
-![Cấu hình SSL](docs/images/certbot-nginx.png)
+![Cấu hình SSL](<docs/images/certbot-nginx.png>)
 
 ---
 
@@ -593,7 +593,7 @@ mv download ezyplatform.zip
 unzip ezyplatform.zip
 ```
 
-![Download EzyPlatform](docs/images/inspect-download-version)
+![Download EzyPlatform](<docs/images/inspect-download-version>)
 
 Tìm đến folder `ezyplatform/settings` và thay đổi file `setup.properties` (ví dụ: `nano settings/setup.properties`) với các thông tin cơ sở dữ liệu bạn đã tạo trước đó, ví dụ: (bạn chỉnh theo dự án):
 
@@ -623,18 +623,18 @@ các bước cấu hình sau:
 
 1) **Dashboard → Web → Settings → Submit**  
    Áp dụng cấu hình cho Web site.
-![Web settings](docs/images/web-settings.png)
+![Web settings](<docs/images/web-settings.png>)
 2) **Dashboard → Admin → Settings → Submit**  
    Áp dụng cấu hình cho Admin site.
-![Admin settings](docs/images/admin-settings.png)
+![Admin settings](<docs/images/admin-settings.png>)
 3) Vào **Theme → Add New → Add Modules** để thêm các module cần thiết.
-![Add modules](docs/images/add-modules.png)
+![Add modules](<docs/images/add-modules.png>)
 4) Thực hiện **Install** và **Active** toàn bộ dependency của Book Store.
-![Active module](docs/images/active-module.png)
-![Install dependencies](docs/images/install-dependencies.png)
+![Active module](<docs/images/active-module.png>)
+![Install dependencies](<docs/images/install-dependencies.png>)
 5) Chọn **Active & Restart** để kích hoạt module và khởi động lại Admin  
    (hoặc vào `Dashboard → Admin → Restart`).
-![Restart admin](docs/images/active-restart-admin.png)
+![Restart admin](<docs/images/active-restart-admin.png>)
 
 
 🎉 **Hoàn tất quá trình deploy dự án Book Store.**
