@@ -382,9 +382,10 @@ Thiết lập mật khẩu cho `root` (nếu cần):
 ```sql
 ALTER USER 'root'@'localhost'
 IDENTIFIED WITH mysql_native_password BY '<new_password>';
+exit
 ```
 
-Chạy harden:
+Chạy hardening:
 
 ```bash
 sudo mysql_secure_installation
