@@ -593,7 +593,7 @@ mv download ezyplatform.zip
 unzip ezyplatform.zip
 ```
 
-![Download EzyPlatform](<docs/images/inspect-download-version>)
+![Download EzyPlatform](<docs/images/inspect-download-version.png>)
 
 Tìm đến folder `ezyplatform/settings` và thay đổi file `setup.properties` (ví dụ: `nano settings/setup.properties`) với các thông tin cơ sở dữ liệu bạn đã tạo trước đó, ví dụ: (bạn chỉnh theo dự án):
 
