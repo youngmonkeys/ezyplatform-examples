@@ -89,13 +89,13 @@ $( document ).ready(function() {
 		ezyweb.appendLangParameterToLinks(ezyweb.lang);
 	}
 
-	mermaid.initialize({
+    mermaid.initialize({
         startOnLoad: false,
         theme: "default"
     });
 
     <!--  STEP 1 + 2: Convert Markdown → source-mermaid -->
-     $('.article-content pre').each(function () {
+    $('.article-content pre').each(function () {
         var $pre = $(this);
         var text = $pre.text();
 
@@ -115,7 +115,7 @@ $( document ).ready(function() {
 
         $wrapper.append($newPre);
         $pre.replaceWith($wrapper);
-     });
+    });
 
     <!-- Render Mermaid -->
     $('.source-mermaid pre').each(function (index) {
@@ -142,7 +142,7 @@ $( document ).ready(function() {
             });
     });
 
-  mermaid.run();
+    mermaid.run();
 });
 </script>
 <th:block th:if="${commonFragments.get('header') != null && !#strings.isEmpty(commonFragments.get('header').additionalFoot)}">
