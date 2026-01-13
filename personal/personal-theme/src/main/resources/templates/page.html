@@ -66,7 +66,8 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 	<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-	<script ezy:vsrc="/js/main.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js" integrity="sha256-0IMKbAVUbp7bj+IKj1RfPg3HxMMTTVhLrZwTqZ16ceA=" crossorigin="anonymous"></script>
+    <script ezy:vsrc="/js/main.js" type="text/javascript"></script>
 </th:block>
 
 <th:block th:if="${commonFragments.get('scripts') != null && commonFragments.get('scripts').content != 'scripts'}">
@@ -87,6 +88,61 @@ $( document ).ready(function() {
 	if (ezyweb.lang) {
 		ezyweb.appendLangParameterToLinks(ezyweb.lang);
 	}
+
+    mermaid.initialize({
+        startOnLoad: false,
+        theme: "default"
+    });
+
+    <!--  STEP 1 + 2: Convert Markdown → source-mermaid -->
+    $('.article-content pre').each(function () {
+        var $pre = $(this);
+        var text = $pre.text();
+
+        if (!text || text.indexOf('```mermaid') === -1) {
+          return;
+        }
+
+        var code = text
+          .replace(/```mermaid\s*/i, '')
+          .replace(/```/g, '')
+          .trim();
+
+        if (!code) return;
+
+        var $wrapper = $('<div class="source-mermaid"></div>');
+        var $newPre = $('<pre></pre>').text(code);
+
+        $wrapper.append($newPre);
+        $pre.replaceWith($wrapper);
+    });
+
+    <!-- Render Mermaid -->
+    $('.source-mermaid pre').each(function (index) {
+        var preElement = $(this);
+        var code = $.trim(preElement.text());
+
+        if (!code) {
+            return;
+        }
+        var id = 'mermaid-diagram-' + index;
+        var $container = $('<div>', {
+            class: 'mermaid',
+            id: id,
+            text: code
+        });
+        preElement.parent().replaceWith($container);
+        mermaid
+            .render(id + '-svg', code)
+            .then(function (result) {
+                $container.html(result.svg);
+            })
+            .catch(function (err) {
+                console.error('Mermaid render error:', err);
+            });
+    });
+
+    mermaid.run();
 });
 </script>
 <th:block th:if="${commonFragments.get('header') != null && !#strings.isEmpty(commonFragments.get('header').additionalFoot)}">

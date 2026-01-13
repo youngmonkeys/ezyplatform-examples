@@ -18,7 +18,7 @@
         <!--suppress UnresolvedMavenProperty -->
         <ezyplatform.home>${env.EZYPLATFORM_HOME}</ezyplatform.home>
         <jsoup.version>1.18.3</jsoup.version>
-        <ezyarticle.version>0.8.7</ezyarticle.version>
+        <ezyarticle.version>0.8.8</ezyarticle.version>
         <ezymail.version>0.1.4</ezymail.version>
         <javax.mail.version>1.6.2</javax.mail.version>
         <ezysupport.version>0.2.9</ezysupport.version>
