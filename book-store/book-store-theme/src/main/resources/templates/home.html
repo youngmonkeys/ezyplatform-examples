@@ -21,48 +21,134 @@
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         layout:decorate="~{ezytheme}">
 <body>
+
+<!-- Import Swiper & Custom CSS -->
+<th:block layout:fragment="import-scripts">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+</th:block>
+
 <div layout:fragment="content">
     <div class="common-spacing-1"></div>
+
+    <!-- HIGHLIGHT BOOKS SLIDER -->
     <div class="container">
-        <div th:each="book : ${highlightBooks}" class="main-book">
-            <div class="description-item">
-                <a th:href="${'/store/books/' + book.code}">
-                    <h1 class="display-2 text-dark">
-                        [[${book.name}]]
-                    </h1>
-                </a>
-                <div class="lead" th:utext="${book.shortedDescription}"></div>
-                <div class="mt-4">
-                    <a class="author text-muted"
-                        th:href="${'/authors/' + book.authorUuid}">
-                        [[${book.authorName}]]
-                    </a>
+        <div class="swiper highlight-swiper" th:if="${highlightBooks != null and !highlightBooks.isEmpty()}">
+            <div class="swiper-wrapper">
+
+                <div class="swiper-slide" th:each="book : ${highlightBooks}">
+                    <div class="main-book">
+                        <div class="description-item">
+                            <!-- Title -->
+                            <a th:href="${'/store/books/' + book.code}" class="book-title">
+                                [[${book.name}]]
+                            </a>
+
+                            <!-- Description -->
+                            <div class="lead" th:utext="${book.shortedDescription}"></div>
+
+                            <!-- Author -->
+                            <a class="author" th:href="${'/authors/' + book.authorUuid}">
+                                Tác giả: [[${book.authorName}]]
+                            </a>
+
+                            <!-- Price Box -->
+                            <div class="price-box" th:if="${book.formattedPriceIncludeSymbol != null}">
+                                <span class="current-price">
+                                    [[${book.formattedPriceIncludeSymbol}]]
+                                </span>
+
+                                <span class="original-price"
+                                      th:if="${book.discountPercent != null && book.discountPercent > 0}">
+                                    [[${book.formattedOriginalPriceIncludeSymbol}]]
+                                </span>
+
+                                <span class="discount-badge"
+                                      th:if="${book.discountPercent != null && book.discountPercent > 0}">
+                                    -[[${book.discountPercent}]]%
+                                </span>
+                            </div>
+
+                            <!-- Nút Xem Chi Tiết -->
+                            <a th:href="${'/store/books/' + book.code}" class="btn-view-detail">
+                                Xem chi tiết <i class="fas fa-arrow-right ms-2" style="font-size: 0.8em;"></i>
+                            </a>
+                        </div>
+
+                        <!-- Image -->
+                        <div class="image-item">
+                            <a th:href="${'/store/books/' + book.code}">
+                                <img th:if="${book.bannerImage != null}"
+                                     th:src="${book.bannerImage.getUrlOrNull()}"
+                                     style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"
+                                     alt="">
+                            </a>
+                        </div>
+                    </div>
                 </div>
+
             </div>
-            <a class="image-item" th:href="${'/store/books/' + book.code}">
-                <img th:if="${book.bannerImage != null}"
-                     th:src="${book.bannerImage.getUrlOrNull()}">
-            </a>
+
+            <!-- Controls -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-pagination"></div>
         </div>
     </div>
+
     <div class="common-spacing-2"></div>
+
+    <!-- BESTSELLING -->
     <div class="container">
         <h1 class="mb-4">[[#{bestselling_books}]]</h1>
         <div class="books">
             <th:block th:each="book : ${bestsellingBooks}">
-                <th:block th:replace="~{fragments/book-item :: content(book=${book})}" />
+                <th:block th:replace="~{fragments/book-item :: content(book=${book})}"/>
             </th:block>
         </div>
     </div>
+
     <div class="common-spacing-3"></div>
+
+    <!-- NEW BOOKS -->
     <div class="container">
         <h1 class="mb-4">[[#{new_book_s}]]</h1>
         <div class="books">
             <th:block th:each="book : ${newBooks}">
-                <th:block th:replace="~{fragments/book-item :: content(book=${book})}" />
+                <th:block th:replace="~{fragments/book-item :: content(book=${book})}"/>
             </th:block>
         </div>
     </div>
 </div>
+
+<!-- Init Swiper -->
+<th:block layout:fragment="scripts">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const el = document.querySelector('.highlight-swiper');
+            if (!el) return;
+
+            new Swiper('.highlight-swiper', {
+                loop: true,
+                slidesPerView: 1,
+                spaceBetween: 24,
+                speed: 600,
+                autoplay: {
+                    delay: 4500,
+                    disableOnInteraction: false
+                },
+                navigation: {
+                    nextEl: '.highlight-swiper .swiper-button-next',
+                    prevEl: '.highlight-swiper .swiper-button-prev'
+                },
+                pagination: {
+                    el: '.highlight-swiper .swiper-pagination',
+                    clickable: true
+                }
+            });
+        });
+    </script>
+</th:block>
+
 </body>
 </html>
