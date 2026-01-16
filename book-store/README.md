@@ -287,6 +287,7 @@ và **triển khai hệ thống lên server Linux (Ubuntu)** để vận hành t
 Trước khi thực hiện export, cần đảm bảo project **Book Store đã được link đầy đủ plugin**
 và các dependency tương ứng đã được cập nhật vào `pom.xml`.
 Thực hiện chỉnh sửa file module.properties
+
 📸 **Ảnh minh họa**: danh sách dependency sau khi link plugin.
 ![Bổ sung dependency](<docs/images/add-dependencies.png>)
 
@@ -316,7 +317,7 @@ Sau khi hoàn tất, thư mục export sẽ được sinh ra, chứa các file c
 
 - **OS**: Ubuntu 20.04 hoặc 22.04 (khuyến nghị)
 - **Domain**: ví dụ `bookstore.com`
-- *(Tuỳ chọn)* subdomain admin: `admin.bookstore.com`
+- subdomain admin: `admin.bookstore.com`
 
 ---
 
@@ -381,9 +382,10 @@ Thiết lập mật khẩu cho `root` (nếu cần):
 ```sql
 ALTER USER 'root'@'localhost'
 IDENTIFIED WITH mysql_native_password BY '<new_password>';
+exit
 ```
 
-Chạy harden:
+Chạy hardening:
 
 ```bash
 sudo mysql_secure_installation
@@ -439,7 +441,7 @@ sudo systemctl restart nginx
 
 **Cấu hình reverse proxy cho domain** 
 
-Xoá config default (nếu đang dùng):
+Xoá config default tại 2 thư mục:
 
 - `/etc/nginx/sites-enabled`
     
@@ -593,7 +595,7 @@ mv download ezyplatform.zip
 unzip ezyplatform.zip
 ```
 
-![Download EzyPlatform](<docs/images/inspect-download-version>)
+![Download EzyPlatform](<docs/images/inspect-download-version.png>)
 
 Tìm đến folder `ezyplatform/settings` và thay đổi file `setup.properties` (ví dụ: `nano settings/setup.properties`) với các thông tin cơ sở dữ liệu bạn đã tạo trước đó, ví dụ: (bạn chỉnh theo dự án):
 
