@@ -1,32 +1,12 @@
-<!--
- ~ Copyright 2022 youngmonkeys.org
- ~ 
- ~ Licensed under the ezyplatform, Version 1.0.0 (the "License");
- ~ you may not use this file except in compliance with the License.
- ~ You may obtain a copy of the License at
- ~ 
- ~     https://youngmonkeys.org/licenses/ezyplatform-1.0.0.txt
- ~ 
- ~ Unless required by applicable law or agreed to in writing, software
- ~ ributed under the License is ributed on an "AS IS" BASIS,
- ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- ~ See the License for the specific language governing permissions and
- ~ limitations under the License.
--->
-
-<!DOCTYPE html>
+<!doctype html>
 <html
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:th="http://www.thymeleaf.org"
-        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        layout:decorate="~{ezytheme}">
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{ezytheme}">
+
 <body>
 
-<!-- Import Swiper & Custom CSS -->
-<th:block layout:fragment="import-scripts">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-</th:block>
 
 <div layout:fragment="content">
     <div class="common-spacing-1"></div>
@@ -49,7 +29,7 @@
 
                             <!-- Author -->
                             <a class="author" th:href="${'/authors/' + book.authorUuid}">
-                                Tác giả: [[${book.authorName}]]
+                                [[#{author}]]: [[${book.authorName}]]
                             </a>
 
                             <!-- Price Box -->
@@ -71,16 +51,15 @@
 
                             <!-- Nút Xem Chi Tiết -->
                             <a th:href="${'/store/books/' + book.code}" class="btn-view-detail">
-                                Xem chi tiết <i class="fas fa-arrow-right ms-2" style="font-size: 0.8em;"></i>
+                                [[#{view_detail}]] <i class="fas fa-arrow-right icon-arrow"></i>
                             </a>
                         </div>
 
-                        <!-- Image -->
                         <div class="image-item">
                             <a th:href="${'/store/books/' + book.code}">
-                                <img th:if="${book.bannerImage != null}"
+                                <img class="book-banner"
+                                     th:if="${book.bannerImage != null}"
                                      th:src="${book.bannerImage.getUrlOrNull()}"
-                                     style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"
                                      alt="">
                             </a>
                         </div>
@@ -124,9 +103,9 @@
 <!-- Init Swiper -->
 <th:block layout:fragment="scripts">
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const el = document.querySelector('.highlight-swiper');
-            if (!el) return;
+        $(function () {
+            var $el = $('.highlight-swiper');
+            if (!$el.length) return;
 
             new Swiper('.highlight-swiper', {
                 loop: true,
