@@ -54,17 +54,17 @@
                 <div th:each="post : ${topViewedBlogs}" class="top-view-item">
                     <a class="top-view-link">
                         <div class="top-view-thumb"
-                             th:if="${blog.featuredImage != null}">
-                            <img th:src="${blog.featuredImage.getUrlOrNull()}">
+                             th:if="${post.featuredImageUrl != null}">
+                            <img th:src="${post.featuredImageUrl}">
                         </div>
                         <div class="top-view-content">
                             <div class="top-view-title">
                                 [[${post.title}]]
                             </div>
                             <div class="top-view-meta">
-                            <span class="date-time-minute-string">
-                                18h30
-                            </span>
+                                <span class="date-time-minute-string">
+                                    [[${post.publishedAt}]]
+                                </span>
                             </div>
                         </div>
                     </a>

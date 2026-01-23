@@ -3,7 +3,6 @@ package org.youngmonkeys.personal.web.view;
 import com.tvd12.ezyfox.bean.annotation.EzySingleton;
 import com.tvd12.ezyhttp.server.core.view.View;
 import lombok.AllArgsConstructor;
-import org.youngmonkeys.ezyarticle.sdk.result.PostIdAndTitleResult;
 import org.youngmonkeys.personal.web.response.TopBlogResponse;
 import org.youngmonkeys.personal.web.service.WebPersonalBlogTopViewService;
 
@@ -16,11 +15,10 @@ public class WebPersonalBlogDetailsViewDecorator {
     private final WebPersonalBlogTopViewService blogService;
 
     public void decorateBlogDetailsView(
-        View view
+        View view,
+        String languageCode
     ) {
-//        List<PostIdAndTitleResult> topViewedBlogs =
-//            blogService.getTopViewedPostIds(6);
-        List<TopBlogResponse> topViewedBlogs = blogService.getTopViewedBlogs(6);
+        List<TopBlogResponse> topViewedBlogs = blogService.getTopViewedBlogs(6, languageCode);
 
         view.setVariable(
             "topViewedBlogs",

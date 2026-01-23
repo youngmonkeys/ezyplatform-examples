@@ -20,6 +20,7 @@ import com.tvd12.ezyhttp.server.core.annotation.Controller;
 import com.tvd12.ezyhttp.server.core.view.View;
 import lombok.AllArgsConstructor;
 import org.youngmonkeys.ezyarticle.web.controller.view.BlogController;
+import org.youngmonkeys.ezyplatform.web.controller.service.WebLanguageControllerService;
 import org.youngmonkeys.personal.web.view.WebPersonalBlogDetailsViewDecorator;
 import org.youngmonkeys.personal.web.view.WebPersonalBlogsViewDecorator;
 
@@ -31,6 +32,7 @@ public class WebPersonalBlogController extends BlogController {
 
     private final WebPersonalBlogsViewDecorator blogsViewDecorator;
     private final WebPersonalBlogDetailsViewDecorator blogDetailsViewDecorator;
+    private WebLanguageControllerService languageControllerService;
 
     @Override
     protected void decorateBlogView(
@@ -45,6 +47,8 @@ public class WebPersonalBlogController extends BlogController {
         HttpServletRequest request,
         View view
     ) {
-        blogDetailsViewDecorator.decorateBlogDetailsView(view);
+        String languageCode =
+            languageControllerService.getLanguageCodeOrDefault(request);
+        blogDetailsViewDecorator.decorateBlogDetailsView(view, languageCode);
     }
 }

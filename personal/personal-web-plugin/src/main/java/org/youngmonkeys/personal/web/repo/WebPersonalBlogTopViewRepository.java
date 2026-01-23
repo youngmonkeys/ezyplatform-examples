@@ -5,7 +5,7 @@ import com.tvd12.ezyfox.database.annotation.EzyQuery;
 import com.tvd12.ezyfox.database.annotation.EzyRepository;
 import com.tvd12.ezyfox.util.Next;
 import org.youngmonkeys.ezyarticle.sdk.entity.PostMeta;
-import org.youngmonkeys.personal.result.PostTitleAndFeaturedImageResult;
+import org.youngmonkeys.personal.result.PostIdAndNumberViewsResult;
 
 import java.util.List;
 
@@ -13,10 +13,7 @@ import java.util.List;
 public interface WebPersonalBlogTopViewRepository extends EzyDatabaseRepository<Long, PostMeta> {
 
     @EzyQuery(
-        "SELECT " +
-            "p.id, p.title, p.slug, p.featuredImageId, " +
-            "pm.metaNumberValue AS views, " +
-            "p.publishedAt " +
+        "SELECT p.id, pm.metaNumberValue AS views " +
         "FROM Post p " +
         "JOIN PostMeta pm ON p.id = pm.postId " +
         "WHERE p.postType = ?1 " +
@@ -24,12 +21,5 @@ public interface WebPersonalBlogTopViewRepository extends EzyDatabaseRepository<
             "AND pm.metaKey = ?0 " +
         "ORDER BY pm.metaNumberValue DESC"
     )
-    List<PostTitleAndFeaturedImageResult> findTopPublicBlogOrderByViews(String metaKey, String postType, String status, Next next);
-
-    @EzyQuery(
-        "SELECT e.postId FROM PostMeta e " +
-        "WHERE e.metaKey = ?0 " +
-        "ORDER BY e.metaNumberValue DESC"
-    )
-    List<Long> findTopPostIdsByMetaKey(String metaKey, Next next);
+    List<PostIdAndNumberViewsResult> findTopPostByMetaKeyAndTypeAndStatusOrderByViews(String metaKey, String postType, String status, Next next);
 }
