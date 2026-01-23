@@ -9,9 +9,7 @@ import org.youngmonkeys.ecommerce.model.ProductBookModel;
 import org.youngmonkeys.ecommerce.model.ProductCurrencyModel;
 import org.youngmonkeys.ecommerce.model.ProductModel;
 import org.youngmonkeys.ecommerce.model.ProductPriceModel;
-import org.youngmonkeys.ecommerce.web.service.WebProductBookService;
-import org.youngmonkeys.ecommerce.web.service.WebProductDescriptionService;
-import org.youngmonkeys.ecommerce.web.service.WebProductPriceService;
+import org.youngmonkeys.ecommerce.web.service.*;
 import org.youngmonkeys.ezyarticle.sdk.model.PostModel;
 import org.youngmonkeys.ezyarticle.web.service.WebPostService;
 import org.youngmonkeys.ezyplatform.model.MediaNameModel;
@@ -21,10 +19,7 @@ import org.youngmonkeys.ezyplatform.rx.Reactive;
 import org.youngmonkeys.ezyplatform.web.service.WebMediaService;
 import org.youngmonkeys.ezyplatform.web.service.WebUserService;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.tvd12.ezyfox.io.EzyLists.newArrayList;
@@ -38,163 +33,170 @@ public class WebBookModelDecorator {
     private final WebMediaService mediaService;
     private final WebPostService postService;
     private final WebProductBookService productBookService;
+    private final WebProductMediaService productMediaService;
     private final WebProductDescriptionService productDescriptionService;
     private final WebProductPriceService productPriceService;
     private final WebUserService userService;
     private final WebBookStoreModelToResponseConverter
-        modelToResponseConverter;
-
+            modelToResponseConverter;
+    private final WebSetProductService webSetProductService;
     @SuppressWarnings("MethodLength")
     public List<WebBookResponse> decorateToBookResponses(
-        List<ProductModel> models,
-        ProductCurrencyModel currency
+            List<ProductModel> models,
+            ProductCurrencyModel currency
     ) {
         List<Long> productIds = newArrayList(
-            models,
-            ProductModel::getId
+                models,
+                ProductModel::getId
         );
         Map<Long, ProductBookModel> bookById = productBookService
-            .getProductBookMapByIds(productIds);
+                .getProductBookMapByIds(productIds);
         Set<Long> userIds = bookById
-            .values()
-            .stream()
-            .map(ProductBookModel::getAuthorUserId)
-            .filter(it -> it > 0)
-            .collect(Collectors.toSet());
+                .values()
+                .stream()
+                .map(ProductBookModel::getAuthorUserId)
+                .filter(it -> it > 0)
+                .collect(Collectors.toSet());
         Set<Long> mediaIds = models
-            .stream()
-            .map(ProductModel::getBannerImageId)
-            .filter(it -> it > 0)
-            .collect(Collectors.toSet());
+                .stream()
+                .map(ProductModel::getBannerImageId)
+                .filter(it -> it > 0)
+                .collect(Collectors.toSet());
         Map<Long, Long> descriptionPostIdByProductId = productDescriptionService
-            .getProductDescriptionPostIdMapByIds(
-                productIds
-            );
+                .getProductDescriptionPostIdMapByIds(
+                        productIds
+                );
         return Reactive.multiple()
-            .register("userById", () ->
-                userService.getUserMapByIds(userIds)
-            )
-            .register("mediaById", () ->
-                mediaService.getMediaNameMapByIds(mediaIds)
-            )
-            .register("descriptionById", () ->
-                postService.getPostMapByIds(
-                    descriptionPostIdByProductId.values()
+                .register("userById", () ->
+                        userService.getUserMapByIds(userIds)
                 )
-            )
-            .register("priceByProductId", () ->
-                productPriceService.getProductPriceMap(
-                    productIds,
-                    currency.getId()
+                .register("mediaById", () ->
+                        mediaService.getMediaNameMapByIds(mediaIds)
                 )
-            )
-            .blockingGet(map -> {
-                Map<Long, UserModel> userById = map.get("userById");
-                Map<Long, MediaNameModel> mediaById = map.get("mediaById");
-                Map<Long, PostModel> descriptionById = map.get("descriptionById");
-                Map<Long, ProductPriceModel> priceByProductId = map
-                    .get("priceByProductId");
-                return newArrayList(models, it -> {
-                    ProductBookModel book = bookById.getOrDefault(
-                        it.getId(),
-                        ProductBookModel.builder().build()
-                    );
-                    return modelToResponseConverter.toBookResponse(
-                        it,
-                        book,
-                        userById.getOrDefault(
-                            book.getAuthorUserId(),
-                            UserModel.builder().build()
-                        ),
-                        mediaById.get(it.getBannerImageId()),
-                        descriptionById.getOrDefault(
-                            descriptionPostIdByProductId.getOrDefault(
+                .register("descriptionById", () ->
+                        postService.getPostMapByIds(
+                                descriptionPostIdByProductId.values()
+                        )
+                )
+                .register("priceByProductId", () ->
+                        productPriceService.getProductPriceMap(
+                                productIds,
+                                currency.getId()
+                        )
+                )
+                .blockingGet(map -> {
+                    Map<Long, UserModel> userById = map.get("userById");
+                    Map<Long, MediaNameModel> mediaById = map.get("mediaById");
+                    Map<Long, PostModel> descriptionById = map.get("descriptionById");
+                    Map<Long, ProductPriceModel> priceByProductId = map
+                            .get("priceByProductId");
+                    return newArrayList(models, it -> {
+                        ProductBookModel book = bookById.getOrDefault(
                                 it.getId(),
-                                ZERO_LONG
-                            ),
-                            PostModel.builder().build()
-                        ),
-                        priceByProductId.getOrDefault(
-                            it.getId(),
-                            ProductPriceModel.ZERO
-                        ),
-                        currency
-                    );
+                                ProductBookModel.builder().build()
+                        );
+                        return modelToResponseConverter.toBookResponse(
+                                it,
+                                book,
+                                userById.getOrDefault(
+                                        book.getAuthorUserId(),
+                                        UserModel.builder().build()
+                                ),
+                                mediaById.get(it.getBannerImageId()),
+                                descriptionById.getOrDefault(
+                                        descriptionPostIdByProductId.getOrDefault(
+                                                it.getId(),
+                                                ZERO_LONG
+                                        ),
+                                        PostModel.builder().build()
+                                ),
+                                priceByProductId.getOrDefault(
+                                        it.getId(),
+                                        ProductPriceModel.ZERO
+                                ),
+                                currency
+                        );
+                    });
                 });
-            });
     }
 
     public WebBookDetailsResponse decorateToBookDetailsResponse(
-        ProductModel model,
-        ProductCurrencyModel currency
+            ProductModel model,
+            ProductCurrencyModel currency
     ) {
         long productId = model.getId();
         long bannerId = model.getBannerImageId();
-        Set<Long> mediaIds = new HashSet<>();
+        List<Long> mediaIds = new ArrayList<>();
         if (bannerId > ZERO_LONG) {
             mediaIds.add(bannerId);
         }
+        mediaIds.addAll(productMediaService.getMediaIdsByProductId(productId));
         long descriptionPostId = productDescriptionService
-            .getProductDescriptionPostIdById(productId);
+                .getProductDescriptionPostIdById(productId);
         return Reactive.multiple()
-            .register("book", () ->
-                productBookService.getProductBookById(productId)
-            )
-            .register("mediaById", () ->
-                mediaService.getMediaNameMapByIds(mediaIds)
-            )
-            .register("description", () ->
-                postService.getPostById(descriptionPostId)
-            )
-            .register("productPrice", () ->
-                productPriceService.getProductPrice(
-                    productId,
-                    currency.getId()
+                .register("book", () ->
+                        productBookService.getProductBookById(productId)
                 )
-            )
-            .blockingGet(map -> {
-                Map<Long, MediaNameModel> mediaById = map.get("mediaById");
-                return modelToResponseConverter.toBookDetailsResponse(
-                    model,
-                         map.get(
-                        "bookById",
-                        ProductBookModel.builder().build()
-                    ),
-                    mediaById.get(bannerId),
-                        map.get(
-                        "description",
-                        PostModel.builder().build()
-                    ),
-                    map.get(
-                        "productPrice",
-                        ProductPriceModel.ZERO
-                    ),
-                    currency
-                );
-            });
+                .register("mediaById",()->
+                        mediaService.getMediaNameMapByIds(mediaIds)
+                )
+                .register("description", () ->
+                        postService.getPostById(descriptionPostId)
+                )
+                .register("productPrice", () ->
+                        productPriceService.getProductPrice(
+                                productId,
+                                currency.getId()
+                        )
+                )
+                .blockingGet(map -> {
+                    Map<Long, MediaNameModel> mediaById = map.get("mediaById");
+
+                    List<MediaNameModel> medias = newArrayList(
+                            mediaById,
+                            (id, media) -> media
+                    );
+                    return modelToResponseConverter.toBookDetailsResponse(
+                            model,
+                            map.get(
+                                    "bookById",
+                                    ProductBookModel.builder().build()
+                            ),
+                            map.get(
+                                    "description",
+                                    PostModel.builder().build()
+                            ),
+                            map.get(
+                                    "productPrice",
+                                    ProductPriceModel.ZERO
+                            ),
+                            currency,
+                            medias
+                    );
+                });
     }
 
     public Map<Long, WebBookResponse> decorateToBookResponseByIdMap(
-        List<ProductModel> models,
-        ProductCurrencyModel currency
+            List<ProductModel> models,
+            ProductCurrencyModel currency
     ) {
         return newHashMap(
-            decorateToBookResponses(models, currency),
-            WebBookResponse::getId
+                decorateToBookResponses(models, currency),
+                WebBookResponse::getId
         );
     }
 
     public PaginationModel<WebBookResponse> decorateToBookPaginationResponse(
-        PaginationModel<ProductModel> pagination,
-        ProductCurrencyModel currency
+            PaginationModel<ProductModel> pagination,
+            ProductCurrencyModel currency
     ) {
         Map<Long, WebBookResponse> productResponseById =
-            decorateToBookResponseByIdMap(
-                pagination.getItems(),
-                currency
-            );
+                decorateToBookResponseByIdMap(
+                        pagination.getItems(),
+                        currency
+                );
         return pagination.map(
-            it -> productResponseById.get(it.getId())
+                it -> productResponseById.get(it.getId())
         );
     }
 }
