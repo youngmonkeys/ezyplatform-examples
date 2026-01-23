@@ -16,6 +16,7 @@ import org.youngmonkeys.ezyplatform.model.MediaNameModel;
 import org.youngmonkeys.ezyplatform.model.UserModel;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.youngmonkeys.ecommerce.util.DecimalPrices.toDiscountPercent;
 import static org.youngmonkeys.ezyplatform.util.Numbers.toNoTrailingZerosString;
@@ -67,10 +68,10 @@ public class WebBookStoreModelToResponseConverter {
     public WebBookDetailsResponse toBookDetailsResponse(
         ProductModel model,
         ProductBookModel book,
-        MediaNameModel bannerImage,
         PostModel descriptionPost,
         ProductPriceModel price,
-        ProductCurrencyModel currency
+        ProductCurrencyModel currency,
+        List<MediaNameModel> medias
     ) {
         BigDecimal priceValue = price.getPrice();
         BigDecimal originalPriceValue = price.getOriginalPrice();
@@ -84,7 +85,7 @@ public class WebBookStoreModelToResponseConverter {
             .name(model.getProductName())
             .code(model.getProductCode())
             .authorName(book.getAuthor())
-            .bannerImage(bannerImage)
+            .medias(medias)
             .description(description)
             .originalPrice(toNoTrailingZerosString(originalPriceValue))
             .formattedOriginalPriceIncludeIsoCode(

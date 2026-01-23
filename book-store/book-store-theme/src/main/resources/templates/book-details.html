@@ -7,11 +7,38 @@
 <div layout:fragment="content" class="container book-details">
     <div class="row align-items-start">
         <div class="col-lg-3">
-            <div class="book-details-image card-panel">
-                <img th:if="${book.bannerImage != null}"
-                     th:src="${book.bannerImage.getUrlOrNull()}"
-                     alt="book cover">
+            <div class="book-details-image card-panel"
+                 th:if="${book.medias != null and !book.medias.isEmpty()}">
+
+                <!-- MAIN -->
+                <div class="swiper book-gallery-main">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide" th:each="m : ${book.medias}">
+                            <img class="book-gallery-main-img"
+                                 th:src="${m.getUrlOrNull()}"
+                                 alt="book image">
+                        </div>
+                    </div>
+
+                    <div class="swiper-button-prev book-gallery-prev"
+                         th:if="${book.medias.size() > 1}"></div>
+                    <div class="swiper-button-next book-gallery-next"
+                         th:if="${book.medias.size() > 1}"></div>
+                </div>
+
+                <!-- THUMBS (BOTTOM) -->
+                <div class="swiper book-gallery-thumbs"
+                     th:if="${book.medias.size() > 1}">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide" th:each="m : ${book.medias}">
+                            <img class="book-gallery-thumb-img"
+                                 th:src="${m.getUrlOrNull()}"
+                                 alt="thumb">
+                        </div>
+                    </div>
+                </div>
             </div>
+
         </div>
         <div class="col-lg-5">
             <div class="book-details-content card-panel">
@@ -61,12 +88,49 @@
         <h1 class="mb-4">[[#{more_by_this_author}]]</h1>
         <div class="books">
             <th:block th:each="book : ${sameAuthorBooks}">
-                <th:block th:replace="~{fragments/book-item :: content(book=${book})}" />
+                <th:block th:replace="~{fragments/book-item :: content(book=${book})}"/>
             </th:block>
         </div>
     </div>
 </div>
 <script layout:fragment="scripts" th:inline="javascript">
+    $(function () {
+        var $main = $('.book-gallery-main');
+        var $thumbs = $('.book-gallery-thumbs');
+
+        if (!$main.length) return;
+
+        var thumbsSwiper = null;
+
+        if ($thumbs.length) {
+            thumbsSwiper = new Swiper('.book-gallery-thumbs', {
+                direction: 'horizontal',
+                slidesPerView: 4,
+                spaceBetween: 10,
+                watchSlidesProgress: true,
+                speed: 400,
+                threshold: 5
+            });
+        }
+
+        new Swiper('.book-gallery-main', {
+            loop: false,
+            spaceBetween: 10,
+            navigation: {
+                nextEl: '.book-gallery-next',
+                prevEl: '.book-gallery-prev'
+            },
+            thumbs: thumbsSwiper ? {swiper: thumbsSwiper} : undefined,
+
+            on: {
+                slideChange: function () {
+                    if (thumbsSwiper) {
+                        thumbsSwiper.slideTo(this.activeIndex - 1);
+                    }
+                }
+            }
+        });
+    });
 </script>
 </body>
 </html>

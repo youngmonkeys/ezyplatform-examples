@@ -12,6 +12,7 @@ import org.youngmonkeys.ecommerce.model.ProductPriceModel;
 import org.youngmonkeys.ecommerce.web.service.WebProductBookService;
 import org.youngmonkeys.ecommerce.web.service.WebProductDescriptionService;
 import org.youngmonkeys.ecommerce.web.service.WebProductPriceService;
+import org.youngmonkeys.ecommerce.web.service.WebProductMediaService;
 import org.youngmonkeys.ezyarticle.sdk.model.PostModel;
 import org.youngmonkeys.ezyarticle.web.service.WebPostService;
 import org.youngmonkeys.ezyplatform.model.MediaNameModel;
@@ -21,7 +22,7 @@ import org.youngmonkeys.ezyplatform.rx.Reactive;
 import org.youngmonkeys.ezyplatform.web.service.WebMediaService;
 import org.youngmonkeys.ezyplatform.web.service.WebUserService;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,6 +39,7 @@ public class WebBookModelDecorator {
     private final WebMediaService mediaService;
     private final WebPostService postService;
     private final WebProductBookService productBookService;
+    private final WebProductMediaService productMediaService;
     private final WebProductDescriptionService productDescriptionService;
     private final WebProductPriceService productPriceService;
     private final WebUserService userService;
@@ -130,10 +132,11 @@ public class WebBookModelDecorator {
     ) {
         long productId = model.getId();
         long bannerId = model.getBannerImageId();
-        Set<Long> mediaIds = new HashSet<>();
+        List<Long> mediaIds = new ArrayList<>();
         if (bannerId > ZERO_LONG) {
             mediaIds.add(bannerId);
         }
+        mediaIds.addAll(productMediaService.getMediaIdsByProductId(productId));
         long descriptionPostId = productDescriptionService
             .getProductDescriptionPostIdById(productId);
         return Reactive.multiple()
@@ -154,14 +157,18 @@ public class WebBookModelDecorator {
             )
             .blockingGet(map -> {
                 Map<Long, MediaNameModel> mediaById = map.get("mediaById");
+
+                List<MediaNameModel> medias = newArrayList(
+                    mediaById,
+                    (id, media) -> media
+                );
                 return modelToResponseConverter.toBookDetailsResponse(
                     model,
-                         map.get(
+                    map.get(
                         "bookById",
                         ProductBookModel.builder().build()
                     ),
-                    mediaById.get(bannerId),
-                        map.get(
+                    map.get(
                         "description",
                         PostModel.builder().build()
                     ),
@@ -169,7 +176,8 @@ public class WebBookModelDecorator {
                         "productPrice",
                         ProductPriceModel.ZERO
                     ),
-                    currency
+                    currency,
+                    medias
                 );
             });
     }
