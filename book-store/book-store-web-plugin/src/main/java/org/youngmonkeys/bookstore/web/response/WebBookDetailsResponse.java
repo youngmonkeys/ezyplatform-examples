@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.youngmonkeys.ezyplatform.model.MediaNameModel;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Builder
@@ -13,7 +14,7 @@ public class WebBookDetailsResponse {
     private String code;
     private String name;
     private String authorName;
-    private MediaNameModel bannerImage;
+    private List<MediaNameModel> medias;
     private String description;
     private String originalPrice;
     private String formattedOriginalPriceIncludeIsoCode;
