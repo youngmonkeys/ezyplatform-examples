@@ -28,96 +28,96 @@ public class WebBookStoreModelToResponseConverter {
     private final WebPostDecoratorManager postDecoratorManager;
 
     public WebBookResponse toBookResponse(
-            ProductModel model,
-            ProductBookModel book,
-            UserModel author,
-            MediaNameModel bannerImage,
-            PostModel descriptionPost,
-            ProductPriceModel price,
-            ProductCurrencyModel currency
+        ProductModel model,
+        ProductBookModel book,
+        UserModel author,
+        MediaNameModel bannerImage,
+        PostModel descriptionPost,
+        ProductPriceModel price,
+        ProductCurrencyModel currency
     ) {
         BigDecimal priceValue = price.getPrice();
         BigDecimal originalPriceValue = price.getOriginalPrice();
         return WebBookResponse.builder()
-                .id(model.getId())
-                .name(model.getProductName())
-                .code(model.getProductCode())
-                .authorName(author.getDisplayName())
-                .authorUuid(author.getUuid())
-                .bannerImage(bannerImage)
-                .shortedDescription(descriptionPost.getShortedContent())
-                .publisher(book.getPublisher())
-                .originalPrice(toNoTrailingZerosString(originalPriceValue))
-                .formattedOriginalPriceIncludeIsoCode(
-                        currency.formatPriceIncludeIsoCode(originalPriceValue)
-                )
-                .formattedOriginalPriceIncludeSymbol(
-                        currency.formatPriceIncludeSymbol(originalPriceValue)
-                )
-                .price(toNoTrailingZerosString(priceValue))
-                .formattedPriceIncludeIsoCode(
-                        currency.formatPriceIncludeIsoCode(priceValue)
-                )
-                .formattedPriceIncludeSymbol(
-                        currency.formatPriceIncludeSymbol(priceValue)
-                )
-                .discountPercent(toDiscountPercent(priceValue, originalPriceValue))
-                .build();
+            .id(model.getId())
+            .name(model.getProductName())
+            .code(model.getProductCode())
+            .authorName(author.getDisplayName())
+            .authorUuid(author.getUuid())
+            .bannerImage(bannerImage)
+            .shortedDescription(descriptionPost.getShortedContent())
+            .publisher(book.getPublisher())
+            .originalPrice(toNoTrailingZerosString(originalPriceValue))
+            .formattedOriginalPriceIncludeIsoCode(
+                currency.formatPriceIncludeIsoCode(originalPriceValue)
+            )
+            .formattedOriginalPriceIncludeSymbol(
+                currency.formatPriceIncludeSymbol(originalPriceValue)
+            )
+            .price(toNoTrailingZerosString(priceValue))
+            .formattedPriceIncludeIsoCode(
+                currency.formatPriceIncludeIsoCode(priceValue)
+            )
+            .formattedPriceIncludeSymbol(
+                currency.formatPriceIncludeSymbol(priceValue)
+            )
+            .discountPercent(toDiscountPercent(priceValue, originalPriceValue))
+            .build();
     }
 
     public WebBookDetailsResponse toBookDetailsResponse(
-            ProductModel model,
-            ProductBookModel book,
-            PostModel descriptionPost,
-            ProductPriceModel price,
-            ProductCurrencyModel currency,
-            List<MediaNameModel> medias
+        ProductModel model,
+        ProductBookModel book,
+        PostModel descriptionPost,
+        ProductPriceModel price,
+        ProductCurrencyModel currency,
+        List<MediaNameModel> medias
     ) {
         BigDecimal priceValue = price.getPrice();
         BigDecimal originalPriceValue = price.getOriginalPrice();
         String description = postDecoratorManager
-                .decorateContent(
-                        descriptionPost.getContentType(),
-                        descriptionPost.getContent()
-                );
+            .decorateContent(
+                descriptionPost.getContentType(),
+                descriptionPost.getContent()
+            );
         return WebBookDetailsResponse.builder()
-                .id(model.getId())
-                .name(model.getProductName())
-                .code(model.getProductCode())
-                .authorName(book.getAuthor())
-                .medias(medias)
-                .description(description)
-                .originalPrice(toNoTrailingZerosString(originalPriceValue))
-                .formattedOriginalPriceIncludeIsoCode(
-                        currency.formatPriceIncludeIsoCode(originalPriceValue)
-                )
-                .formattedOriginalPriceIncludeSymbol(
-                        currency.formatPriceIncludeSymbol(originalPriceValue)
-                )
-                .price(toNoTrailingZerosString(priceValue))
-                .formattedPriceIncludeIsoCode(
-                        currency.formatPriceIncludeIsoCode(priceValue)
-                )
-                .formattedPriceIncludeSymbol(
-                        currency.formatPriceIncludeSymbol(priceValue)
-                )
-                .discountPercent(toDiscountPercent(priceValue, originalPriceValue))
-                .build();
+            .id(model.getId())
+            .name(model.getProductName())
+            .code(model.getProductCode())
+            .authorName(book.getAuthor())
+            .medias(medias)
+            .description(description)
+            .originalPrice(toNoTrailingZerosString(originalPriceValue))
+            .formattedOriginalPriceIncludeIsoCode(
+                currency.formatPriceIncludeIsoCode(originalPriceValue)
+            )
+            .formattedOriginalPriceIncludeSymbol(
+                currency.formatPriceIncludeSymbol(originalPriceValue)
+            )
+            .price(toNoTrailingZerosString(priceValue))
+            .formattedPriceIncludeIsoCode(
+                currency.formatPriceIncludeIsoCode(priceValue)
+            )
+            .formattedPriceIncludeSymbol(
+                currency.formatPriceIncludeSymbol(priceValue)
+            )
+            .discountPercent(toDiscountPercent(priceValue, originalPriceValue))
+            .build();
     }
 
     public WebBookAuthorDetailResponse toBookAuthorDetailResponse(
-            UserModel model,
-            CustomerModel customer,
-            MediaNameModel avatarImage,
-            MediaNameModel coverImage
+        UserModel model,
+        CustomerModel customer,
+        MediaNameModel avatarImage,
+        MediaNameModel coverImage
     ) {
         return WebBookAuthorDetailResponse.builder()
-                .displayName(model.getDisplayName())
-                .uuid(model.getUuid())
-                .avatarImage(avatarImage)
-                .coverImage(coverImage)
-                .websiteUrl(model.getUrl())
-                .description(customer.getDescription())
-                .build();
+            .displayName(model.getDisplayName())
+            .uuid(model.getUuid())
+            .avatarImage(avatarImage)
+            .coverImage(coverImage)
+            .websiteUrl(model.getUrl())
+            .description(customer.getDescription())
+            .build();
     }
 }

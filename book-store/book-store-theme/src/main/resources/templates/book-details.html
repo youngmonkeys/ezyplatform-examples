@@ -88,7 +88,7 @@
         <h1 class="mb-4">[[#{more_by_this_author}]]</h1>
         <div class="books">
             <th:block th:each="book : ${sameAuthorBooks}">
-                <th:block th:replace="~{fragments/book-item :: content(book=${book})}" />
+                <th:block th:replace="~{fragments/book-item :: content(book=${book})}"/>
             </th:block>
         </div>
     </div>
@@ -120,7 +120,7 @@
                 nextEl: '.book-gallery-next',
                 prevEl: '.book-gallery-prev'
             },
-            thumbs: thumbsSwiper ? { swiper: thumbsSwiper } : undefined,
+            thumbs: thumbsSwiper ? {swiper: thumbsSwiper} : undefined,
 
             on: {
                 slideChange: function () {
