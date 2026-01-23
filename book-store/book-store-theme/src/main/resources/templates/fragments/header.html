@@ -19,8 +19,8 @@
 <body>
 
 <th:block th:fragment="header">
-<div th:replace="~{fragments/header :: mobile-menu}"></div>
-<div th:replace="~{fragments/header :: large-menu}"></div>
+    <div th:replace="~{fragments/header :: mobile-menu}"></div>
+    <div th:replace="~{fragments/header :: large-menu}"></div>
 </th:block>
 
 <div th:fragment="large-menu" class="container-fluid">
@@ -28,7 +28,8 @@
         <div class="d-flex align-items-center gap-4">
             <div class="site-branding">
                 <a href="/" class="text-white custom-logo-link" rel="home" aria-current="page">
-                    <img src="/images/logo.svg" class="main-logo" alt="Easy Going Platform">
+                    <img th:src="${siteLogoUrl != null ? siteLogoUrl : '/images/logo.svg'}"
+                         class="main-logo" alt="Easy Going Platform">
                 </a>
             </div>
             <ul class="d-none d-lg-flex gap-3">
@@ -131,7 +132,7 @@
         </ul>
         <div class="d-lg-none d-flex">
             <div th:if="${loggedIn == true && shoppingCartProductCount > 0}"
-                class="nav-item dropdown me-4">
+                 class="nav-item dropdown me-4">
                 <a class="nav-link" href="/checkout/shopping-cart">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="badge badge-warning navbar-badge">
@@ -270,14 +271,14 @@
     </div>
 </div>
 <script th:fragment="scripts">
-// ===================== common ===============
-var isMainMobileMenuOpen = false;
-var toggleMainMobileMenu = function() {
-    $('#mainMobileMenu').css({
-        '-webkit-transform': 'translate3d(' + (isMainMobileMenuOpen ? '-100%' : '0%') + ',0,0)'
-    });
-    isMainMobileMenuOpen = !isMainMobileMenuOpen;
-}
+    // ===================== common ===============
+    var isMainMobileMenuOpen = false;
+    var toggleMainMobileMenu = function() {
+        $('#mainMobileMenu').css({
+            '-webkit-transform': 'translate3d(' + (isMainMobileMenuOpen ? '-100%' : '0%') + ',0,0)'
+        });
+        isMainMobileMenuOpen = !isMainMobileMenuOpen;
+    }
 </script>
 </body>
 
