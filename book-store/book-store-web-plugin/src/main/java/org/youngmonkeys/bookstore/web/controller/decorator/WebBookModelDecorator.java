@@ -9,7 +9,10 @@ import org.youngmonkeys.ecommerce.model.ProductBookModel;
 import org.youngmonkeys.ecommerce.model.ProductCurrencyModel;
 import org.youngmonkeys.ecommerce.model.ProductModel;
 import org.youngmonkeys.ecommerce.model.ProductPriceModel;
-import org.youngmonkeys.ecommerce.web.service.*;
+import org.youngmonkeys.ecommerce.web.service.WebProductBookService;
+import org.youngmonkeys.ecommerce.web.service.WebProductDescriptionService;
+import org.youngmonkeys.ecommerce.web.service.WebProductPriceService;
+import org.youngmonkeys.ecommerce.web.service.WebProductMediaService;
 import org.youngmonkeys.ezyarticle.sdk.model.PostModel;
 import org.youngmonkeys.ezyarticle.web.service.WebPostService;
 import org.youngmonkeys.ezyplatform.model.MediaNameModel;
@@ -19,7 +22,10 @@ import org.youngmonkeys.ezyplatform.rx.Reactive;
 import org.youngmonkeys.ezyplatform.web.service.WebMediaService;
 import org.youngmonkeys.ezyplatform.web.service.WebUserService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.tvd12.ezyfox.io.EzyLists.newArrayList;
@@ -39,7 +45,7 @@ public class WebBookModelDecorator {
     private final WebUserService userService;
     private final WebBookStoreModelToResponseConverter
             modelToResponseConverter;
-    private final WebSetProductService webSetProductService;
+
     @SuppressWarnings("MethodLength")
     public List<WebBookResponse> decorateToBookResponses(
             List<ProductModel> models,
