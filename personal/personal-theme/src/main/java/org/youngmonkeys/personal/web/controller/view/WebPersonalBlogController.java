@@ -20,6 +20,7 @@ import com.tvd12.ezyhttp.server.core.annotation.Controller;
 import com.tvd12.ezyhttp.server.core.view.View;
 import lombok.AllArgsConstructor;
 import org.youngmonkeys.ezyarticle.web.controller.view.BlogController;
+import org.youngmonkeys.personal.web.view.WebPersonalBlogDetailsViewDecorator;
 import org.youngmonkeys.personal.web.view.WebPersonalBlogsViewDecorator;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 public class WebPersonalBlogController extends BlogController {
 
     private final WebPersonalBlogsViewDecorator blogsViewDecorator;
+    private final WebPersonalBlogDetailsViewDecorator blogDetailsViewDecorator;
 
     @Override
     protected void decorateBlogView(
@@ -36,5 +38,13 @@ public class WebPersonalBlogController extends BlogController {
         View view
     ) {
         blogsViewDecorator.decorateBlogView(view);
+    }
+
+    @Override
+    protected void decorateBlogDetailsView(
+        HttpServletRequest request,
+        View view
+    ) {
+        blogDetailsViewDecorator.decorateBlogDetailsView(view);
     }
 }

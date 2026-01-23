@@ -115,6 +115,20 @@
             <scope>system</scope>
             <systemPath>${ezyplatform.home}/admin/plugins/ezycrm/lib/ezycrm-admin-plugin-${ezycrm.version}.jar</systemPath>
         </dependency>
+    <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyrating-sdk</artifactId>
+            <version>${ezyrating.version}</version>
+        <scope>system</scope>
+            <systemPath>${ezyplatform.home}/admin/plugins/ezyrating/lib/ezyrating-sdk-${ezyrating.version}.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.youngmonkeys</groupId>
+            <artifactId>ezyrating-admin-plugin</artifactId>
+            <version>${ezyrating.version}</version>
+            <scope>system</scope>
+            <systemPath>${ezyplatform.home}/admin/plugins/ezyrating/lib/ezyrating-admin-plugin-${ezyrating.version}.jar</systemPath>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>
@@ -150,6 +164,9 @@
                     </resource>
                 <resource>
                         <directory>${ezyplatform.home}/admin/plugins/ecommerce/resources</directory>
+                    </resource>
+                <resource>
+                        <directory>${ezyplatform.home}/admin\plugins/ezyrating/resources</directory>
                     </resource>
                 </resources>
             </build>

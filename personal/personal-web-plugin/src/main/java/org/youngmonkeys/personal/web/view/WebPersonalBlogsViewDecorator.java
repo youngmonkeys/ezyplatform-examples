@@ -3,6 +3,7 @@ package org.youngmonkeys.personal.web.view;
 import com.tvd12.ezyfox.bean.annotation.EzySingleton;
 import com.tvd12.ezyhttp.server.core.view.View;
 import lombok.AllArgsConstructor;
+import org.youngmonkeys.ezyarticle.sdk.entity.Post;
 import org.youngmonkeys.ezyarticle.web.response.WebPostContentResponse;
 import org.youngmonkeys.ezyplatform.model.PaginationModel;
 import org.youngmonkeys.ezyplatform.model.UuidNameModel;
