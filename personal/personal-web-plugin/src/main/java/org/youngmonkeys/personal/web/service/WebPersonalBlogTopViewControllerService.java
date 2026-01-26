@@ -17,12 +17,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class WebPersonalBlogTopViewService {
+public class WebPersonalBlogTopViewControllerService {
     private final WebPersonalBlogTopViewRepository blogTopViewRepository;
     private final PostService postService;
     private final WebTopBlogDecorator blogDecorator;
 
-    public WebPersonalBlogTopViewService(
+    public WebPersonalBlogTopViewControllerService(
         WebPersonalBlogTopViewRepository blogTopViewRepository,
         PostService postService,
         WebTopBlogDecorator blogDecorator
@@ -33,7 +33,8 @@ public class WebPersonalBlogTopViewService {
     }
 
     public List<TopBlogResponse> getTopViewedBlogs(int limit, String language) {
-        List<PostIdAndNumberViewsResult> rows = blogTopViewRepository.findTopPostByMetaKeyAndTypeAndStatusOrderByViews(
+        List<PostIdAndNumberViewsResult> rows = blogTopViewRepository
+            .findTopPostByMetaKeyAndTypeAndStatusOrderByViews(
             "víews",
             PostType.BLOG.toString(),
             PostStatus.PUBLISHED.toString(),

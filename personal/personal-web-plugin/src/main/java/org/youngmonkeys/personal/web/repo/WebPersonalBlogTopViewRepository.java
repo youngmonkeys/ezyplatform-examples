@@ -21,5 +21,6 @@ public interface WebPersonalBlogTopViewRepository extends EzyDatabaseRepository<
             "AND pm.metaKey = ?0 " +
         "ORDER BY pm.metaNumberValue DESC"
     )
-    List<PostIdAndNumberViewsResult> findTopPostByMetaKeyAndTypeAndStatusOrderByViews(String metaKey, String postType, String status, Next next);
+    List<PostIdAndNumberViewsResult> findTopPostByMetaKeyAndTypeAndStatusOrderByViews(
+        String metaKey, String postType, String status, Next next);
 }

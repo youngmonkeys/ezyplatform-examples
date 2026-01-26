@@ -32,7 +32,7 @@ public class WebPersonalBlogController extends BlogController {
 
     private final WebPersonalBlogsViewDecorator blogsViewDecorator;
     private final WebPersonalBlogDetailsViewDecorator blogDetailsViewDecorator;
-    private WebLanguageControllerService languageControllerService;
+    private final WebLanguageControllerService languageControllerService;
 
     @Override
     protected void decorateBlogView(
