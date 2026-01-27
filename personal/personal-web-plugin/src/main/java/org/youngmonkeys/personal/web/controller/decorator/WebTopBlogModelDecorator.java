@@ -1,4 +1,4 @@
-package org.youngmonkeys.personal.web.decorator;
+package org.youngmonkeys.personal.web.controller.decorator;
 
 import com.tvd12.ezyfox.bean.annotation.EzySingleton;
 import org.youngmonkeys.ezyarticle.sdk.model.PostI18nModel;
@@ -16,12 +16,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @EzySingleton
-public class WebTopBlogDecorator {
+public class WebTopBlogModelDecorator {
     private final WebMediaService mediaService;
     private final WebPostSlugService postSlugService;
     private final WebPostI18nService postI18nService;
 
-    public WebTopBlogDecorator(
+    public WebTopBlogModelDecorator(
         WebMediaService mediaService,
         WebPostSlugService postSlugService,
         WebPostI18nService postI18nService
@@ -71,14 +71,14 @@ public class WebTopBlogDecorator {
                 String imageUrl =
                     MediaNameModel.getMediaUrlOrNull(media);
 
-                return new TopBlogResponse(
-                    post.getId(),
-                    title,
-                    slugMap.get(post.getId()),
-                    imageUrl,
-                    viewsMap.get(post.getId()),
-                    post.getPublishedAtDateTime()
-                );
+                return TopBlogResponse.builder()
+                    .id(post.getId())
+                    .title(title)
+                    .slug(slugMap.get(post.getId()))
+                    .featuredImageUrl(imageUrl)
+                    .views(viewsMap.get(post.getId()))
+                    .publishedAt(post.getPublishedAtDateTime())
+                    .build();
             })
             .collect(Collectors.toList());
     }

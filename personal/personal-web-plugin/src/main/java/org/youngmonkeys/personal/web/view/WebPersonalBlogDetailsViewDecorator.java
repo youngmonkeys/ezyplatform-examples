@@ -12,13 +12,14 @@ import java.util.List;
 @AllArgsConstructor
 public class WebPersonalBlogDetailsViewDecorator {
 
-    private final WebPersonalBlogTopViewControllerService blogService;
+    private final WebPersonalBlogTopViewControllerService blogTopViewControllerService;
 
     public void decorateBlogDetailsView(
         View view,
         String languageCode
     ) {
-        List<TopBlogResponse> topViewedBlogs = blogService.getTopViewedBlogs(6, languageCode);
+        List<TopBlogResponse> topViewedBlogs =
+            blogTopViewControllerService.getTopViewedBlogs(6, languageCode);
 
         view.setVariable(
             "topViewedBlogs",

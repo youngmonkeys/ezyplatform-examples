@@ -7,7 +7,7 @@ import org.youngmonkeys.ezyarticle.sdk.entity.PostType;
 import org.youngmonkeys.ezyarticle.sdk.model.PostModel;
 import org.youngmonkeys.ezyarticle.sdk.service.PostService;
 import org.youngmonkeys.personal.result.PostIdAndNumberViewsResult;
-import org.youngmonkeys.personal.web.decorator.WebTopBlogDecorator;
+import org.youngmonkeys.personal.web.controller.decorator.WebTopBlogModelDecorator;
 import org.youngmonkeys.personal.web.repo.WebPersonalBlogTopViewRepository;
 import org.youngmonkeys.personal.web.response.TopBlogResponse;
 
@@ -20,12 +20,12 @@ import java.util.stream.Collectors;
 public class WebPersonalBlogTopViewControllerService {
     private final WebPersonalBlogTopViewRepository blogTopViewRepository;
     private final PostService postService;
-    private final WebTopBlogDecorator blogDecorator;
+    private final WebTopBlogModelDecorator blogDecorator;
 
     public WebPersonalBlogTopViewControllerService(
         WebPersonalBlogTopViewRepository blogTopViewRepository,
         PostService postService,
-        WebTopBlogDecorator blogDecorator
+        WebTopBlogModelDecorator blogDecorator
     ) {
         this.blogTopViewRepository = blogTopViewRepository;
         this.postService = postService;
@@ -38,7 +38,7 @@ public class WebPersonalBlogTopViewControllerService {
             "víews",
             PostType.BLOG.toString(),
             PostStatus.PUBLISHED.toString(),
-            Next.limit(6)
+            Next.limit(limit)
         );
 
         if (rows.isEmpty()) {
