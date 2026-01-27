@@ -1,4 +1,4 @@
-package org.youngmonkeys.personal.web.service;
+package org.youngmonkeys.personal.web.controller.service;
 
 import com.tvd12.ezyfox.util.Next;
 import com.tvd12.ezyhttp.server.core.annotation.Service;

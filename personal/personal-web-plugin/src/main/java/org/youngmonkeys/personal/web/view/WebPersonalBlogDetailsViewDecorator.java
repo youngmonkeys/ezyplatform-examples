@@ -4,7 +4,7 @@ import com.tvd12.ezyfox.bean.annotation.EzySingleton;
 import com.tvd12.ezyhttp.server.core.view.View;
 import lombok.AllArgsConstructor;
 import org.youngmonkeys.personal.web.response.TopBlogResponse;
-import org.youngmonkeys.personal.web.service.WebPersonalBlogTopViewControllerService;
+import org.youngmonkeys.personal.web.controller.service.WebPersonalBlogTopViewControllerService;
 
 import java.util.List;
 
