@@ -5,14 +5,12 @@ import lombok.AllArgsConstructor;
 import org.youngmonkeys.bookstore.web.converter.WebBookStoreModelToResponseConverter;
 import org.youngmonkeys.bookstore.web.response.WebBookDetailsResponse;
 import org.youngmonkeys.bookstore.web.response.WebBookResponse;
+import org.youngmonkeys.bookstore.web.service.WebBookService;
 import org.youngmonkeys.ecommerce.model.ProductBookModel;
 import org.youngmonkeys.ecommerce.model.ProductCurrencyModel;
 import org.youngmonkeys.ecommerce.model.ProductModel;
 import org.youngmonkeys.ecommerce.model.ProductPriceModel;
-import org.youngmonkeys.ecommerce.web.service.WebProductBookService;
-import org.youngmonkeys.ecommerce.web.service.WebProductDescriptionService;
-import org.youngmonkeys.ecommerce.web.service.WebProductPriceService;
-import org.youngmonkeys.ecommerce.web.service.WebProductMediaService;
+import org.youngmonkeys.ecommerce.web.service.*;
 import org.youngmonkeys.ezyarticle.sdk.model.PostModel;
 import org.youngmonkeys.ezyarticle.web.service.WebPostService;
 import org.youngmonkeys.ezyplatform.model.MediaNameModel;
@@ -22,11 +20,9 @@ import org.youngmonkeys.ezyplatform.rx.Reactive;
 import org.youngmonkeys.ezyplatform.web.service.WebMediaService;
 import org.youngmonkeys.ezyplatform.web.service.WebUserService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+
 
 import static com.tvd12.ezyfox.io.EzyLists.newArrayList;
 import static com.tvd12.ezyfox.io.EzyMaps.newHashMap;
@@ -43,8 +39,8 @@ public class WebBookModelDecorator {
     private final WebProductDescriptionService productDescriptionService;
     private final WebProductPriceService productPriceService;
     private final WebUserService userService;
-    private final WebBookStoreModelToResponseConverter
-        modelToResponseConverter;
+    private final WebBookStoreModelToResponseConverter modelToResponseConverter;
+    private final WebBookService bookService;
 
     @SuppressWarnings("MethodLength")
     public List<WebBookResponse> decorateToBookResponses(
@@ -57,11 +53,22 @@ public class WebBookModelDecorator {
         );
         Map<Long, ProductBookModel> bookById = productBookService
             .getProductBookMapByIds(productIds);
-        Set<Long> userIds = bookById
+        Map<Long, List<Long>> authorUserIdsByProductId = bookById
             .values()
             .stream()
-            .map(ProductBookModel::getAuthorUserId)
-            .filter(it -> it > 0)
+            .collect(Collectors.toMap(
+                ProductBookModel::getProductId,
+                it -> {
+                    Set<Long> ids = new LinkedHashSet<>();
+                    if (it.getAuthorUserId() > 0) ids.add(it.getAuthorUserId());
+                    ids.addAll(bookService.getAuthorIdsByBookId(it.getProductId(), 0, it.getNumberOfAuthors()));
+                    return new ArrayList<>(ids);
+                }
+            ));
+        Set<Long> authorUserIds = authorUserIdsByProductId
+            .values()
+            .stream()
+            .flatMap(List::stream)
             .collect(Collectors.toSet());
         Set<Long> mediaIds = models
             .stream()
@@ -72,9 +79,10 @@ public class WebBookModelDecorator {
             .getProductDescriptionPostIdMapByIds(
                 productIds
             );
+
         return Reactive.multiple()
             .register("userById", () ->
-                userService.getUserMapByIds(userIds)
+                userService.getUserMapByIds(authorUserIds)
             )
             .register("mediaById", () ->
                 mediaService.getMediaNameMapByIds(mediaIds)
@@ -101,13 +109,16 @@ public class WebBookModelDecorator {
                         it.getId(),
                         ProductBookModel.builder().build()
                     );
+                    List<UserModel> authorUsers = authorUserIdsByProductId
+                        .getOrDefault(it.getId(), Collections.emptyList())
+                        .stream()
+                        .map(userById::get)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
                     return modelToResponseConverter.toBookResponse(
                         it,
                         book,
-                        userById.getOrDefault(
-                            book.getAuthorUserId(),
-                            UserModel.builder().build()
-                        ),
+                        authorUsers,
                         mediaById.get(it.getBannerImageId()),
                         descriptionById.getOrDefault(
                             descriptionPostIdByProductId.getOrDefault(
@@ -132,16 +143,23 @@ public class WebBookModelDecorator {
     ) {
         long productId = model.getId();
         long bannerId = model.getBannerImageId();
+        ProductBookModel bookById = productBookService.getProductBookById(productId);
         List<Long> mediaIds = new ArrayList<>();
         if (bannerId > ZERO_LONG) {
             mediaIds.add(bannerId);
         }
         mediaIds.addAll(productMediaService.getMediaIdsByProductId(productId));
+        Set<Long> authorUserIds = new LinkedHashSet<>();
+        if (bookById.getAuthorUserId() > 0) authorUserIds.add(bookById.getAuthorUserId());
+        authorUserIds.addAll(bookService.getAuthorIdsByBookId(bookById.getProductId(), 0, bookById.getNumberOfAuthors()));
         long descriptionPostId = productDescriptionService
             .getProductDescriptionPostIdById(productId);
         return Reactive.multiple()
             .register("book", () ->
                 productBookService.getProductBookById(productId)
+            )
+            .register("userById", () ->
+                userService.getUserMapByIds(authorUserIds)
             )
             .register("mediaById", () ->
                 mediaService.getMediaNameMapByIds(mediaIds)
@@ -156,8 +174,12 @@ public class WebBookModelDecorator {
                 )
             )
             .blockingGet(map -> {
+                Map<Long, UserModel> userById = map.get("userById");
+                List<UserModel> authorUsers = newArrayList(
+                    userById,
+                    (id, user) -> user
+                );
                 Map<Long, MediaNameModel> mediaById = map.get("mediaById");
-
                 List<MediaNameModel> medias = newArrayList(
                     mediaById,
                     (id, media) -> media
@@ -177,7 +199,8 @@ public class WebBookModelDecorator {
                         ProductPriceModel.ZERO
                     ),
                     currency,
-                    medias
+                    medias,
+                    authorUsers
                 );
             });
     }

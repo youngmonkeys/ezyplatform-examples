@@ -13,7 +13,7 @@ public class WebBookDetailsResponse {
     private long id;
     private String code;
     private String name;
-    private String authorName;
+    private List<WebBookAuthorResponse> authors;
     private List<MediaNameModel> medias;
     private String description;
     private String originalPrice;

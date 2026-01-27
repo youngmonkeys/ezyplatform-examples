@@ -38,7 +38,21 @@
                     </div>
                 </div>
             </div>
+            <!-- AUTHORS (BELOW IMAGE) -->
+            <div class="book-authors card-panel"
+                 th:if="${book.authors != null and !book.authors.isEmpty()}">
+                <div class="book-authors-title">
+                    [[#{author}]] (<span th:text="${#lists.size(book.authors)}"></span>)
+                </div>
 
+                <div class="book-authors-chips">
+                    <a class="book-author-chip"
+                       th:each="author : ${book.authors}"
+                       th:text="${author.displayName}"
+                       th:href="${'/authors/' + author.uuid}">
+                    </a>
+                </div>
+            </div>
         </div>
         <div class="col-lg-5">
             <div class="book-details-content card-panel">
