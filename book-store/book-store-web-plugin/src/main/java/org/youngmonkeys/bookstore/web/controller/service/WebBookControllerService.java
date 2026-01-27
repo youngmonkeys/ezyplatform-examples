@@ -107,7 +107,7 @@ public class WebBookControllerService {
         );
     }
 
-     public List<WebBookResponse> randomSameAuthorBooksByBookId(
+    public List<WebBookResponse> randomSameAuthorBooksByBookId(
         long bookId,
         ProductCurrencyModel currency,
         int limit
@@ -118,7 +118,7 @@ public class WebBookControllerService {
                 limit
             );
         return getBooksByIds(bookIds, currency);
-     }
+    }
 
     public WebBookDetailsResponse getBookDetailsByCode(
         String productCode,

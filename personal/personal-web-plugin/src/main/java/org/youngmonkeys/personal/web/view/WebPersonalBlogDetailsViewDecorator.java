@@ -4,7 +4,7 @@ import com.tvd12.ezyfox.bean.annotation.EzySingleton;
 import com.tvd12.ezyhttp.server.core.view.View;
 import lombok.AllArgsConstructor;
 import org.youngmonkeys.personal.web.response.TopBlogResponse;
-import org.youngmonkeys.personal.web.service.WebPersonalBlogTopViewControllerService;
+import org.youngmonkeys.personal.web.controller.service.WebPersonalBlogTopViewControllerService;
 
 import java.util.List;
 
@@ -12,13 +12,14 @@ import java.util.List;
 @AllArgsConstructor
 public class WebPersonalBlogDetailsViewDecorator {
 
-    private final WebPersonalBlogTopViewControllerService blogService;
+    private final WebPersonalBlogTopViewControllerService blogTopViewControllerService;
 
     public void decorateBlogDetailsView(
         View view,
         String languageCode
     ) {
-        List<TopBlogResponse> topViewedBlogs = blogService.getTopViewedBlogs(6, languageCode);
+        List<TopBlogResponse> topViewedBlogs =
+            blogTopViewControllerService.getTopViewedBlogs(6, languageCode);
 
         view.setVariable(
             "topViewedBlogs",
