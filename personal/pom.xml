@@ -18,13 +18,14 @@
         <!--suppress UnresolvedMavenProperty -->
         <ezyplatform.home>${env.EZYPLATFORM_HOME}</ezyplatform.home>
         <jsoup.version>1.18.3</jsoup.version>
-        <ezyarticle.version>0.8.8</ezyarticle.version>
+        <ezyarticle.version>0.9.1</ezyarticle.version>
         <ezymail.version>0.1.4</ezymail.version>
         <javax.mail.version>1.6.2</javax.mail.version>
-        <ezysupport.version>0.2.9</ezysupport.version>
-        <ecommerce.version>1.0.7</ecommerce.version>
+        <ezysupport.version>0.3.0</ezysupport.version>
+        <ecommerce.version>1.1.0</ecommerce.version>
         <zxing.version>3.5.3</zxing.version>
-        <ezycrm.version>0.3.7</ezycrm.version>
+        <ezycrm.version>0.3.9</ezycrm.version>
+        <ezyrating.version>0.1.7</ezyrating.version>
     </properties>
 
     <modules>
