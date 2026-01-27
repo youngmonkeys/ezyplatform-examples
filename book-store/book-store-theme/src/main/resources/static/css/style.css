@@ -122,25 +122,25 @@ button.close {
 }
 
 .form-group {
-  margin-bottom: 1rem;
+    margin-bottom: 1rem;
 }
 
 .form-inline .form-control {
-  display: inline-block;
-  width: auto;
-  vertical-align: middle;
+    display: inline-block;
+    width: auto;
+    vertical-align: middle;
 }
 
 .form-row {
-  display: flex;
-  flex-wrap: wrap;
-  margin-right: -5px;
-  margin-left: -5px;
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -5px;
+    margin-left: -5px;
 }
 
 .form-row > .col {
-  padding-left: 5px;
-  padding-right: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .modal-header .close {
@@ -232,11 +232,11 @@ button.close {
     justify-content: center;
 }
 .pagination-arrows a, .pagination-arrows span {
-     display:flex;
-     align-items: center;
-     justify-content: center;
-     padding: 15px;
-     cursor: pointer;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    cursor: pointer;
 }
 .pagination-arrows a, .pagination-arrows span {
     color: gray;
@@ -249,12 +249,12 @@ button.close {
 .pagination-arrows a:nth-child(5),
 .pagination-arrows span:nth-child(1),
 .pagination-arrows span:nth-child(5) {
-  background: lightgray;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border-width: 1px;
-  border-color: gray;
+    background: lightgray;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border-width: 1px;
+    border-color: gray;
 }
 .pagination-sm .page-link { font-size: 1rem; }
 .p-1px { padding: 1px; }
@@ -342,7 +342,7 @@ button.close {
     padding: 2px 4px;
 }
 .wrapper {
-	display: flex;
+    display: flex;
     min-height: 100vh;
     flex-direction: column;
 }
@@ -355,7 +355,7 @@ body {
     background-color: var(--light-color);
 }
 main {
-	flex-grow: 1;
+    flex-grow: 1;
 }
 .heading {
     text-align: center;
@@ -630,6 +630,38 @@ div.screen-loading .loading-percent {
     text-decoration: underline;
 }
 
+.books .book .book-author,
+.books .book-item .book-author {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.books .book .book-author .book-author-icon,
+.books .book-item .book-author .book-author-icon {
+    flex-shrink: 0;
+    margin-right: 6px;
+    font-size: 0.9em;
+    color: #999;
+}
+
+.books .book .book-author .author-names,
+.books .book-item .book-author .author-names {
+    min-width: 0;
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.books .book .book-author .author-name,
+.books .book-item .book-author .author-name {
+    color: inherit;
+    text-decoration: none;
+}
+
 .books .book .prices,
 .books .book-item .prices {
     display: flex;
@@ -652,8 +684,6 @@ div.screen-loading .loading-percent {
     text-decoration: line-through;
 }
 
-
-/* Products */
 .section-book {
     padding: 9.6rem 0;
     width: 80%;
@@ -768,3 +798,4 @@ strong {
     width: 20%;
     cursor: pointer;
 }
+

@@ -1,9 +1,13 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{ezytheme}">
+<!doctype html>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{ezytheme}">
+
 <body>
+
+
 <div layout:fragment="content">
     <div class="common-spacing-1"></div>
 
@@ -24,9 +28,18 @@
                             <div class="lead" th:utext="${book.shortedDescription}"></div>
 
                             <!-- Author -->
-                            <a class="author" th:href="${'/authors/' + book.authorUuid}">
-                                [[#{author}]]: [[${book.authorName}]]
-                            </a>
+                            <div class="author-wrapper" th:if="${book.authors != null and !book.authors.isEmpty()}">
+                                <span>[[#{author}]]: </span>
+
+                                <th:block th:if="${book.authors != null and !book.authors.isEmpty()}">
+                                    <th:block th:each="author, iter : ${book.authors}">
+                                        <a class="author-name"
+                                           th:href="${'/authors/' + author.uuid}">
+                                            [[${author.displayName}]][[${!iter.last ? ', ' : ''}]]
+                                        </a>
+                                    </th:block>
+                                </th:block>
+                            </div>
 
                             <!-- Price Box -->
                             <div class="price-box" th:if="${book.formattedPriceIncludeSymbol != null}">

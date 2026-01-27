@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.youngmonkeys.ezyplatform.model.MediaNameModel;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Builder
@@ -12,8 +13,7 @@ public class WebBookResponse {
     private long id;
     private String code;
     private String name;
-    private String authorName;
-    private String authorUuid;
+    private List<WebBookAuthorResponse> authors;
     private MediaNameModel bannerImage;
     private String shortedDescription;
     private String publisher;

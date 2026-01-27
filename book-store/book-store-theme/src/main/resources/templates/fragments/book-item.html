@@ -19,7 +19,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <th:block th:fragment="content">
-	<div class="book">
+    <div class="book">
         <a class="book-image"
            th:href="${'/store/books/' + book.code}">
             <img th:if="${book.bannerImage != null}"
@@ -35,12 +35,23 @@
                class="book-title">
                 [[${book.name}]]
             </a>
-            <div class="book-author">
-                <span class="author-title">[[#{author}]]</span>
-                <a th:href="${'/authors/' + book.authorUuid}" class="author-name">
-                    [[${book.authorName}]]
-                </a>
+            <div class="book-author"
+                 th:title="${#strings.listJoin(book.authors.{displayName}, ', ')}">
+
+                <i class="far fa-user book-author-icon"></i>
+
+                <div class="author-names">
+                    <th:block th:if="${book.authors != null and !book.authors.isEmpty()}">
+                        <th:block th:each="author, iter : ${book.authors}">
+                            <a class="author-name"
+                               th:href="${'/authors/' + author.uuid}">
+                                [[${author.displayName}]][[${!iter.last ? ', ' : ''}]]
+                            </a>
+                        </th:block>
+                    </th:block>
+                </div>
             </div>
+
             <div class="prices">
                 <span class="price">
                     [[${book.formattedPriceIncludeSymbol}]]
