@@ -71,14 +71,14 @@ public class WebTopBlogDecorator {
                 String imageUrl =
                     MediaNameModel.getMediaUrlOrNull(media);
 
-                return new TopBlogResponse(
-                    post.getId(),
-                    title,
-                    slugMap.get(post.getId()),
-                    imageUrl,
-                    viewsMap.get(post.getId()),
-                    post.getPublishedAtDateTime()
-                );
+                return TopBlogResponse.builder()
+                    .id(post.getId())
+                    .title(title)
+                    .slug(slugMap.get(post.getId()))
+                    .featuredImageUrl(imageUrl)
+                    .views(viewsMap.get(post.getId()))
+                    .publishedAt(post.getPublishedAtDateTime())
+                    .build();
             })
             .collect(Collectors.toList());
     }

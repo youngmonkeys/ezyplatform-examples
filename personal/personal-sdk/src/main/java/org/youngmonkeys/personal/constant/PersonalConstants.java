@@ -15,5 +15,14 @@ public final class PersonalConstants {
     public static final String SETTING_KEY_ALLOW_CALCULATE_POST_READ_TIME =
         "allow_calculate_post_read_time";
 
+    public static final String TABLE_NAME_COIN_PRICE =
+        "personal_coin_price";
+
+    public static final String INTERNAL_EVENT_NAME_COIN_PRICE_UPDATE =
+        "personal_coin_price";
+
+    public static final String API_URL_COIN_PRICE =
+        "https://coinyep.com/api/v1/?list=BTC,ETH,BNB,LTC,XRP";
+
     private PersonalConstants() {}
 }
