@@ -93,12 +93,11 @@
     background-color: #d0011b;
     color: #fff !important;
     font-weight: 600;
-    border-radius: 50px; /* Bo tròn hình viên thuốc */
+    border-radius: 50px;
     text-decoration: none;
     transition: all 0.3s ease;
     border: none;
     box-shadow: 0 4px 15px rgba(208, 1, 27, 0.3);
-    /* Quan trọng: Tạo khoảng cách giữa chữ và mũi tên */
     gap: 10px;
 }
 
@@ -189,5 +188,120 @@
         opacity: 1;
         pointer-events: auto;
     }
+}
+
+.authors-container {
+    margin: 20px 0;
+}
+
+.authors-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #a0aec0;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.authors-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+.author-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow: hidden;
+    padding: 5px 0;
+}
+
+.author-avatar-wrapper {
+    width: 45px !important;
+    height: 45px !important;
+    min-width: 45px !important;
+    flex-shrink: 0;
+    position: relative;
+    margin-right: 0;
+    display: block;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.author-avatar-wrapper:hover {
+    transform: scale(1.05);
+}
+
+.author-avatar {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 50%;
+    display: block;
+    border: 1px solid #edf2f7;
+    background-color: #f7fafc;
+    max-width: none !important;
+    max-height: none !important;
+}
+
+.verified-badge {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 16px;
+    height: 16px;
+    background-color: #4299e1;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    border: 2px solid #fff;
+    z-index: 2;
+}
+
+.author-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    min-width: 0;
+}
+
+.author-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2d3748;
+    text-decoration: none;
+    white-space: normal;
+    line-height: 1.4;
+    word-wrap: break-word;
+    display: block;
+}
+
+.author-name:hover {
+    color: #4299e1;
+}
+
+.book .book-author {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.book .author-names {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.book .author-names a {
+    display: inline !important;
+    white-space: nowrap !important;
 }
 

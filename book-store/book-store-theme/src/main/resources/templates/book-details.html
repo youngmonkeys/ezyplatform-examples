@@ -39,18 +39,27 @@
                 </div>
             </div>
             <!-- AUTHORS (BELOW IMAGE) -->
-            <div class="book-authors card-panel"
-                 th:if="${book.authors != null and !book.authors.isEmpty()}">
-                <div class="book-authors-title">
-                    [[#{author}]] (<span th:text="${#lists.size(book.authors)}"></span>)
-                </div>
+            <div class="book-authors card-panel" th:if="${book.authors != null and !book.authors.isEmpty()}">
 
-                <div class="book-authors-chips">
-                    <a class="book-author-chip"
-                       th:each="author : ${book.authors}"
-                       th:text="${author.displayName}"
-                       th:href="${'/authors/' + author.uuid}">
-                    </a>
+                <div class="authors-label">[[#{author}]]</div>
+
+                <div class="sidebar-authors-list">
+                    <div class="author-item" th:each="author : ${book.authors}">
+                        <a th:href="${'/authors/' + author.uuid}" class="author-avatar-wrapper">
+                            <img class="author-avatar"
+                                 th:src="${author.avatarImage != null ? author.avatarImage.getUrlOrDefault('/images/logo.svg') : '/images/logo.svg'}"
+                                 alt="Avatar">
+                            <div class="verified-badge">
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </a>
+
+                        <div class="author-info">
+                            <a class="author-name" th:href="${'/authors/' + author.uuid}">
+                                [[${author.displayName}]]
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -148,3 +157,4 @@
 </script>
 </body>
 </html>
+
