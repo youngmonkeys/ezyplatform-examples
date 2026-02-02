@@ -16,6 +16,12 @@
     <div class="col-md-9 col-7">
         <th:block th:replace="~{fragments/data-appender :: actions(dataAppenderName='personal_post_word_count')}" />
     </div>
+    <div class="col-md-3 col-5">
+        <span>[[#{coin_price_appender}]]</span>
+    </div>
+    <div class="col-md-9 col-7">
+        <th:block th:replace="~{fragments/data-appender :: actions(dataAppenderName='coin_price_appender')}" />
+    </div>
     <div class="col-md-12">
         <hr class="mb-4"/>
     </div>

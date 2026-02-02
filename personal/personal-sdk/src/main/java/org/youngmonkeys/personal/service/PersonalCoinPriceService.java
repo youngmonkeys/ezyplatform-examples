@@ -15,7 +15,6 @@ import java.util.List;
 import static org.youngmonkeys.personal.constant.PersonalConstants.API_URL_COIN_PRICE;
 
 @EzySingleton
-@AllArgsConstructor
 public class PersonalCoinPriceService {
 
     @EzyAutoBind
@@ -32,7 +31,7 @@ public class PersonalCoinPriceService {
                 return Arrays.asList(responseArray);
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return Collections.emptyList();
         }
         return Collections.emptyList();
     }

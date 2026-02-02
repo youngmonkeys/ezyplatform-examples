@@ -11,6 +11,7 @@ import org.youngmonkeys.personal.repo.PersonalCoinPriceRepository;
 import org.youngmonkeys.personal.result.CoinPriceApiResult;
 import org.youngmonkeys.personal.service.PersonalCoinPriceService;
 
+import java.time.ZoneId;
 import java.util.List;
 
 @EzySingleton
@@ -18,6 +19,8 @@ public class AdminPersonalCoinPriceDataAppender
     extends AdminDataAppender<CoinPriceApiResult, PersonalCoinPrice, Long> {
 
     private final ClockProxy clock;
+
+    @EzyAutoBind
     private PersonalCoinPriceService coinPriceService;
 
     @EzyAutoBind
@@ -51,13 +54,13 @@ public class AdminPersonalCoinPriceDataAppender
     protected void addDataRecords(List<PersonalCoinPrice> dataRecords) {
         if (!dataRecords.isEmpty()) {
             coinPriceRepository.save(dataRecords);
-//            logger.info("Appended {} coin prices to database", dataRecords.size());
+            //logger.info("Appended {} coin prices to database", dataRecords.size());
         }
     }
 
     @Override
     protected Long extractNewLastPageToken(List<CoinPriceApiResult> list, Long aLong) {
-        return 0L;
+        return clock.nowDateTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
     @Override
@@ -72,6 +75,6 @@ public class AdminPersonalCoinPriceDataAppender
 
     @Override
     protected Class<Long> pageTokenType() {
-        return null;
+        return Long.class;
     }
 }
