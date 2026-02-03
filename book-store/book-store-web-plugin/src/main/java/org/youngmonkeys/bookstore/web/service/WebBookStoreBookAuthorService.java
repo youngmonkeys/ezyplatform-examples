@@ -23,7 +23,7 @@ public class WebBookStoreBookAuthorService {
             this::getAuthorUsersByBook
         ));
     }
-    private List<UserModel> getAuthorUsersByBook(ProductBookModel book) {
+    public List<UserModel> getAuthorUsersByBook(ProductBookModel book) {
         if (book == null) return Collections.emptyList();
 
         Set<Long> authorIds = new LinkedHashSet<>();
