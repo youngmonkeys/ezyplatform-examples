@@ -20,16 +20,12 @@ import static org.youngmonkeys.personal.constant.PersonalConstants.TABLE_NAME_CO
 @NoArgsConstructor
 public class PersonalCoinPrice {
     @Id
-    @Column(name = "id")
     private long id;
 
-    @Column(name = "symbol")
     private String symbol;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "price")
     private String price;
 
     @Column(name = "price_change")

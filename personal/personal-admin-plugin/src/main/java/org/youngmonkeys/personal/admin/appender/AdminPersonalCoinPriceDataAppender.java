@@ -1,17 +1,18 @@
 package org.youngmonkeys.personal.admin.appender;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tvd12.ezyfox.bean.annotation.EzyAutoBind;
 import com.tvd12.ezyfox.bean.annotation.EzySingleton;
 import org.youngmonkeys.ezyplatform.admin.appender.AdminDataAppender;
 import org.youngmonkeys.ezyplatform.admin.service.AdminSettingService;
 import org.youngmonkeys.ezyplatform.time.ClockProxy;
+import org.youngmonkeys.personal.admin.repo.AdminPersonalCoinPriceRepository;
+import org.youngmonkeys.personal.admin.service.AminPersonalCoinPriceService;
 import org.youngmonkeys.personal.entity.PersonalCoinPrice;
-import org.youngmonkeys.personal.repo.PersonalCoinPriceRepository;
 import org.youngmonkeys.personal.result.CoinPriceApiResult;
-import org.youngmonkeys.personal.service.PersonalCoinPriceService;
 
 import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @EzySingleton
@@ -19,23 +20,38 @@ public class AdminPersonalCoinPriceDataAppender
     extends AdminDataAppender<CoinPriceApiResult, PersonalCoinPrice, Long> {
 
     private final ClockProxy clock;
-
-    @EzyAutoBind
-    private PersonalCoinPriceService coinPriceService;
-
-    @EzyAutoBind
-    private PersonalCoinPriceRepository coinPriceRepository;
+    private final AminPersonalCoinPriceService coinPriceService;
+    private final AdminPersonalCoinPriceRepository coinPriceRepository;
+    private long lastCallTime = System.currentTimeMillis();
+    private static final int PERIOD = 60 * 1000;
 
     public AdminPersonalCoinPriceDataAppender(
         ClockProxy clock,
-        ObjectMapper objectMapper, AdminSettingService settingService) {
-        super(objectMapper, settingService);
+        ObjectMapper objectMapper,
+        AminPersonalCoinPriceService coinPriceService,
+        AdminSettingService settingService,
+        AdminPersonalCoinPriceRepository coinPriceRepository
+    ) {
+        super(
+            objectMapper,
+            settingService
+        );
         this.clock = clock;
+        this.coinPriceService = coinPriceService;
+        this.coinPriceRepository = coinPriceRepository;
     }
 
     @Override
-    protected List<CoinPriceApiResult> getValueList(Long lastTimestamp) {
-        return coinPriceService.fetchCoinPrice();
+    protected List<CoinPriceApiResult> getValueList(
+        Long lastTimestamp
+    ) {
+        long callTime = lastCallTime + PERIOD;
+        long now = System.currentTimeMillis();
+        if (callTime < now) {
+            lastCallTime = now;
+            return Arrays.asList(coinPriceService.fetchCoinPrice());
+        }
+        return Collections.emptyList();
     }
 
     @Override
@@ -52,10 +68,7 @@ public class AdminPersonalCoinPriceDataAppender
 
     @Override
     protected void addDataRecords(List<PersonalCoinPrice> dataRecords) {
-        if (!dataRecords.isEmpty()) {
-            coinPriceRepository.save(dataRecords);
-            //logger.info("Appended {} coin prices to database", dataRecords.size());
-        }
+        coinPriceRepository.save(dataRecords);
     }
 
     @Override
