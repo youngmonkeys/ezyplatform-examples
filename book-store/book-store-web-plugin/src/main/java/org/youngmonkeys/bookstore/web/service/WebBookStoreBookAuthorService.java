@@ -20,13 +20,10 @@ public class WebBookStoreBookAuthorService {
     public Map<Long, List<UserModel>> getAuthorUsersMapByBooks(Collection<ProductBookModel> books) {
         return books.stream().collect(Collectors.toMap(
             ProductBookModel::getProductId,
-            this::getAuthorUsers
+            this::getAuthorUsersByBook
         ));
     }
-    public List<UserModel> getAuthorUsersByBook(ProductBookModel book) {
-        return getAuthorUsers(book);
-    }
-    private List<UserModel> getAuthorUsers(ProductBookModel book) {
+    private List<UserModel> getAuthorUsersByBook(ProductBookModel book) {
         if (book == null) return Collections.emptyList();
 
         Set<Long> authorIds = new LinkedHashSet<>();
