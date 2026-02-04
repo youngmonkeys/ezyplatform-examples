@@ -3,6 +3,7 @@ package org.youngmonkeys.bookstore.web.converter;
 import com.tvd12.ezyfox.bean.annotation.EzySingleton;
 import lombok.AllArgsConstructor;
 import org.youngmonkeys.bookstore.web.response.WebBookAuthorDetailResponse;
+import org.youngmonkeys.bookstore.web.response.WebBookAuthorResponse;
 import org.youngmonkeys.bookstore.web.response.WebBookDetailsResponse;
 import org.youngmonkeys.bookstore.web.response.WebBookResponse;
 import org.youngmonkeys.ecommerce.model.ProductBookModel;
@@ -17,6 +18,9 @@ import org.youngmonkeys.ezyplatform.model.UserModel;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Collections;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.youngmonkeys.ecommerce.util.DecimalPrices.toDiscountPercent;
 import static org.youngmonkeys.ezyplatform.util.Numbers.toNoTrailingZerosString;
@@ -30,7 +34,8 @@ public class WebBookStoreModelToResponseConverter {
     public WebBookResponse toBookResponse(
         ProductModel model,
         ProductBookModel book,
-        UserModel author,
+        List<UserModel> authors,
+        Map<Long, MediaNameModel> avatarImages,
         MediaNameModel bannerImage,
         PostModel descriptionPost,
         ProductPriceModel price,
@@ -38,12 +43,12 @@ public class WebBookStoreModelToResponseConverter {
     ) {
         BigDecimal priceValue = price.getPrice();
         BigDecimal originalPriceValue = price.getOriginalPrice();
+
         return WebBookResponse.builder()
             .id(model.getId())
             .name(model.getProductName())
             .code(model.getProductCode())
-            .authorName(author.getDisplayName())
-            .authorUuid(author.getUuid())
+            .authors(toAuthorResponses(authors,avatarImages))
             .bannerImage(bannerImage)
             .shortedDescription(descriptionPost.getShortedContent())
             .publisher(book.getPublisher())
@@ -67,11 +72,12 @@ public class WebBookStoreModelToResponseConverter {
 
     public WebBookDetailsResponse toBookDetailsResponse(
         ProductModel model,
-        ProductBookModel book,
         PostModel descriptionPost,
         ProductPriceModel price,
         ProductCurrencyModel currency,
-        List<MediaNameModel> medias
+        List<MediaNameModel> medias,
+        List<UserModel> authors,
+        Map<Long, MediaNameModel> avatarImages
     ) {
         BigDecimal priceValue = price.getPrice();
         BigDecimal originalPriceValue = price.getOriginalPrice();
@@ -80,11 +86,12 @@ public class WebBookStoreModelToResponseConverter {
                 descriptionPost.getContentType(),
                 descriptionPost.getContent()
             );
+
         return WebBookDetailsResponse.builder()
             .id(model.getId())
             .name(model.getProductName())
             .code(model.getProductCode())
-            .authorName(book.getAuthor())
+            .authors(toAuthorResponses(authors, avatarImages))
             .medias(medias)
             .description(description)
             .originalPrice(toNoTrailingZerosString(originalPriceValue))
@@ -119,5 +126,20 @@ public class WebBookStoreModelToResponseConverter {
             .websiteUrl(model.getUrl())
             .description(customer.getDescription())
             .build();
+    }
+    private List<WebBookAuthorResponse> toAuthorResponses(
+        List<UserModel> users,
+        Map<Long, MediaNameModel> avatarImages
+    ) {
+        if (users == null) {
+            return Collections.emptyList();
+        }
+        return users.stream()
+            .map(user -> WebBookAuthorResponse.builder()
+                .displayName(user.getDisplayName())
+                .uuid(user.getUuid())
+                .avatarImage(avatarImages.get(user.getAvatarImageId()))
+                .build())
+            .collect(Collectors.toList());
     }
 }
