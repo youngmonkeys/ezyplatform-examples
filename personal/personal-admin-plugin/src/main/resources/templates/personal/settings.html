@@ -16,6 +16,13 @@
     <div class="col-md-9 col-7">
         <th:block th:replace="~{fragments/data-appender :: actions(dataAppenderName='personal_post_word_count')}" />
     </div>
+    <div class="col-12 mt-3"></div>
+    <div class="col-md-3 col-5">
+        <span>[[#{coin_price_appender}]]</span>
+    </div>
+    <div class="col-md-9 col-7">
+        <th:block th:replace="~{fragments/data-appender :: actions(dataAppenderName='personal_coin_price')}" />
+    </div>
     <div class="col-md-12">
         <hr class="mb-4"/>
     </div>
@@ -29,6 +36,16 @@
                 </div>
                 <label id="allowCalculatePostReadTimeErrorLabel" class="col-lg-2 col-md-3 col-form-label text-danger d-none" for="allowCalculatePostReadTime">
                     <i class="far fa-times-circle"></i> <span id="allowCalculatePostReadTimeError">[[#{invalid}]]</span>
+                </label>
+            </div>
+            <div class="form-group row">
+                <label for="showCoinWidget" class="col-sm-3 col-form-label">[[#{coin_widget_enable}]]</label>
+                <div class="col-lg-7 col-md-6 d-flex align-items-center">
+                    <input type="checkbox" name="showCoinWidget" id="showCoinWidget" class="wh-1rem"
+                            th:checked="${showCoinWidget}">
+                </div>
+                <label id="showCoinWidgetErrorLabel" class="col-lg-2 col-md-3 col-form-label text-danger d-none" for="showCoinWidget">
+                    <i class="far fa-times-circle"></i> <span id="showCoinWidgetError">[[#{invalid}]]</span>
                 </label>
             </div>
             <div class="row">
@@ -54,6 +71,8 @@ ezyadmin.messages.save_successfully = /*[[#{save_successfully}]]*/;
 personal.updateSettings = function() {
     var formData = ezyadmin.formDataToObject('updateSettingsForm');
     formData.allowCalculatePostReadTime = $('#allowCalculatePostReadTime')
+        .prop('checked');
+    formData.showCoinWidget = $('#showCoinWidget')
         .prop('checked');
     $.ajax({
         type: 'PUT',
