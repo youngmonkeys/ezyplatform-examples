@@ -21,8 +21,13 @@ public final class PersonalConstants {
     public static final String INTERNAL_EVENT_NAME_COIN_PRICE_UPDATE =
         "personal_coin_price";
 
+    public static final String COIN_SYMBOLS = "BTC,ETH,BNB,LTC,XRP";
+
     public static final String API_URL_COIN_PRICE =
-        "https://coinyep.com/api/v1/?list=BTC,ETH,BNB,LTC,XRP";
+        "https://coinyep.com/api/v1/?list=" + COIN_SYMBOLS;
+
+    public static final String SETTING_KEY_SHOW_COIN_PRICE =
+        "show_coin_widget";
 
     private PersonalConstants() {}
 }

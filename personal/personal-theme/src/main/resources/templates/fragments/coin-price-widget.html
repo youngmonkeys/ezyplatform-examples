@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="coin-price-widget">
+
+    <div id="coin-widget" class="coin-widget collapsed">
+        <!-- Toggle Button -->
+        <div class="coin-widget-toggle" id="coin-widget-toggle">
+            <i class="fa-solid fa-coins"></i>
+        </div>
+
+        <!-- Panel -->
+        <div class="coin-widget-panel">
+            <div class="coin-widget-header">
+                <span>[[#{price_coin}]]</span>
+                <button class="close-btn" id="coin-widget-close">×</button>
+            </div>
+
+            <div class="coin-widget-body">
+                <table class="coin-table">
+                    <thead>
+                    <tr>
+                        <th>Coin</th>
+                        <th>[[#{price}]] ($)</th>
+                        <th>[[#{price_change}]]</th>
+                    </tr>
+                    </thead>
+                    <tbody id="coin-price-body">
+                    <!-- JS render -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</th:block>
+</html>

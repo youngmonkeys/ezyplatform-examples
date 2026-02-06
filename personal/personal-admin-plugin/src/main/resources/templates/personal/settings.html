@@ -38,6 +38,16 @@
                     <i class="far fa-times-circle"></i> <span id="allowCalculatePostReadTimeError">[[#{invalid}]]</span>
                 </label>
             </div>
+            <div class="form-group row">
+                <label for="showCoinWidget" class="col-sm-3 col-form-label">[[#{coin_widget_enable}]]</label>
+                <div class="col-lg-7 col-md-6 d-flex align-items-center">
+                    <input type="checkbox" name="showCoinWidget" id="showCoinWidget" class="wh-1rem"
+                            th:checked="${showCoinWidget}">
+                </div>
+                <label id="showCoinWidgetErrorLabel" class="col-lg-2 col-md-3 col-form-label text-danger d-none" for="showCoinWidget">
+                    <i class="far fa-times-circle"></i> <span id="showCoinWidgetError">[[#{invalid}]]</span>
+                </label>
+            </div>
             <div class="row">
                 <div class="col-md-3"></div>
                 <div class="col-md-2 mb-2">
@@ -61,6 +71,8 @@ ezyadmin.messages.save_successfully = /*[[#{save_successfully}]]*/;
 personal.updateSettings = function() {
     var formData = ezyadmin.formDataToObject('updateSettingsForm');
     formData.allowCalculatePostReadTime = $('#allowCalculatePostReadTime')
+        .prop('checked');
+    formData.showCoinWidget = $('#showCoinWidget')
         .prop('checked');
     $.ajax({
         type: 'PUT',

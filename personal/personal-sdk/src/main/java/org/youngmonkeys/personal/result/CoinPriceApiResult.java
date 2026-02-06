@@ -1,11 +1,13 @@
 package org.youngmonkeys.personal.result;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.tvd12.ezyfox.database.annotation.EzyQueryResult;
 import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EzyQueryResult
 public class CoinPriceApiResult {
 
     @JsonProperty("base_symbol")

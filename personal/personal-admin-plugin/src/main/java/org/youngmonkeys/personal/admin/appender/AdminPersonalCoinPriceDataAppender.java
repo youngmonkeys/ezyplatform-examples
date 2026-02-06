@@ -9,18 +9,24 @@ import org.youngmonkeys.personal.admin.repo.AdminPersonalCoinPriceRepository;
 import org.youngmonkeys.personal.admin.service.AminPersonalCoinPriceService;
 import org.youngmonkeys.personal.entity.PersonalCoinPrice;
 import org.youngmonkeys.personal.result.CoinPriceApiResult;
+import org.youngmonkeys.personal.service.PersonalCoinPriceService;
 
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.youngmonkeys.personal.constant.PersonalConstants.COIN_SYMBOLS;
 
 @EzySingleton
 public class AdminPersonalCoinPriceDataAppender
     extends AdminDataAppender<CoinPriceApiResult, PersonalCoinPrice, Long> {
 
     private final ClockProxy clock;
-    private final AminPersonalCoinPriceService coinPriceService;
+    private final AminPersonalCoinPriceService adminCoinPriceService;
+    private final PersonalCoinPriceService coinPriceService;
     private final AdminPersonalCoinPriceRepository coinPriceRepository;
     private long lastCallTime = System.currentTimeMillis();
     private static final int PERIOD = 60 * 1000;
@@ -28,7 +34,8 @@ public class AdminPersonalCoinPriceDataAppender
     public AdminPersonalCoinPriceDataAppender(
         ClockProxy clock,
         ObjectMapper objectMapper,
-        AminPersonalCoinPriceService coinPriceService,
+        AminPersonalCoinPriceService adminCoinPriceService,
+        PersonalCoinPriceService coinPriceService,
         AdminSettingService settingService,
         AdminPersonalCoinPriceRepository coinPriceRepository
     ) {
@@ -37,6 +44,7 @@ public class AdminPersonalCoinPriceDataAppender
             settingService
         );
         this.clock = clock;
+        this.adminCoinPriceService = adminCoinPriceService;
         this.coinPriceService = coinPriceService;
         this.coinPriceRepository = coinPriceRepository;
     }
@@ -49,7 +57,7 @@ public class AdminPersonalCoinPriceDataAppender
         long now = System.currentTimeMillis();
         if (callTime < now) {
             lastCallTime = now;
-            return Arrays.asList(coinPriceService.fetchCoinPrice());
+            return Arrays.asList(adminCoinPriceService.fetchCoinPrice());
         }
         return Collections.emptyList();
     }
@@ -68,7 +76,20 @@ public class AdminPersonalCoinPriceDataAppender
 
     @Override
     protected void addDataRecords(List<PersonalCoinPrice> dataRecords) {
-        coinPriceRepository.save(dataRecords);
+        List<CoinPriceApiResult> lastestResults =
+            new ArrayList<>(coinPriceService.getLatestPrices(COIN_SYMBOLS));
+        List<CoinPriceApiResult> incomingResults = dataRecords.stream()
+            .map(coin -> {
+                CoinPriceApiResult result = new CoinPriceApiResult();
+                result.setPrice(coin.getPrice());
+                result.setBaseSymbol(coin.getSymbol());
+                result.setBaseName(coin.getName());
+                result.setPriceChange(coin.getPriceChange());
+                return result;
+            }).collect(Collectors.toList());
+        if (adminCoinPriceService.isAnyCoinChanged(lastestResults, incomingResults)) {
+            coinPriceRepository.save(dataRecords);
+        }
     }
 
     @Override
