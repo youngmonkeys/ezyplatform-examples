@@ -25,6 +25,7 @@ import java.util.List;
 
 import static org.youngmonkeys.ezyplatform.util.StringConverters.trimOrNull;
 import static org.youngmonkeys.ezysupport.constant.EzySupportConstants.SETTING_NAME_BANNER_IMAGE_URL;
+import static org.youngmonkeys.personal.constant.PersonalConstants.SETTING_KEY_SHOW_COIN_PRICE;
 
 @Setter
 public class PersonalHomeController {
@@ -109,6 +110,10 @@ public class PersonalHomeController {
                 )
             )
             .addVariable("pageTitle", "home")
+            .addVariable(
+                "showCoinWidget",
+                settingService.getBooleanValue(SETTING_KEY_SHOW_COIN_PRICE)
+                )
             .build();
         blogsViewDecorator.decorateBlogView(view);
         return view;
