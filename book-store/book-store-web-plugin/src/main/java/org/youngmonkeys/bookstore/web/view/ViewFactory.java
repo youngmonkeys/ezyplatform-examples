@@ -4,6 +4,7 @@ import com.tvd12.ezyfox.bean.annotation.EzySingleton;
 import com.tvd12.ezyhttp.server.core.view.View;
 import lombok.AllArgsConstructor;
 import org.youngmonkeys.bookstore.web.controller.service.WebBookControllerService;
+import org.youngmonkeys.bookstore.web.controller.service.WebBookFlashSaleControllerService;
 import org.youngmonkeys.ecommerce.model.ProductCurrencyModel;
 import org.youngmonkeys.ecommerce.web.service.WebProductCurrencyService;
 import org.youngmonkeys.ezyarticle.web.manager.WebPageFragmentManager;
@@ -17,6 +18,7 @@ public class ViewFactory {
     private final WebPageFragmentManager pageFragmentManager;
     private final WebProductCurrencyService currencyService;
     private final WebBookControllerService bookControllerService;
+    private final WebBookFlashSaleControllerService flashSaleControllerService;
 
     public View.Builder newHomeViewBuilder(
         long currencyId,
@@ -44,6 +46,12 @@ public class ViewFactory {
             .addVariable(
                 "newBooks",
                 bookControllerService.getNewBooks(
+                    currency,
+                    DEFAULT_BOOKS_LIMIT
+                )
+            )
+            .addVariable("flashSale",
+                flashSaleControllerService.getFlashSale(
                     currency,
                     DEFAULT_BOOKS_LIMIT
                 )
