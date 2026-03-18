@@ -1,153 +1,272 @@
 <!doctype html>
-<html
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:th="http://www.thymeleaf.org"
-        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        layout:decorate="~{ezytheme}">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{ezytheme}">
 
 <body>
 
 
-<div layout:fragment="content">
-    <div class="common-spacing-1"></div>
+    <div layout:fragment="content">
+        <div class="common-spacing-1"></div>
 
-    <!-- HIGHLIGHT BOOKS SLIDER -->
-    <div class="container">
-        <div class="swiper highlight-swiper" th:if="${highlightBooks != null and !highlightBooks.isEmpty()}">
-            <div class="swiper-wrapper">
+        <!-- HIGHLIGHT BOOKS SLIDER -->
+        <div class="container">
+            <div class="swiper highlight-swiper" th:if="${highlightBooks != null and !highlightBooks.isEmpty()}">
+                <div class="swiper-wrapper">
 
-                <div class="swiper-slide" th:each="book : ${highlightBooks}">
-                    <div class="main-book">
-                        <div class="description-item">
-                            <!-- Title -->
-                            <a th:href="${'/store/books/' + book.code}" class="book-title">
-                                [[${book.name}]]
-                            </a>
+                    <div class="swiper-slide" th:each="book : ${highlightBooks}">
+                        <div class="main-book">
+                            <div class="description-item">
+                                <!-- Title -->
+                                <a th:href="${'/store/books/' + book.code}" class="book-title">
+                                    [[${book.name}]]
+                                </a>
 
-                            <!-- Description -->
-                            <div class="lead" th:utext="${book.shortedDescription}"></div>
+                                <!-- Description -->
+                                <div class="lead" th:utext="${book.shortedDescription}"></div>
 
-                            <!-- Author -->
-                            <div class="authors-container" th:if="${book.authors != null and !book.authors.isEmpty()}">
-                                <div class="authors-label">[[#{author}]]</div>
+                                <!-- Author -->
+                                <div class="authors-container"
+                                    th:if="${book.authors != null and !book.authors.isEmpty()}">
+                                    <div class="authors-label">[[#{author}]]</div>
 
-                                <div class="authors-list">
-                                    <div class="author-item" th:each="author : ${book.authors}">
+                                    <div class="authors-list">
+                                        <div class="author-item" th:each="author : ${book.authors}">
 
-                                        <a th:href="${'/authors/' + author.uuid}" class="author-avatar-wrapper">
-                                            <img class="author-avatar"
-                                                 th:src="${author.avatarImage != null ? author.avatarImage.getUrlOrDefault('/images/logo.svg') : '/images/logo.svg'}"
-                                                 alt="Avatar">
-                                            <div class="verified-badge">
-                                                <i class="fas fa-check"></i>
-                                            </div>
-                                        </a>
-
-                                        <div class="author-info">
-                                            <a class="author-name" th:href="${'/authors/' + author.uuid}">
-                                                [[${author.displayName}]]
+                                            <a th:href="${'/authors/' + author.uuid}" class="author-avatar-wrapper">
+                                                <img class="author-avatar"
+                                                    th:src="${author.avatarImage != null ? author.avatarImage.getUrlOrDefault('/images/logo.svg') : '/images/logo.svg'}"
+                                                    alt="Avatar">
+                                                <div class="verified-badge">
+                                                    <i class="fas fa-check"></i>
+                                                </div>
                                             </a>
+
+                                            <div class="author-info">
+                                                <a class="author-name" th:href="${'/authors/' + author.uuid}">
+                                                    [[${author.displayName}]]
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                <!-- Price Box -->
+                                <div class="price-box" th:if="${book.formattedPriceIncludeSymbol != null}">
+                                    <span class="current-price">
+                                        [[${book.formattedPriceIncludeSymbol}]]
+                                    </span>
+
+                                    <span class="original-price"
+                                        th:if="${book.discountPercent != null && book.discountPercent > 0}">
+                                        [[${book.formattedOriginalPriceIncludeSymbol}]]
+                                    </span>
+
+                                    <span class="discount-badge"
+                                        th:if="${book.discountPercent != null && book.discountPercent > 0}">
+                                        -[[${book.discountPercent}]]%
+                                    </span>
+                                </div>
+
+                                <!-- Nút Xem Chi Tiết -->
+                                <a th:href="${'/store/books/' + book.code}" class="btn-view-detail">
+                                    [[#{view_detail}]] <i class="fas fa-arrow-right icon-arrow"></i>
+                                </a>
                             </div>
-                            <!-- Price Box -->
-                            <div class="price-box" th:if="${book.formattedPriceIncludeSymbol != null}">
-                                <span class="current-price">
-                                    [[${book.formattedPriceIncludeSymbol}]]
-                                </span>
 
-                                <span class="original-price"
-                                      th:if="${book.discountPercent != null && book.discountPercent > 0}">
-                                    [[${book.formattedOriginalPriceIncludeSymbol}]]
-                                </span>
-
-                                <span class="discount-badge"
-                                      th:if="${book.discountPercent != null && book.discountPercent > 0}">
-                                    -[[${book.discountPercent}]]%
-                                </span>
+                            <div class="image-item">
+                                <a th:href="${'/store/books/' + book.code}">
+                                    <img class="book-banner" th:if="${book.bannerImage != null}"
+                                        th:src="${book.bannerImage.getUrlOrNull()}" alt="">
+                                </a>
                             </div>
+                        </div>
+                    </div>
 
-                            <!-- Nút Xem Chi Tiết -->
-                            <a th:href="${'/store/books/' + book.code}" class="btn-view-detail">
-                                [[#{view_detail}]] <i class="fas fa-arrow-right icon-arrow"></i>
-                            </a>
+                </div>
+
+                <!-- Controls -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+
+        <div class="common-spacing-2"></div>
+
+        <div class="container" th:if="${flashSale != null and flashSale.books != null and !flashSale.books.isEmpty()}">
+            <section class="flashsale-section">
+                <div class="flashsale-header">
+                    <div class="flashsale-intro">
+                        <div class="flashsale-topline">
+                            <span class="flashsale-badge">[[#{flash_sale}]]</span>
+                            <div id="flashsale-countdown" class="flashsale-countdown"
+                                th:attr="data-end-ms=${flashSale.finishApplyAtMs}">
+                                <span class="flashsale-time-box">00</span>
+                                <span class="flashsale-time-sep">:</span>
+                                <span class="flashsale-time-box">00</span>
+                                <span class="flashsale-time-sep">:</span>
+                                <span class="flashsale-time-box">00</span>
+                            </div>
                         </div>
 
-                        <div class="image-item">
-                            <a th:href="${'/store/books/' + book.code}">
-                                <img class="book-banner"
-                                     th:if="${book.bannerImage != null}"
-                                     th:src="${book.bannerImage.getUrlOrNull()}"
-                                     alt="">
-                            </a>
-                        </div>
+                        <h2 class="flashsale-title" th:text="${flashSale.displayName}">[[#{flash_sale}]]</h2>
+                    </div>
+
+                    <div class="flashsale-actions">
+                        <button type="button" class="flashsale-nav flashsale-prev">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button type="button" class="flashsale-nav flashsale-next">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
                     </div>
                 </div>
 
+                <div class="swiper flashsale-swiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide" th:each="book : ${flashSale.books}">
+                            <div class="flashsale-slide-card">
+                                <th:block th:replace="~{fragments/book-item :: content(book=${book})}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="common-spacing-2"></div>
+
+        <!-- BESTSELLING -->
+        <div class="container">
+            <h1 class="mb-4">[[#{bestselling_books}]]</h1>
+            <div class="books">
+                <th:block th:each="book : ${bestsellingBooks}">
+                    <th:block th:replace="~{fragments/book-item :: content(book=${book})}" />
+                </th:block>
             </div>
+        </div>
 
-            <!-- Controls -->
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-pagination"></div>
+        <div class="common-spacing-3"></div>
+
+        <!-- NEW BOOKS -->
+        <div class="container">
+            <h1 class="mb-4">[[#{new_book_s}]]</h1>
+            <div class="books">
+                <th:block th:each="book : ${newBooks}">
+                    <th:block th:replace="~{fragments/book-item :: content(book=${book})}" />
+                </th:block>
+            </div>
         </div>
     </div>
 
-    <div class="common-spacing-2"></div>
+    <!-- Init Swiper -->
+    <th:block layout:fragment="scripts">
+        <script>
+            $(function () {
+                var $el = $('.highlight-swiper');
+                if (!$el.length) return;
 
-    <!-- BESTSELLING -->
-    <div class="container">
-        <h1 class="mb-4">[[#{bestselling_books}]]</h1>
-        <div class="books">
-            <th:block th:each="book : ${bestsellingBooks}">
-                <th:block th:replace="~{fragments/book-item :: content(book=${book})}"/>
-            </th:block>
-        </div>
-    </div>
+                new Swiper('.highlight-swiper', {
+                    loop: true,
+                    slidesPerView: 1,
+                    spaceBetween: 24,
+                    speed: 600,
+                    autoplay: {
+                        delay: 4500,
+                        disableOnInteraction: false
+                    },
+                    navigation: {
+                        nextEl: '.highlight-swiper .swiper-button-next',
+                        prevEl: '.highlight-swiper .swiper-button-prev'
+                    },
+                    pagination: {
+                        el: '.highlight-swiper .swiper-pagination',
+                        clickable: true
+                    }
+                });
+            });
 
-    <div class="common-spacing-3"></div>
-
-    <!-- NEW BOOKS -->
-    <div class="container">
-        <h1 class="mb-4">[[#{new_book_s}]]</h1>
-        <div class="books">
-            <th:block th:each="book : ${newBooks}">
-                <th:block th:replace="~{fragments/book-item :: content(book=${book})}"/>
-            </th:block>
-        </div>
-    </div>
-</div>
-
-<!-- Init Swiper -->
-<th:block layout:fragment="scripts">
-    <script>
-        $(function () {
-            var $el = $('.highlight-swiper');
-            if (!$el.length) return;
-
-            new Swiper('.highlight-swiper', {
-                loop: true,
-                slidesPerView: 1,
-                spaceBetween: 24,
-                speed: 600,
-                autoplay: {
-                    delay: 4500,
-                    disableOnInteraction: false
-                },
-                navigation: {
-                    nextEl: '.highlight-swiper .swiper-button-next',
-                    prevEl: '.highlight-swiper .swiper-button-prev'
-                },
-                pagination: {
-                    el: '.highlight-swiper .swiper-pagination',
-                    clickable: true
+            $(function () {
+                var $flash = $('.flashsale-swiper');
+                if ($flash.length) {
+                    new Swiper('.flashsale-swiper', {
+                        loop: false,
+                        speed: 700,
+                        spaceBetween: 22,
+                        navigation: {
+                            nextEl: '.flashsale-next',
+                            prevEl: '.flashsale-prev'
+                        },
+                        breakpoints: {
+                            0: {
+                                slidesPerView: 1.15,
+                                spaceBetween: 14
+                            },
+                            576: {
+                                slidesPerView: 2,
+                                spaceBetween: 16
+                            },
+                            768: {
+                                slidesPerView: 2.4,
+                                spaceBetween: 18
+                            },
+                            992: {
+                                slidesPerView: 3,
+                                spaceBetween: 20
+                            },
+                            1200: {
+                                slidesPerView: 4,
+                                spaceBetween: 22
+                            }
+                        }
+                    });
                 }
             });
-        });
-    </script>
-</th:block>
+
+            $(function () {
+                var $cd = $('#flashsale-countdown');
+                if (!$cd.length) return;
+
+                var endMs = parseInt($cd.attr('data-end-ms'), 10);
+                if (!endMs || isNaN(endMs)) return;
+
+                function pad2(n) {
+                    return String(n).padStart(2, '0');
+                }
+
+                function renderBoxes(h, m, s) {
+                    $cd.html(
+                        '<span class="flashsale-time-box">' + pad2(h) + '</span>' +
+                        '<span class="flashsale-time-sep">:</span>' +
+                        '<span class="flashsale-time-box">' + pad2(m) + '</span>' +
+                        '<span class="flashsale-time-sep">:</span>' +
+                        '<span class="flashsale-time-box">' + pad2(s) + '</span>'
+                    );
+                }
+
+                function tick() {
+                    var diff = endMs - Date.now();
+                    if (diff < 0) diff = 0;
+
+                    var totalSeconds = Math.floor(diff / 1000);
+                    var seconds = totalSeconds % 60;
+                    var totalMinutes = Math.floor(totalSeconds / 60);
+                    var minutes = totalMinutes % 60;
+                    var totalHours = Math.floor(totalMinutes / 60);
+                    var hours = totalHours;
+
+                    renderBoxes(hours, minutes, seconds);
+
+                    if (diff === 0) {
+                        clearInterval(timer);
+                    }
+                }
+
+                tick();
+                var timer = setInterval(tick, 1000);
+            });
+        </script>
+    </th:block>
 
 </body>
-</html>
 
+</html>
