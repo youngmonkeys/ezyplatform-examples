@@ -1,160 +1,168 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{ezytheme}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{ezytheme}">
+
 <body>
-<div layout:fragment="content" class="container book-details">
-    <div class="row align-items-start">
-        <div class="col-lg-3">
-            <div class="book-details-image card-panel"
-                 th:if="${book.medias != null and !book.medias.isEmpty()}">
+    <div layout:fragment="content" class="container book-details">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="sticky-sidebar">
 
-                <!-- MAIN -->
-                <div class="swiper book-gallery-main">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide" th:each="m : ${book.medias}">
-                            <img class="book-gallery-main-img"
-                                 th:src="${m.getUrlOrNull()}"
-                                 alt="book image">
-                        </div>
-                    </div>
-
-                    <div class="swiper-button-prev book-gallery-prev"
-                         th:if="${book.medias.size() > 1}"></div>
-                    <div class="swiper-button-next book-gallery-next"
-                         th:if="${book.medias.size() > 1}"></div>
-                </div>
-
-                <!-- THUMBS (BOTTOM) -->
-                <div class="swiper book-gallery-thumbs"
-                     th:if="${book.medias.size() > 1}">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide" th:each="m : ${book.medias}">
-                            <img class="book-gallery-thumb-img"
-                                 th:src="${m.getUrlOrNull()}"
-                                 alt="thumb">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- AUTHORS (BELOW IMAGE) -->
-            <div class="book-authors card-panel" th:if="${book.authors != null and !book.authors.isEmpty()}">
-
-                <div class="authors-label">[[#{author}]]</div>
-
-                <div class="sidebar-authors-list">
-                    <div class="author-item" th:each="author : ${book.authors}">
-                        <a th:href="${'/authors/' + author.uuid}" class="author-avatar-wrapper">
-                            <img class="author-avatar"
-                                 th:src="${author.avatarImage != null ? author.avatarImage.getUrlOrDefault('/images/logo.svg') : '/images/logo.svg'}"
-                                 alt="Avatar">
-                            <div class="verified-badge">
-                                <i class="fas fa-check"></i>
+                    <div class="book-details-image card-panel"
+                        th:if="${book.medias != null and !book.medias.isEmpty()}">
+                        <div class="swiper book-gallery-main">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide" th:each="m : ${book.medias}">
+                                    <img class="book-gallery-main-img" th:src="${m.getUrlOrNull()}" alt="book image">
+                                </div>
                             </div>
-                        </a>
+                            <div class="swiper-button-prev book-gallery-prev" th:if="${book.medias.size() > 1}"></div>
+                            <div class="swiper-button-next book-gallery-next" th:if="${book.medias.size() > 1}"></div>
+                        </div>
 
-                        <div class="author-info">
-                            <a class="author-name" th:href="${'/authors/' + author.uuid}">
-                                [[${author.displayName}]]
-                            </a>
+                        <div class="swiper book-gallery-thumbs" th:if="${book.medias.size() > 1}">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide" th:each="m : ${book.medias}">
+                                    <img class="book-gallery-thumb-img" th:src="${m.getUrlOrNull()}" alt="thumb">
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    <div class="book-authors card-panel" th:if="${book.authors != null and !book.authors.isEmpty()}">
+                        <div class="authors-label">[[#{author}]]</div>
+                        <div class="sidebar-authors-list">
+                            <div class="author-item" th:each="author : ${book.authors}">
+                                <a th:href="${'/authors/' + author.uuid}" class="author-avatar-wrapper">
+                                    <img class="author-avatar"
+                                        th:src="${author.avatarImage != null ? author.avatarImage.getUrlOrDefault('/images/logo.svg') : '/images/logo.svg'}"
+                                        alt="Avatar">
+                                    <div class="verified-badge">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                </a>
+                                <div class="author-info">
+                                    <a class="author-name" th:href="${'/authors/' + author.uuid}">
+                                        [[${author.displayName}]]
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-        </div>
-        <div class="col-lg-5">
-            <div class="book-details-content card-panel">
-                <div class="book-details-header">
-                    <p class="eyebrow">[[#{book_details}]]</p>
-                    <h1 class="book-details-title">[[${book_name}]]</h1>
-                </div>
-                <div class="book-details-description">
-                    <h4>[[#{description}]]</h4>
-                    <div class="description-body" th:utext="${book.description}"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="book-details-checkout card-panel">
-                <div class="book-details-price">
-                    <div class="price">[[${book.formattedPriceIncludeSymbol}]]</div>
-                    <div class="price-meta">
-                        <span class="original-price"
-                              th:if="${book.discountPercent > 0}">
-                            [[${book.formattedOriginalPriceIncludeSymbol}]]
-                        </span>
-                        <span class="discount-badge"
-                              th:if="${book.discountPercent > 0}">
-                            [[${'- ' + book.discountPercent + ' %'}]]
-                        </span>
+
+            <div class="col-lg-5">
+                <div class="book-details-content card-panel">
+                    <div class="book-details-header">
+                        <p class="eyebrow">[[#{book_details}]]</p>
+                        <h1 class="book-details-title">[[${book.name}]]</h1>
+                    </div>
+
+                    <div class="book-details-description">
+                        <h4>[[#{description}]]</h4>
+                        <div id="descBox" class="description-body" th:utext="${book.description}"></div>
                     </div>
                 </div>
-                <p class="book-details-note">
-                    Secure checkout · Instant access
-                </p>
-                <div class="book-details-actions">
-                    <button type="button" class="btn btn-outline-primary"
-                            th:attr="onclick=|addBookToCart(${book.id})|">
-                        [[#{add_to_cart}]]
-                    </button>
-                    <button type="button" class="btn btn-primary"
-                            th:attr="onclick=|buyBookNow(${book.id})|">
-                        [[#{buy_now}]]
-                    </button>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="sticky-sidebar">
+
+                    <div class="book-details-checkout card-panel">
+                        <div class="book-details-price">
+                            <div class="price">[[${book.formattedPriceIncludeSymbol}]]</div>
+                            <div class="price-meta">
+                                <span class="original-price" th:if="${book.discountPercent > 0}">
+                                    [[${book.formattedOriginalPriceIncludeSymbol}]]
+                                </span>
+                                <span class="discount-badge" th:if="${book.discountPercent > 0}">
+                                    [[${'- ' + book.discountPercent + ' %'}]]
+                                </span>
+                            </div>
+                        </div>
+                        <p class="book-details-note">
+                            Secure checkout · Instant access
+                        </p>
+                        <div class="book-details-actions">
+                            <button type="button" class="btn btn-outline-primary"
+                                th:attr="onclick=|addBookToCart(${book.id})|">
+                                [[#{add_to_cart}]]
+                            </button>
+                            <button type="button" class="btn btn-primary" th:attr="onclick=|buyBookNow(${book.id})|">
+                                [[#{buy_now}]]
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
-    </div>
-    <div class="common-spacing-3"></div>
-    <div class="container">
-        <h1 class="mb-4">[[#{more_by_this_author}]]</h1>
+
+        <th:block th:if="${setProductBooks != null and !setProductBooks.isEmpty()}">
+            <h1 class="mb-4 mt-5">[[#{books_in_series}]]</h1>
+            <div class="books">
+                <th:block th:each="book : ${setProductBooks}">
+                    <th:block th:replace="~{fragments/book-item :: content(book=${book})}" />
+                </th:block>
+            </div>
+        </th:block>
+
+        <th:block th:if="${upsellProductBooks != null and !upsellProductBooks.isEmpty()}">
+            <h1 class="mb-4 mt-5">[[#{you_may_also_like}]]</h1>
+            <div class="books">
+                <th:block th:each="book : ${upsellProductBooks}">
+                    <th:block th:replace="~{fragments/book-item :: content(book=${book})}" />
+                </th:block>
+            </div>
+        </th:block>
+
+        <h1 class="mb-4 mt-5">[[#{more_by_this_author}]]</h1>
         <div class="books">
             <th:block th:each="book : ${sameAuthorBooks}">
-                <th:block th:replace="~{fragments/book-item :: content(book=${book})}"/>
+                <th:block th:replace="~{fragments/book-item :: content(book=${book})}" />
             </th:block>
         </div>
     </div>
-</div>
-<script layout:fragment="scripts" th:inline="javascript">
-    $(function () {
-        var $main = $('.book-gallery-main');
-        var $thumbs = $('.book-gallery-thumbs');
 
-        if (!$main.length) return;
+    <script layout:fragment="scripts" th:inline="javascript">
+        $(function () {
+            var $main = $('.book-gallery-main');
+            var $thumbs = $('.book-gallery-thumbs');
 
-        var thumbsSwiper = null;
-
-        if ($thumbs.length) {
-            thumbsSwiper = new Swiper('.book-gallery-thumbs', {
-                direction: 'horizontal',
-                slidesPerView: 4,
-                spaceBetween: 10,
-                watchSlidesProgress: true,
-                speed: 400,
-                threshold: 5
-            });
-        }
-
-        new Swiper('.book-gallery-main', {
-            loop: false,
-            spaceBetween: 10,
-            navigation: {
-                nextEl: '.book-gallery-next',
-                prevEl: '.book-gallery-prev'
-            },
-            thumbs: thumbsSwiper ? {swiper: thumbsSwiper} : undefined,
-
-            on: {
-                slideChange: function () {
-                    if (thumbsSwiper) {
-                        thumbsSwiper.slideTo(this.activeIndex - 1);
-                    }
+            if ($main.length) {
+                var thumbsSwiper = null;
+                if ($thumbs.length) {
+                    thumbsSwiper = new Swiper('.book-gallery-thumbs', {
+                        direction: 'horizontal',
+                        slidesPerView: 4,
+                        spaceBetween: 10,
+                        watchSlidesProgress: true,
+                        speed: 400,
+                        threshold: 5
+                    });
                 }
+
+                new Swiper('.book-gallery-main', {
+                    loop: false,
+                    spaceBetween: 10,
+                    navigation: {
+                        nextEl: '.book-gallery-next',
+                        prevEl: '.book-gallery-prev'
+                    },
+                    thumbs: thumbsSwiper ? { swiper: thumbsSwiper } : undefined,
+                    on: {
+                        slideChange: function () {
+                            if (thumbsSwiper) {
+                                thumbsSwiper.slideTo(this.activeIndex - 1);
+                            }
+                        }
+                    }
+                });
             }
         });
-    });
-</script>
+    </script>
 </body>
-</html>
 
+</html>

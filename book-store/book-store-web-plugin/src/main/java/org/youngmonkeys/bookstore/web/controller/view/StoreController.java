@@ -20,6 +20,7 @@ import org.youngmonkeys.ecommerce.model.ProductCurrencyModel;
 import org.youngmonkeys.ecommerce.pagination.DefaultProductFilter;
 import org.youngmonkeys.ecommerce.pagination.DefaultProductPriceFilter;
 import org.youngmonkeys.ecommerce.web.controller.service.WebProductCategoryControllerService;
+import org.youngmonkeys.ecommerce.web.controller.service.WebProductControllerService;
 import org.youngmonkeys.ecommerce.web.service.WebProductCurrencyService;
 import org.youngmonkeys.ecommerce.web.validator.WebProductCategoryValidator;
 import org.youngmonkeys.ezyplatform.model.PaginationModel;
@@ -175,6 +176,22 @@ public class StoreController {
                     bookId,
                     currency,
                     DEFAULT_BOOKS_LIMIT
+                )
+            )
+            .addVariable(
+                "setProductBooks",
+                 bookControllerService.getSetProductBooks(
+                     bookId,
+                     currency,
+                     DEFAULT_BOOKS_LIMIT
+                 )
+            )
+            .addVariable(
+                "upsellProductBooks",
+                bookControllerService.getUpsellProductBooks(
+                        bookId,
+                        currency,
+                        DEFAULT_BOOKS_LIMIT
                 )
             )
             .build();
