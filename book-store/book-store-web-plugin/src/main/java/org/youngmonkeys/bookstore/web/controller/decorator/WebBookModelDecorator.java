@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import org.youngmonkeys.bookstore.web.converter.WebBookStoreModelToResponseConverter;
 import org.youngmonkeys.bookstore.web.response.WebBookDetailsResponse;
 import org.youngmonkeys.bookstore.web.response.WebBookResponse;
-import org.youngmonkeys.bookstore.web.service.WebBookService;
 import org.youngmonkeys.bookstore.web.service.WebBookStoreBookAuthorService;
 import org.youngmonkeys.ecommerce.model.ProductBookModel;
 import org.youngmonkeys.ecommerce.model.ProductCurrencyModel;
@@ -22,11 +21,13 @@ import org.youngmonkeys.ezyplatform.model.PaginationModel;
 import org.youngmonkeys.ezyplatform.model.UserModel;
 import org.youngmonkeys.ezyplatform.rx.Reactive;
 import org.youngmonkeys.ezyplatform.web.service.WebMediaService;
-import org.youngmonkeys.ezyplatform.web.service.WebUserService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
-
 
 import static com.tvd12.ezyfox.io.EzyLists.newArrayList;
 import static com.tvd12.ezyfox.io.EzyMaps.newHashMap;
@@ -42,9 +43,7 @@ public class WebBookModelDecorator {
     private final WebProductMediaService productMediaService;
     private final WebProductDescriptionService productDescriptionService;
     private final WebProductPriceService productPriceService;
-    private final WebUserService userService;
     private final WebBookStoreModelToResponseConverter modelToResponseConverter;
-    private final WebBookService bookService;
     private final WebBookStoreBookAuthorService webBookStoreBookAuthorService;
 
     @SuppressWarnings("MethodLength")
@@ -61,14 +60,17 @@ public class WebBookModelDecorator {
         Set<Long> mediaIds = models
             .stream()
             .map(ProductModel::getBannerImageId)
-            .filter(it -> it > 0)
+            .filter(it -> it > ZERO_LONG)
             .collect(Collectors.toSet());
         Map<Long, Long> descriptionPostIdByProductId = productDescriptionService
             .getProductDescriptionPostIdMapByIds(
                 productIds
             );
-        Map<Long, List<UserModel>> authorUsersByBookId = webBookStoreBookAuthorService.getAuthorUsersMapByBooks(bookById.values());
-        Set<Long> authorAvatarIds = authorUsersByBookId.values().stream()
+        Map<Long, List<UserModel>> authorUsersByBookId = webBookStoreBookAuthorService
+            .getAuthorUsersMapByBooks(bookById.values());
+        Set<Long> authorAvatarIds = authorUsersByBookId
+            .values()
+            .stream()
             .flatMap(List::stream)
             .map(UserModel::getAvatarImageId)
             .filter(id -> id > ZERO_LONG)
@@ -132,15 +134,18 @@ public class WebBookModelDecorator {
     ) {
         long productId = model.getId();
         long bannerId = model.getBannerImageId();
-        ProductBookModel bookById = productBookService.getProductBookById(productId);
+        ProductBookModel bookById = productBookService
+            .getProductBookById(productId);
         List<Long> mediaIds = new ArrayList<>();
         if (bannerId > ZERO_LONG) {
             mediaIds.add(bannerId);
         }
-        mediaIds.addAll(productMediaService.getMediaIdsByProductId(productId));
+        mediaIds.addAll(productMediaService
+            .getMediaIdsByProductId(productId));
         long descriptionPostId = productDescriptionService
             .getProductDescriptionPostIdById(productId);
-        List<UserModel> authorUsers = webBookStoreBookAuthorService.getAuthorUsersByBook(bookById);
+        List<UserModel> authorUsers = webBookStoreBookAuthorService
+            .getAuthorUsersByBook(bookById);
         Set<Long> authorAvatarIds = authorUsers.stream()
             .map(UserModel::getAvatarImageId)
             .filter(id -> id > ZERO_LONG)

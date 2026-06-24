@@ -48,7 +48,7 @@ public class WebBookStoreModelToResponseConverter {
             .id(model.getId())
             .name(model.getProductName())
             .code(model.getProductCode())
-            .authors(toAuthorResponses(authors,avatarImages))
+            .authors(toAuthorResponses(authors, avatarImages))
             .bannerImage(bannerImage)
             .shortedDescription(descriptionPost.getShortedContent())
             .publisher(book.getPublisher())
@@ -127,6 +127,7 @@ public class WebBookStoreModelToResponseConverter {
             .description(customer.getDescription())
             .build();
     }
+
     private List<WebBookAuthorResponse> toAuthorResponses(
         List<UserModel> users,
         Map<Long, MediaNameModel> avatarImages
