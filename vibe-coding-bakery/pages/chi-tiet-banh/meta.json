@@ -1,0 +1,11 @@
+{
+  "slug": "chi-tiet-banh",
+  "title": "Chi tiết bánh",
+  "summary": "Thông tin chi tiết của từng loại bánh tại Sweet Home Bakery",
+  "featuredImageName": "",
+  "pageType": "STANDALONE_PAGE",
+  "contentType": "THYMELEAF",
+  "status": "PUBLISHED",
+  "metadata": {},
+  "id": 44
+}

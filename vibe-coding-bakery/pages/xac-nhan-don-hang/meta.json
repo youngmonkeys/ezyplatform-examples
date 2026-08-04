@@ -1,0 +1,11 @@
+{
+  "slug": "xac-nhan-don-hang",
+  "title": "Xác nhận đơn hàng",
+  "summary": "Xác nhận đặt bánh thành công tại Sweet Home Bakery",
+  "featuredImageName": "",
+  "pageType": "STANDALONE_PAGE",
+  "contentType": "THYMELEAF",
+  "status": "PUBLISHED",
+  "metadata": {},
+  "id": 47
+}

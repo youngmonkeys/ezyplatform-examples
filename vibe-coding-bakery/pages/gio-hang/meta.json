@@ -1,0 +1,11 @@
+{
+  "slug": "gio-hang",
+  "title": "Giỏ hàng",
+  "summary": "Xem lại các loại bánh đã thêm vào giỏ hàng tại Sweet Home Bakery",
+  "featuredImageName": "",
+  "pageType": "STANDALONE_PAGE",
+  "contentType": "THYMELEAF",
+  "status": "PUBLISHED",
+  "metadata": {},
+  "id": 45
+}

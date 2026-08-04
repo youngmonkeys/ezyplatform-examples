@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{ezytheme}">
+<head>
+    <link rel="stylesheet" type="text/css" ezy:vhref="/css/main.css" />
+    <link rel="stylesheet" type="text/css" ezy:vhref="/css/pages/checkout.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet" />
+    <script src="/ecommerce/js/qrcode.min.js"></script>
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+    (function () {
+        var STORAGE_KEY = "sweetBakeryTheme";
+        var stored = null;
+        try {
+            stored = localStorage.getItem(STORAGE_KEY);
+        } catch (e) {}
+        var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        var theme = stored === "light" || stored === "dark" ? stored : (prefersDark ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+    })();
+    /*]]>*/
+    </script>
+</head>
+<body>
+<div layout:fragment="content">
+    <main class="bakery-page">
+        <section class="checkout-page" th:aria-label="#{checkout_page_title}">
+            <div class="section-inner">
+                <p class="breadcrumb">
+                    <a href="/sweet-home-bakery" th:text="#{nav_home}">Trang chủ</a> / <a href="/gio-hang" th:text="#{cart_page_title}">Giỏ hàng</a> / <span th:text="#{checkout_page_title}">Thanh toán</span>
+                </p>
+                <h1 th:text="#{checkout_page_title}">Thanh toán</h1>
+
+                <div id="checkoutEmpty" class="checkout-empty" hidden="hidden">
+                    <p>Giỏ hàng của bạn đang trống, không có gì để thanh toán.</p>
+                    <a href="/thuc-don" th:text="#{view_menu}">Xem thực đơn</a>
+                </div>
+
+                <div class="checkout-layout" id="checkoutLayout">
+                    <form class="checkout-form" id="checkoutForm" novalidate="novalidate">
+                        <h2>Phương thức nhận hàng</h2>
+                        <div class="method-tabs" id="receiveMethodTabs">
+                            <button type="button" class="method-tab is-active" id="tabDelivery" data-method="delivery">Giao hàng tận nơi</button>
+                            <button type="button" class="method-tab" id="tabPickup" data-method="pickup">Nhận tại cửa hàng</button>
+                        </div>
+
+                        <div class="form-field" id="fieldFullName">
+                            <label for="fullName">Họ tên <span class="required">*</span></label>
+                            <input type="text" id="fullName" name="fullName" autocomplete="name" />
+                            <span class="form-field-error">Vui lòng nhập họ tên.</span>
+                        </div>
+
+                        <div class="form-field" id="fieldPhone">
+                            <label for="phone">Số điện thoại <span class="required">*</span></label>
+                            <input type="tel" id="phone" name="phone" autocomplete="tel" />
+                            <span class="form-field-error">Vui lòng nhập số điện thoại hợp lệ.</span>
+                        </div>
+
+                        <div id="deliveryFields">
+                            <div class="form-field" id="fieldAddress">
+                                <label for="address">Địa chỉ giao hàng <span class="required">*</span></label>
+                                <input type="text" id="address" name="address" autocomplete="street-address" placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành..." />
+                                <span class="form-field-error">Vui lòng nhập địa chỉ giao hàng.</span>
+                            </div>
+                        </div>
+
+                        <div id="pickupFields" hidden="hidden">
+                            <div class="form-field" id="fieldBranch">
+                                <label for="branch">Chi nhánh nhận hàng <span class="required">*</span></label>
+                                <select id="branch" name="branch">
+                                    <option value="">-- Chọn chi nhánh --</option>
+                                </select>
+                                <span class="form-field-error">Vui lòng chọn chi nhánh.</span>
+                            </div>
+                        </div>
+
+                        <div class="form-field" id="fieldNote">
+                            <label for="note">Ghi chú</label>
+                            <textarea id="note" name="note" placeholder="Ví dụ: giao trong giờ hành chính, gọi trước khi giao..."></textarea>
+                        </div>
+
+                        <h2>Phương thức thanh toán</h2>
+                        <div class="payment-options" id="paymentOptions">
+                            <label class="payment-option is-selected" id="paymentOptionCod">
+                                <input type="radio" name="paymentMethod" value="cod" checked="checked" />
+                                <span>Thanh toán khi nhận hàng (COD)</span>
+                            </label>
+                            <label class="payment-option" id="paymentOptionQr">
+                                <input type="radio" name="paymentMethod" value="qr" />
+                                <span>Chuyển khoản / Quét mã QR</span>
+                            </label>
+                            <label class="payment-option" id="paymentOptionGateway" hidden="hidden">
+                                <input type="radio" name="paymentMethod" value="gateway" />
+                                <span>Cổng thanh toán trực tuyến</span>
+                            </label>
+                        </div>
+
+                        <div class="form-field" id="fieldGateway" hidden="hidden">
+                            <label for="gatewayService">Chọn cổng thanh toán <span class="required">*</span></label>
+                            <select id="gatewayService" name="gatewayService">
+                                <option value="">-- Chọn --</option>
+                            </select>
+                            <span class="form-field-error">Vui lòng chọn cổng thanh toán.</span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="placeOrderBtn">Đặt hàng</button>
+                    </form>
+
+                    <aside class="checkout-summary">
+                        <h2>Đơn hàng của bạn</h2>
+                        <div class="checkout-summary-list" id="checkoutSummaryList"></div>
+                        <div class="checkout-summary-row">
+                            <span class="checkout-summary-label">Số lượng</span>
+                            <span class="checkout-summary-value" id="checkoutSummaryQuantity">0</span>
+                        </div>
+                        <div class="checkout-summary-row">
+                            <span class="checkout-summary-label">Phí vận chuyển</span>
+                            <span class="checkout-summary-value" id="checkoutSummaryDeliveryFee">0đ</span>
+                        </div>
+                        <div class="checkout-summary-row checkout-summary-total">
+                            <span class="checkout-summary-label">Tổng tiền</span>
+                            <span class="checkout-summary-value" id="checkoutSummaryTotal">0đ</span>
+                        </div>
+                    </aside>
+                </div>
+
+                <div class="qr-payment-panel" id="qrPaymentPanel" hidden="hidden">
+                    <h2>Quét mã để thanh toán</h2>
+                    <p>Đơn hàng đã được tạo. Vui lòng chuyển khoản theo thông tin bên dưới, chúng tôi sẽ xử lý đơn hàng sau khi xác nhận đã nhận được thanh toán.</p>
+                    <dl class="qr-payment-summary">
+                        <div>
+                            <dt>Số tiền</dt>
+                            <dd id="qrAmount"></dd>
+                        </div>
+                        <div>
+                            <dt>Nội dung chuyển khoản</dt>
+                            <dd id="qrMessage"></dd>
+                        </div>
+                    </dl>
+                    <div class="qr-payment-list" id="qrPaymentList"></div>
+                    <button type="button" class="btn btn-primary" id="qrConfirmBtn">Tôi đã chuyển khoản, xem đơn hàng</button>
+                </div>
+            </div>
+        </section>
+
+        <th:block th:replace="~{fragments/footer :: footer}" />
+    </main>
+</div>
+<th:block layout:fragment="post-scripts">
+    <script ezy:vsrc="/js/main.js"></script>
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+    (function () {
+        var CHECKOUT_CONTEXT_API = "/api/v1/checkout/context";
+        var SHOPPING_CART_API = "/api/v1/shopping-cart";
+        var SELECTED_DELIVERY_INFO_API = "/api/v1/checkout/selected-delivery-information";
+        var RECEIVE_BRANCHES_API = "/api/v1/checkout/receive-at-shop-branches";
+        var PAYMENT_SERVICES_API = "/api/v1/available-payment-services";
+        var BANK_ACCOUNTS_API = "/api/v1/default-shop-bank-accounts";
+        var QR_CODES_API = "/api/v1/checkout/shopping-cart/qr-codes";
+        var COUNTRIES_API = "/api/v1/countries";
+        var DELIVERY_FEE_API = "/api/v1/delivery/calculate-fee";
+        var ORDER_CREATE_WAITING_API = "/api/v1/orders/create-waiting-to-confirm";
+        var ORDER_CREATE_API = "/api/v1/orders/create";
+        var ORDER_CREATE_PAYMENT_URL_API = "/api/v1/orders/create-payment-url";
+        var CURRENCY_ID = 3;
+        var CONFIRMATION_URL = "/xac-nhan-don-hang";
+        var DEFAULT_IMAGE = "/images/placeholder-product.jpg";
+        var PHONE_PATTERN = /^(0|\+84)\d{9,10}$/;
+
+        var checkoutEmpty = document.getElementById("checkoutEmpty");
+        var checkoutLayout = document.getElementById("checkoutLayout");
+        var summaryList = document.getElementById("checkoutSummaryList");
+        var summaryQuantity = document.getElementById("checkoutSummaryQuantity");
+        var summaryDeliveryFee = document.getElementById("checkoutSummaryDeliveryFee");
+        var summaryTotal = document.getElementById("checkoutSummaryTotal");
+        var form = document.getElementById("checkoutForm");
+        var placeOrderBtn = document.getElementById("placeOrderBtn");
+
+        var fullNameInput = document.getElementById("fullName");
+        var phoneInput = document.getElementById("phone");
+        var addressInput = document.getElementById("address");
+        var noteInput = document.getElementById("note");
+
+        var tabDelivery = document.getElementById("tabDelivery");
+        var tabPickup = document.getElementById("tabPickup");
+        var deliveryFields = document.getElementById("deliveryFields");
+        var pickupFields = document.getElementById("pickupFields");
+        var branchSelect = document.getElementById("branch");
+
+        var paymentOptionCod = document.getElementById("paymentOptionCod");
+        var paymentOptionQr = document.getElementById("paymentOptionQr");
+        var paymentOptionGateway = document.getElementById("paymentOptionGateway");
+        var gatewayField = document.getElementById("fieldGateway");
+        var gatewaySelect = document.getElementById("gatewayService");
+        var paymentRadios = Array.prototype.slice.call(document.querySelectorAll('input[name="paymentMethod"]'));
+
+        var qrPaymentPanel = document.getElementById("qrPaymentPanel");
+        var qrPaymentList = document.getElementById("qrPaymentList");
+        var qrAmount = document.getElementById("qrAmount");
+        var qrMessage = document.getElementById("qrMessage");
+        var qrConfirmBtn = document.getElementById("qrConfirmBtn");
+
+        var state = {
+            context: null,
+            cart: null,
+            receiveMethod: "delivery",
+            branches: [],
+            paymentServices: [],
+            bankAccounts: [],
+            countries: [],
+            deliveryFee: 0
+        };
+
+        function fetchJson(url, options) {
+            return fetch(url, options).then(function (response) {
+                if (!response.ok) throw new Error("Request failed: " + url);
+                return response.json();
+            });
+        }
+
+        function fetchFormattedAmount(amount) {
+            return fetchJson("/api/v1/currencies/" + CURRENCY_ID + "/format-amount?amount=" + encodeURIComponent(amount));
+        }
+
+        function cartProductsTotal() {
+            var products = (state.cart && state.cart.products) || [];
+            return products.reduce(function (sum, item) {
+                return sum + Number(item.totalAmountMoney || 0);
+            }, 0);
+        }
+
+        function fillSelect(select, items, valueKey, labelKey, placeholder) {
+            select.innerHTML = "";
+            var placeholderOpt = document.createElement("option");
+            placeholderOpt.value = "";
+            placeholderOpt.textContent = placeholder;
+            select.appendChild(placeholderOpt);
+            items.forEach(function (item) {
+                var opt = document.createElement("option");
+                opt.value = String(item[valueKey]);
+                opt.textContent = item[labelKey] || item.name || "";
+                select.appendChild(opt);
+            });
+        }
+
+        /* ---- Summary ---- */
+        function renderSummary() {
+            var products = (state.cart && state.cart.products) || [];
+
+            summaryList.innerHTML = "";
+
+            products.forEach(function (item) {
+                var row = document.createElement("div");
+                row.className = "checkout-summary-item";
+
+                var media = document.createElement("div");
+                media.className = "checkout-summary-item-media";
+                var img = document.createElement("img");
+                img.src = mediaUrl(item.product && item.product.bannerImage) || DEFAULT_IMAGE;
+                img.alt = item.product ? item.product.productName : "";
+                media.appendChild(img);
+
+                var info = document.createElement("div");
+                info.className = "checkout-summary-item-info";
+
+                var name = document.createElement("span");
+                name.className = "checkout-summary-item-name";
+                name.textContent = item.product ? item.product.productName : "";
+
+                var meta = document.createElement("span");
+                meta.className = "checkout-summary-item-meta";
+                var sizeLabel = item.size ? (item.size.sizeDisplayName || item.size.sizeName) : "";
+                meta.textContent = (sizeLabel ? sizeLabel + " × " : "") + item.amount;
+
+                info.appendChild(name);
+                info.appendChild(meta);
+
+                var subtotal = document.createElement("span");
+                subtotal.className = "checkout-summary-item-subtotal";
+                subtotal.textContent = item.formattedTotalAmountMoney;
+
+                row.appendChild(media);
+                row.appendChild(info);
+                row.appendChild(subtotal);
+                summaryList.appendChild(row);
+            });
+
+            var totalQuantity = products.reduce(function (sum, item) { return sum + item.amount; }, 0);
+            summaryQuantity.textContent = String(totalQuantity);
+        }
+
+        function refreshGrandTotal() {
+            var total = cartProductsTotal() + state.deliveryFee;
+            return fetchFormattedAmount(total).then(function (data) {
+                summaryTotal.textContent = data.formattedWithSymbol;
+            }).catch(function (error) {
+                console.error("Không thể định dạng tổng tiền", error);
+            });
+        }
+
+        function refreshDeliveryFee() {
+            if (state.receiveMethod !== "delivery") {
+                state.deliveryFee = 0;
+                summaryDeliveryFee.textContent = "0đ";
+                return refreshGrandTotal();
+            }
+            var url = DELIVERY_FEE_API + "?orderAmount=" + encodeURIComponent(cartProductsTotal()) + "&currencyId=" + CURRENCY_ID;
+            return fetchJson(url).then(function (data) {
+                state.deliveryFee = Number(data.value || 0);
+                summaryDeliveryFee.textContent = data.formattedValueIncludeSymbol;
+                return refreshGrandTotal();
+            }).catch(function (error) {
+                console.error("Không thể tính phí vận chuyển", error);
+            });
+        }
+
+        /* ---- Receive method ---- */
+        function setReceiveMethod(method) {
+            state.receiveMethod = method;
+            tabDelivery.classList.toggle("is-active", method === "delivery");
+            tabPickup.classList.toggle("is-active", method === "pickup");
+            deliveryFields.hidden = method !== "delivery";
+            pickupFields.hidden = method !== "pickup";
+            refreshDeliveryFee();
+        }
+
+        tabDelivery.addEventListener("click", function () { setReceiveMethod("delivery"); });
+        tabPickup.addEventListener("click", function () { setReceiveMethod("pickup"); });
+
+        /* ---- Payment method ---- */
+        function getSelectedPaymentMethod() {
+            var checked = document.querySelector('input[name="paymentMethod"]:checked');
+            return checked ? checked.value : "cod";
+        }
+
+        function updatePaymentOptionStyles() {
+            var method = getSelectedPaymentMethod();
+            paymentOptionCod.classList.toggle("is-selected", method === "cod");
+            paymentOptionQr.classList.toggle("is-selected", method === "qr");
+            paymentOptionGateway.classList.toggle("is-selected", method === "gateway");
+            gatewayField.hidden = method !== "gateway";
+        }
+
+        paymentRadios.forEach(function (radio) {
+            radio.addEventListener("change", updatePaymentOptionStyles);
+        });
+
+        /* ---- Validation ---- */
+        function setFieldInvalid(fieldId, isInvalid) {
+            var el = document.getElementById(fieldId);
+            if (el) el.classList.toggle("is-invalid", isInvalid);
+        }
+
+        function validateForm() {
+            var isValid = true;
+
+            var fullNameValid = fullNameInput.value.trim().length > 0;
+            setFieldInvalid("fieldFullName", !fullNameValid);
+            if (!fullNameValid) isValid = false;
+
+            var phoneValid = PHONE_PATTERN.test(phoneInput.value.trim());
+            setFieldInvalid("fieldPhone", !phoneValid);
+            if (!phoneValid) isValid = false;
+
+            if (state.receiveMethod === "delivery") {
+                var addressValid = addressInput.value.trim().length > 0;
+                setFieldInvalid("fieldAddress", !addressValid);
+                if (!addressValid) isValid = false;
+            } else {
+                setFieldInvalid("fieldBranch", !branchSelect.value);
+                if (!branchSelect.value) isValid = false;
+            }
+
+            if (getSelectedPaymentMethod() === "gateway") {
+                setFieldInvalid("fieldGateway", !gatewaySelect.value);
+                if (!gatewaySelect.value) isValid = false;
+            }
+
+            return isValid;
+        }
+
+        /* ---- Order submission ---- */
+        function splitFullName(fullName) {
+            var parts = fullName.trim().split(/\s+/);
+            if (parts.length === 1) return { firstName: parts[0], lastName: parts[0] };
+            return {
+                firstName: parts.slice(0, parts.length - 1).join(" "),
+                lastName: parts[parts.length - 1]
+            };
+        }
+
+        function buildDeliveryInformation() {
+            var name = splitFullName(fullNameInput.value.trim());
+            var info = {
+                deliveryFullName: fullNameInput.value.trim(),
+                deliveryFirstName: name.firstName,
+                deliveryLastName: name.lastName,
+                deliveryPhoneNumber: phoneInput.value.trim(),
+                deliveryNotes: noteInput.value.trim()
+            };
+
+            if (state.receiveMethod === "delivery") {
+                if (state.countries[0]) {
+                    info.deliveryCountryId = state.countries[0].id;
+                }
+                info.deliveryAddress = addressInput.value.trim();
+            } else {
+                info.receiveAtShopBranchId = Number(branchSelect.value);
+            }
+
+            return info;
+        }
+
+        function buildOrderProducts() {
+            var products = (state.cart && state.cart.products) || [];
+            return products.map(function (item) {
+                return {
+                    productId: item.product ? item.product.id : 0,
+                    productColorId: item.color ? item.color.id : 0,
+                    productMaterialId: item.material ? item.material.id : 0,
+                    productSizeId: item.size ? item.size.id : 0,
+                    amount: item.amount,
+                    price: item.amount ? item.totalAmountMoney / item.amount : 0
+                };
+            });
+        }
+
+        function buildOrderBody() {
+            var body = {
+                currencyId: CURRENCY_ID,
+                deliveryFee: state.deliveryFee,
+                deliveryInformation: buildDeliveryInformation(),
+                fromShoppingCartId: state.cart ? state.cart.id : null,
+                products: buildOrderProducts()
+            };
+            if (state.context && state.context.discountCode) {
+                body.discountCode = state.context.discountCode;
+            }
+            return body;
+        }
+
+        function postOrder(url, body) {
+            return fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            }).then(function (response) {
+                if (!response.ok) throw new Error("Failed to create order");
+                return response.json();
+            });
+        }
+
+        /* COD only: order is created and waits for manual confirmation on delivery */
+        function createWaitingToConfirmOrder() {
+            return postOrder(ORDER_CREATE_WAITING_API, buildOrderBody());
+        }
+
+        /* QR / gateway: order is created up front, payment is settled separately */
+        function createOrder() {
+            return postOrder(ORDER_CREATE_API, buildOrderBody());
+        }
+
+        function buildQrCard(account, qrText) {
+            var card = document.createElement("div");
+            card.className = "qr-payment-card";
+
+            var qrContainer = document.createElement("div");
+            qrContainer.className = "qr-payment-card-code";
+            card.appendChild(qrContainer);
+
+            var info = document.createElement("dl");
+            info.className = "qr-payment-info";
+
+            function addRow(label, value) {
+                var row = document.createElement("div");
+                var dt = document.createElement("dt");
+                dt.textContent = label;
+                var dd = document.createElement("dd");
+                dd.textContent = value || "";
+                row.appendChild(dt);
+                row.appendChild(dd);
+                info.appendChild(row);
+            }
+
+            addRow("Ngân hàng", account.bankName);
+            addRow("Chủ tài khoản", account.accountOwnerName);
+            addRow("Số tài khoản", account.accountNumber);
+
+            card.appendChild(info);
+
+            if (qrText && window.QRCode) {
+                new QRCode(qrContainer, {
+                    text: qrText,
+                    width: 160,
+                    height: 160,
+                    correctLevel: QRCode.CorrectLevel.L
+                });
+            }
+
+            return card;
+        }
+
+        function renderQrCards(qrCodeByBankAccountId) {
+            var codes = qrCodeByBankAccountId || {};
+            qrPaymentList.innerHTML = "";
+            state.bankAccounts.forEach(function (account) {
+                var qrText = codes[account.bankId];
+                if (qrText == null) qrText = codes[account.id];
+                qrPaymentList.appendChild(buildQrCard(account, qrText));
+            });
+        }
+
+        function confirmBankTransferOrder(order) {
+            var url = "/api/v1/orders/" + encodeURIComponent(order.createdId) + "/waiting-to-confirm";
+            fetch(url, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(buildOrderBody())
+            }).then(function (response) {
+                if (!response.ok) throw new Error("Failed to confirm bank transfer");
+                return updateCartCountBadge();
+            }).then(function () {
+                window.location.href = CONFIRMATION_URL + "?id=" + encodeURIComponent(order.createdId);
+            }).catch(function (error) {
+                console.error("Không thể xác nhận đã chuyển khoản", error);
+                window.location.href = CONFIRMATION_URL + "?id=" + encodeURIComponent(order.createdId);
+            });
+        }
+
+        function showQrPayment(order) {
+            checkoutLayout.hidden = true;
+            qrPaymentPanel.hidden = false;
+
+            var totalAmount = cartProductsTotal() + state.deliveryFee;
+
+            qrMessage.textContent = "DH" + order.createdId;
+
+            fetchFormattedAmount(totalAmount).then(function (data) {
+                qrAmount.textContent = data.formattedWithSymbol;
+            }).catch(function () {
+                qrAmount.textContent = "";
+            });
+
+            var url = QR_CODES_API + "?totalFee=" + encodeURIComponent(totalAmount) + "&discountAmount=0";
+            fetchJson(url).then(function (qrCodeByBankAccountId) {
+                renderQrCards(qrCodeByBankAccountId);
+            }).catch(function (error) {
+                console.error("Không thể tạo mã QR thanh toán", error);
+                renderQrCards({});
+            });
+
+            qrConfirmBtn.onclick = function () {
+                confirmBankTransferOrder(order);
+            };
+        }
+
+        function goToGatewayPayment() {
+            var body = buildOrderBody();
+            body.paymentServiceCode = gatewaySelect.value;
+            body.message = "Thanh toan don hang";
+
+            return fetch(ORDER_CREATE_PAYMENT_URL_API, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            }).then(function (response) {
+                if (!response.ok) throw new Error("Failed to create payment url");
+                return response.text();
+            }).then(function (paymentUrl) {
+                window.location.href = paymentUrl;
+            });
+        }
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            if (!validateForm()) return;
+            if (!state.cart || !state.cart.products || state.cart.products.length === 0) return;
+
+            placeOrderBtn.disabled = true;
+            placeOrderBtn.textContent = "Đang xử lý...";
+
+            var method = getSelectedPaymentMethod();
+            var request;
+
+            if (method === "cod") {
+                request = createWaitingToConfirmOrder().then(function (order) {
+                    return updateCartCountBadge().then(function () {
+                        window.location.href = CONFIRMATION_URL + "?id=" + encodeURIComponent(order.createdId);
+                    });
+                });
+            } else if (method === "qr") {
+                request = createOrder().then(function (order) {
+                    showQrPayment(order);
+                });
+            } else {
+                request = goToGatewayPayment();
+            }
+
+            request.catch(function (error) {
+                console.error("Không thể tạo đơn hàng", error);
+                placeOrderBtn.disabled = false;
+                placeOrderBtn.textContent = "Đặt hàng";
+            });
+        });
+
+        /* ---- Init ---- */
+        function loadBranches() {
+            return fetchJson(RECEIVE_BRANCHES_API).then(function (branches) {
+                state.branches = branches || [];
+                fillSelect(branchSelect, state.branches, "id", "address", "-- Chọn chi nhánh --");
+            }).catch(function (error) {
+                console.error("Không thể tải danh sách chi nhánh", error);
+            });
+        }
+
+        function loadPaymentServices() {
+            return fetchJson(PAYMENT_SERVICES_API).then(function (services) {
+                state.paymentServices = services || [];
+                if (state.paymentServices.length > 0) {
+                    paymentOptionGateway.hidden = false;
+                    gatewaySelect.innerHTML = '<option value="">-- Chọn --</option>';
+                    state.paymentServices.forEach(function (service) {
+                        var opt = document.createElement("option");
+                        opt.value = service.code;
+                        opt.textContent = service.name;
+                        gatewaySelect.appendChild(opt);
+                    });
+                }
+            }).catch(function (error) {
+                console.error("Không thể tải danh sách cổng thanh toán", error);
+            });
+        }
+
+        function loadBankAccounts() {
+            return fetchJson(BANK_ACCOUNTS_API).then(function (accounts) {
+                state.bankAccounts = accounts || [];
+            }).catch(function (error) {
+                console.error("Không thể tải thông tin tài khoản ngân hàng", error);
+            });
+        }
+
+        function loadCountries() {
+            return fetchJson(COUNTRIES_API).then(function (countries) {
+                state.countries = countries || [];
+            }).catch(function (error) {
+                console.error("Không thể tải danh sách quốc gia", error);
+            });
+        }
+
+        updatePaymentOptionStyles();
+
+        function prefillDeliveryInformation(info) {
+            if (!info) return;
+
+            if (info.deliveryFullName) fullNameInput.value = info.deliveryFullName;
+            if (info.deliveryPhoneNumber) phoneInput.value = info.deliveryPhoneNumber;
+            if (info.deliveryNotes) noteInput.value = info.deliveryNotes;
+
+            if (info.receiveAtShopBranchId) {
+                setReceiveMethod("pickup");
+                branchSelect.value = String(info.receiveAtShopBranchId);
+            } else {
+                setReceiveMethod("delivery");
+                if (info.deliveryAddress) addressInput.value = info.deliveryAddress;
+            }
+        }
+
+        Promise.all([
+            fetchJson(CHECKOUT_CONTEXT_API).catch(function () { return null; }),
+            fetchJson(SHOPPING_CART_API).catch(function () { return null; }),
+            fetchJson(SELECTED_DELIVERY_INFO_API).catch(function () { return null; }),
+            loadCountries(),
+            loadBranches(),
+            loadPaymentServices(),
+            loadBankAccounts()
+        ]).then(function (results) {
+            state.context = results[0];
+            state.cart = results[1];
+            var selectedDeliveryInfo = results[2];
+
+            if (!state.cart || !state.cart.products || state.cart.products.length === 0) {
+                checkoutEmpty.hidden = false;
+                checkoutLayout.hidden = true;
+                return;
+            }
+
+            checkoutEmpty.hidden = true;
+            checkoutLayout.hidden = false;
+
+            renderSummary();
+            prefillDeliveryInformation(selectedDeliveryInfo);
+            refreshDeliveryFee();
+        }).catch(function (error) {
+            console.error("Không thể tải dữ liệu thanh toán", error);
+        });
+    })();
+    /*]]>*/
+    </script>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <script>
+        (function () {
+            var STORAGE_KEY = "sweetHomeBakeryTheme";
+            var stored = null;
+            try {
+                stored = localStorage.getItem(STORAGE_KEY);
+            } catch (e) {}
+            var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+            var theme = stored === "light" || stored === "dark" ? stored : (prefersDark ? "dark" : "light");
+            document.documentElement.setAttribute("data-theme", theme);
+        })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chi tiết bánh - Sweet Home Bakery</title>
+    <meta name="description" content="Thông tin chi tiết của từng loại bánh tại Sweet Home Bakery." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" ezy:mhref="/api/v1/media/sweet-bakery.css" />
+    <style>
+        /* Product detail */
+
+        .product-detail {
+            padding: 16px 0 72px;
+        }
+
+        .product-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            overflow: hidden;
+            border-radius: 18px;
+            background: var(--milk);
+            box-shadow: var(--shadow);
+        }
+
+        .product-gallery {
+            padding: 28px;
+            background: var(--header-cream);
+        }
+
+        .gallery-thumbs {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            padding: 32px;
+        }
+
+        .product-name {
+            margin: 0;
+            color: var(--cocoa);
+            font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1.25;
+        }
+
+        .price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .price-original {
+            color: #9c8677;
+            font-family: "Nunito", Arial, Helvetica, sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: line-through;
+        }
+
+        .price-sale {
+            color: #8b5e3c;
+            font-family: "Nunito", Arial, Helvetica, sans-serif;
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .field-label {
+            color: var(--cocoa);
+            font-family: "Nunito", Arial, Helvetica, sans-serif;
+            font-weight: 800;
+            font-size: 0.95rem;
+        }
+
+        .product-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 6px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            min-width: 200px;
+            padding: 0 24px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.98rem;
+            cursor: pointer;
+            transition: transform 180ms ease, background 180ms ease, color 180ms ease;
+        }
+
+        .description-section {
+            margin-top: 32px;
+            padding: 32px;
+            border-radius: 18px;
+            background: var(--milk);
+            box-shadow: var(--shadow);
+        }
+
+        .description-section h2 {
+            margin: 0 0 16px;
+            color: var(--cocoa);
+            font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .description p {
+            margin: 0 0 14px;
+            color: var(--coffee);
+        }
+
+        .description p:last-child {
+            margin-bottom: 0;
+        }
+
+        .not-found {
+            padding: 64px 0 88px;
+            text-align: center;
+        }
+
+        .not-found h1 {
+            margin: 0 0 12px;
+            color: var(--cocoa);
+            font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+            font-size: clamp(1.8rem, 4vw, 2.4rem);
+        }
+
+        .not-found p {
+            margin: 0;
+            color: #7a5947;
+        }
+
+        .not-found a {
+            color: var(--caramel-hover);
+            font-weight: 700;
+            text-decoration: underline;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            z-index: 60;
+            padding: 12px 22px;
+            border-radius: 999px;
+            color: #fff;
+            background: var(--caramel-hover);
+            font-weight: 700;
+            font-size: 0.95rem;
+            opacity: 0;
+            box-shadow: 0 14px 30px rgba(47, 28, 20, 0.3);
+            transform: translate(-50%, 12px);
+            transition: opacity 220ms ease, transform 220ms ease;
+            pointer-events: none;
+        }
+
+        .toast.is-visible {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        @media (max-width: 840px) {
+            .product-detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-info {
+                padding: 24px;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .section-inner {
+                width: min(100% - 28px, 1120px);
+            }
+
+            .header-inner {
+                gap: 14px;
+            }
+
+            .brand img {
+                height: 34px;
+            }
+
+            .header-actions {
+                gap: 12px;
+            }
+
+            .main-nav {
+                gap: 16px;
+            }
+
+            .main-nav a {
+                font-size: 0.9rem;
+            }
+
+            .product-gallery {
+                padding: 18px;
+            }
+
+            .product-actions {
+                flex-direction: column;
+            }
+
+            .product-actions .btn {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .contact-panel {
+                padding: 22px;
+            }
+
+            .contact-item {
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+        }
+
+        :root[data-theme="dark"] .breadcrumb,
+        :root[data-theme="dark"] .contact-title p {
+            color: #d9c3a8;
+        }
+
+        :root[data-theme="dark"] .product-detail-grid {
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+        }
+    </style>
+</head>
+<body>
+<ezy:block ezy:replace="~{sweet_bakery/header :: content}" />
+<main class="bakery-page"
+      th:with="pdSlug=${ezyfunctions.call('get_request_parameter', &quot;{name:'slug'}&quot;)},
+               pdProductArg=${&quot;{productCode:'&quot; + #strings.escapeJavaScript(pdSlug) + &quot;', currencyId:3, language:'vi'}&quot;},
+               pdProduct=${ezyfunctions.call('get_product_details', pdProductArg)},
+               pdMainImageUrl=${pdProduct != null ? (pdProduct.iconImage != null ? pdProduct.iconImage.getUrlOrDefault('/api/v1/media/chocolate-dream-cake.jpg') : '/api/v1/media/chocolate-dream-cake.jpg') : ''}">
+    <section class="product-detail" aria-label="Chi tiết bánh">
+        <div class="section-inner">
+            <p class="breadcrumb">
+                <a href="/sweet-home-bakery">Trang chủ</a> /
+                <a href="/thuc-don">Thực đơn</a> /
+                <span th:text="${pdProduct != null ? pdProduct.name : 'Không tìm thấy'}"></span>
+            </p>
+
+            <div class="not-found" th:if="${pdProduct == null}">
+                <h1>Không tìm thấy bánh</h1>
+                <p>Vui lòng quay lại <a href="/thuc-don">Thực đơn</a> để chọn một loại bánh khác.</p>
+            </div>
+
+            <th:block th:if="${pdProduct != null}">
+            <div class="product-detail-grid" id="pdWrapper" style="margin-top: 16px;" th:attr="data-product-id=${pdProduct.id}">
+                <div class="product-gallery">
+                    <div class="gallery-main">
+                        <img id="pdMainImage" th:src="${pdMainImageUrl}" th:alt="${pdProduct.name}" src="" alt="" />
+                        <span class="discount-badge" id="pdDiscountBadge"
+                              th:attr="hidden=${pdProduct.discountPercent != null and pdProduct.discountPercent > 0} ? null : 'hidden'"
+                              th:text="'-' + ${#numbers.formatDecimal(pdProduct.discountPercent != null ? pdProduct.discountPercent : 0, 1, 0)} + '%'">-20%</span>
+                        <button type="button" class="gallery-nav gallery-prev" id="pdGalleryPrev" aria-label="Ảnh trước">&lsaquo;</button>
+                        <button type="button" class="gallery-nav gallery-next" id="pdGalleryNext" aria-label="Ảnh sau">&rsaquo;</button>
+                    </div>
+                    <div class="gallery-thumbs" id="pdThumbs">
+                        <button type="button" class="gallery-thumb is-active" th:attr="data-src=${pdMainImageUrl}">
+                            <img th:src="${pdMainImageUrl}" th:alt="${pdProduct.name}" src="" alt="" />
+                        </button>
+                        <button type="button" class="gallery-thumb"
+                                th:each="media : ${pdProduct.colorMediaList}"
+                                th:attr="data-src=${media.getUrlOrDefault(pdMainImageUrl)}">
+                            <img th:src="${media.getUrlOrDefault(pdMainImageUrl)}" alt="" src="" />
+                        </button>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h1 class="product-name" id="pdName" th:text="${pdProduct.name}"></h1>
+                    <div class="price-row">
+                        <span class="price-original" id="pdPriceOriginal"
+                              th:attr="hidden=${pdProduct.discountPercent != null and pdProduct.discountPercent > 0} ? null : 'hidden'"
+                              th:text="${pdProduct.formattedOriginalPrice}"></span>
+                        <span class="price-sale" id="pdPriceSale" th:text="${pdProduct.formattedPrice}"></span>
+                    </div>
+                    <div class="field" th:if="${pdProduct.sizes != null and !pdProduct.sizes.isEmpty()}">
+                        <span class="field-label">Kích thước</span>
+                        <div class="size-options" id="pdSizeOptions">
+                            <button type="button" class="size-option"
+                                    th:each="size, sizeStat : ${pdProduct.sizes}"
+                                    th:classappend="${sizeStat.first} ? ' is-active'"
+                                    th:text="${size.sizeDisplayName != null and !size.sizeDisplayName.isEmpty() ? size.sizeDisplayName : size.sizeName}"
+                                    th:attr="data-size-id=${size.id}, data-size-name=${size.sizeName}, data-size-label=${size.sizeDisplayName != null and !size.sizeDisplayName.isEmpty() ? size.sizeDisplayName : size.sizeName}"></button>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <span class="field-label">Số lượng</span>
+                        <div class="quantity-stepper">
+                            <button type="button" id="pdQtyMinus" aria-label="Giảm số lượng">&minus;</button>
+                            <input type="text" id="pdQtyInput" value="1" readonly aria-label="Số lượng" />
+                            <button type="button" id="pdQtyPlus" aria-label="Tăng số lượng">+</button>
+                        </div>
+                    </div>
+                    <div class="product-actions">
+                        <button type="button" class="btn btn-primary" id="pdAddToCart"
+                                th:attr="data-code=${pdProduct.code}, data-name=${pdProduct.name}, data-image=${pdMainImageUrl}, data-price=${pdProduct.price}">Thêm vào giỏ hàng</button>
+                        <button type="button" class="btn btn-primary" id="pdBuyNow"
+                                th:attr="data-code=${pdProduct.code}, data-name=${pdProduct.name}, data-image=${pdMainImageUrl}, data-price=${pdProduct.price}">Mua ngay</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="description-section" id="pdDescriptionSection">
+                <h2>Mô tả chi tiết</h2>
+                <div class="description" id="pdDescription" th:utext="${pdProduct.description}"></div>
+            </div>
+            </th:block>
+        </div>
+    </section>
+
+    <div class="toast" id="pdToast" role="status" aria-live="polite"></div>
+
+    <ezy:block ezy:replace="~{sweet_bakery/footer :: content}" />
+</main>
+<script ezy:msrc="/api/v1/media/sweet-bakery.js"></script>
+<script>
+    (function () {
+        var CHECKOUT_URL = "/thanh-toan";
+        var wrapper = document.getElementById("pdWrapper");
+        if (!wrapper) return;
+
+        var PRODUCT_DETAILS_API_PREFIX = "/api/v1/products/";
+        var CURRENCY_ID = 3;
+        var productId = wrapper.getAttribute("data-product-id");
+
+        function fetchSizeColorPrice(sizeId) {
+            var url = PRODUCT_DETAILS_API_PREFIX + encodeURIComponent(productId) + "/size-color-price?sizeId=" + encodeURIComponent(sizeId) + "&currencyId=" + CURRENCY_ID;
+            return fetch(url).then(function (response) {
+                if (!response.ok) throw new Error("Failed to load size price");
+                return response.json();
+            });
+        }
+
+        function addToCheckoutCart(code, sizeName, quantity) {
+            var url = PRODUCT_DETAILS_API_PREFIX + encodeURIComponent(code) + "/checkout";
+            var body = { quantity: quantity };
+            if (sizeName) {
+                body.sizeName = sizeName;
+            }
+            return fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            }).then(function (response) {
+                if (!response.ok) throw new Error("Failed to add to cart");
+                return response.json();
+            });
+        }
+
+        /* Gallery */
+        var mainImage = document.getElementById("pdMainImage");
+        var thumbButtons = Array.prototype.slice.call(document.querySelectorAll(".gallery-thumb"));
+        var galleryPrev = document.getElementById("pdGalleryPrev");
+        var galleryNext = document.getElementById("pdGalleryNext");
+        var imageIndex = 0;
+
+        function renderGallery() {
+            if (thumbButtons.length === 0) return;
+            mainImage.src = thumbButtons[imageIndex].getAttribute("data-src");
+            thumbButtons.forEach(function (btn, index) {
+                btn.classList.toggle("is-active", index === imageIndex);
+            });
+        }
+
+        thumbButtons.forEach(function (btn, index) {
+            btn.addEventListener("click", function () {
+                imageIndex = index;
+                renderGallery();
+            });
+        });
+
+        if (galleryPrev) {
+            galleryPrev.addEventListener("click", function () {
+                imageIndex = (imageIndex - 1 + thumbButtons.length) % thumbButtons.length;
+                renderGallery();
+            });
+        }
+
+        if (galleryNext) {
+            galleryNext.addEventListener("click", function () {
+                imageIndex = (imageIndex + 1) % thumbButtons.length;
+                renderGallery();
+            });
+        }
+
+        renderGallery();
+
+        /* Size selection */
+        var priceSaleEl = document.getElementById("pdPriceSale");
+        var priceOriginalEl = document.getElementById("pdPriceOriginal");
+        var discountBadgeEl = document.getElementById("pdDiscountBadge");
+
+        function applyPrice(priceData) {
+            if (priceSaleEl) priceSaleEl.textContent = priceData.formattedPrice;
+            var hasDiscount = priceData.discountPercent > 0;
+            if (priceOriginalEl) {
+                priceOriginalEl.hidden = !hasDiscount;
+                if (hasDiscount) priceOriginalEl.textContent = priceData.formattedOriginalPrice;
+            }
+            if (discountBadgeEl) {
+                discountBadgeEl.hidden = !hasDiscount;
+                if (hasDiscount) discountBadgeEl.textContent = "-" + priceData.discountPercent + "%";
+            }
+            if (btnAddToCart) btnAddToCart.setAttribute("data-price", priceData.price);
+            if (btnBuyNow) btnBuyNow.setAttribute("data-price", priceData.price);
+        }
+
+        var sizeButtons = Array.prototype.slice.call(document.querySelectorAll(".size-option"));
+        sizeButtons.forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                sizeButtons.forEach(function (other) {
+                    other.classList.remove("is-active");
+                });
+                btn.classList.add("is-active");
+
+                var sizeId = btn.getAttribute("data-size-id");
+                if (!productId || !sizeId) return;
+                fetchSizeColorPrice(sizeId).then(applyPrice).catch(function (error) {
+                    console.error("Không thể tải giá theo kích thước", error);
+                });
+            });
+        });
+
+        /* Quantity */
+        var qtyInput = document.getElementById("pdQtyInput");
+        var qtyMinus = document.getElementById("pdQtyMinus");
+        var qtyPlus = document.getElementById("pdQtyPlus");
+        var quantity = 1;
+
+        function renderQuantity() {
+            qtyInput.value = String(quantity);
+        }
+
+        qtyMinus.addEventListener("click", function () {
+            if (quantity > 1) {
+                quantity -= 1;
+                renderQuantity();
+            }
+        });
+
+        qtyPlus.addEventListener("click", function () {
+            quantity += 1;
+            renderQuantity();
+        });
+
+        /* Cart actions */
+        var btnAddToCart = document.getElementById("pdAddToCart");
+        var btnBuyNow = document.getElementById("pdBuyNow");
+        var toast = document.getElementById("pdToast");
+        var toastTimer = null;
+
+        function getSelectedSize() {
+            var activeBtn = document.querySelector(".size-option.is-active");
+            if (!activeBtn) return { key: null, label: null };
+            return {
+                key: activeBtn.getAttribute("data-size-name"),
+                label: activeBtn.getAttribute("data-size-label")
+            };
+        }
+
+        function addCurrentSelectionToCart(sourceBtn) {
+            var size = getSelectedSize();
+            var code = sourceBtn.getAttribute("data-code");
+            return addToCheckoutCart(code, size.key, quantity).then(function () {
+                return updateCartCount();
+            });
+        }
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add("is-visible");
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(function () {
+                toast.classList.remove("is-visible");
+            }, 2200);
+        }
+
+        btnAddToCart.addEventListener("click", function () {
+            addCurrentSelectionToCart(btnAddToCart).then(function () {
+                showToast("Đã thêm vào giỏ hàng");
+            }).catch(function (error) {
+                console.error("Không thể thêm vào giỏ hàng", error);
+            });
+        });
+
+        btnBuyNow.addEventListener("click", function () {
+            addCurrentSelectionToCart(btnBuyNow).then(function () {
+                window.location.href = CHECKOUT_URL;
+            }).catch(function (error) {
+                console.error("Không thể thêm vào giỏ hàng", error);
+            });
+        });
+
+        updateCartCount().catch(function (error) {
+            console.error("Không thể tải số lượng giỏ hàng", error);
+        });
+    })();
+</script>
+</body>
+</html>

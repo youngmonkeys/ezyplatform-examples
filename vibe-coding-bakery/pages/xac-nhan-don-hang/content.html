@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <script>
+        (function () {
+            var STORAGE_KEY = "sweetHomeBakeryTheme";
+            var stored = null;
+            try {
+                stored = localStorage.getItem(STORAGE_KEY);
+            } catch (e) {}
+            var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+            var theme = stored === "light" || stored === "dark" ? stored : (prefersDark ? "dark" : "light");
+            document.documentElement.setAttribute("data-theme", theme);
+        })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Xác nhận đơn hàng - Sweet Home Bakery</title>
+    <meta name="description" content="Xác nhận đặt bánh thành công tại Sweet Home Bakery." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" ezy:mhref="/api/v1/media/sweet-bakery.css" />
+    <style>
+        :root {
+            color-scheme: light dark;
+            --cream: #fff8ec;
+            --butter: #f3d9ad;
+            --caramel: #b46b38;
+            --cocoa: #5c3422;
+            --coffee: #2f1c14;
+            --milk: #fffdf8;
+            --rose: #d98879;
+            --shadow: 0 18px 42px rgba(92, 52, 34, 0.16);
+            --header-cream: #faf3e7;
+            --header-text: #3b2a1e;
+            --caramel-hover: #8b5e3c;
+            --sale-red: #c24a3b;
+            --success-green: #3f8b52;
+        }
+
+        /* Confirmation page */
+
+        .confirmation-page {
+            padding: 16px 0 72px;
+        }
+
+        .confirmation-panel {
+            max-width: 720px;
+            margin: 24px auto 0;
+            padding: 40px;
+            border-radius: 16px;
+            background: var(--milk);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .confirmation-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            color: #fff;
+            background: var(--success-green);
+            font-size: 2rem;
+        }
+
+        .confirmation-panel h1 {
+            margin: 0 0 10px;
+            color: var(--cocoa);
+            font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+            font-size: clamp(1.8rem, 4vw, 2.3rem);
+        }
+
+        .confirmation-panel > p {
+            margin: 0 0 24px;
+            color: #7a5947;
+        }
+
+        .confirmation-code {
+            display: inline-block;
+            margin: 0 0 28px;
+            padding: 12px 24px;
+            border: 1.5px dashed var(--caramel-hover);
+            border-radius: 12px;
+            color: var(--caramel-hover);
+            font-family: "Nunito", Arial, Helvetica, sans-serif;
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+        }
+
+        .confirmation-details {
+            display: grid;
+            gap: 24px;
+            margin-top: 8px;
+            text-align: left;
+        }
+
+        .confirmation-block h2 {
+            margin: 0 0 12px;
+            color: var(--cocoa);
+            font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .confirmation-customer {
+            display: grid;
+            gap: 8px;
+            margin: 0;
+        }
+
+        .confirmation-customer div {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 12px;
+        }
+
+        .confirmation-customer dt {
+            color: var(--caramel);
+            font-weight: 800;
+        }
+
+        .confirmation-customer dd {
+            margin: 0;
+            color: var(--coffee);
+            font-weight: 600;
+        }
+
+        .confirmation-items {
+            display: grid;
+            gap: 12px;
+            margin: 0 0 6px;
+        }
+
+        .confirmation-item {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(92, 52, 34, 0.12);
+        }
+
+        .confirmation-item:last-child {
+            border-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .confirmation-item-name {
+            display: block;
+            color: var(--cocoa);
+            font-weight: 700;
+        }
+
+        .confirmation-item-meta {
+            display: block;
+            color: #7a5947;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .confirmation-item-subtotal {
+            color: #8b5e3c;
+            font-family: "Nunito", Arial, Helvetica, sans-serif;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .confirmation-total {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(92, 52, 34, 0.12);
+        }
+
+        .confirmation-total-label {
+            color: var(--cocoa);
+            font-weight: 800;
+        }
+
+        .confirmation-total-value {
+            color: #8b5e3c;
+            font-family: "Nunito", Arial, Helvetica, sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+
+        .confirmation-actions {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 32px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 0 28px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.98rem;
+            cursor: pointer;
+            transition: transform 180ms ease, background 180ms ease, color 180ms ease;
+        }
+
+        @media (max-width: 560px) {
+            .section-inner {
+                width: min(100% - 28px, 1120px);
+            }
+
+            .header-inner {
+                gap: 14px;
+            }
+
+            .brand img {
+                height: 34px;
+            }
+
+            .header-actions {
+                gap: 12px;
+            }
+
+            .main-nav {
+                gap: 16px;
+            }
+
+            .main-nav a {
+                font-size: 0.9rem;
+            }
+
+            .contact-panel {
+                padding: 22px;
+            }
+
+            .contact-item {
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+
+            .confirmation-panel {
+                padding: 28px 20px;
+            }
+
+            .confirmation-customer div {
+                grid-template-columns: 1fr;
+                gap: 2px;
+            }
+
+            .confirmation-actions {
+                flex-direction: column;
+            }
+        }
+
+        :root[data-theme="dark"] .breadcrumb,
+        :root[data-theme="dark"] .contact-title p,
+        :root[data-theme="dark"] .confirmation-panel > p,
+        :root[data-theme="dark"] .confirmation-item-meta {
+            color: #d9c3a8;
+        }
+
+        :root[data-theme="dark"] .confirmation-panel {
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+        }
+
+        :root[data-theme="dark"] .confirmation-item,
+        :root[data-theme="dark"] .confirmation-total {
+            border-color: rgba(250, 243, 231, 0.14);
+        }
+    </style>
+</head>
+<body>
+<ezy:block ezy:replace="~{sweet_bakery/header :: content}" />
+<main class="bakery-page">
+    <section class="confirmation-page" aria-label="Xác nhận đơn hàng">
+        <div class="section-inner">
+            <p class="breadcrumb">
+                <a href="/sweet-home-bakery">Trang chủ</a> / Xác nhận đơn hàng
+            </p>
+
+            <div class="confirmation-panel" id="confirmationFound" hidden>
+                <div class="confirmation-icon" aria-hidden="true">✓</div>
+                <h1>Đặt hàng thành công!</h1>
+                <p>Cảm ơn bạn đã tin tưởng Sweet Home Bakery. Chúng tôi sẽ liên hệ để xác nhận và giao bánh sớm nhất.</p>
+                <div class="confirmation-code">Mã đơn hàng: <span id="confirmationOrderCode"></span></div>
+
+                <div class="confirmation-details">
+                    <div class="confirmation-block">
+                        <h2>Thông tin đơn hàng</h2>
+                        <dl class="confirmation-customer">
+                            <div>
+                                <dt>Ngày đặt</dt>
+                                <dd id="confirmationCreatedAt"></dd>
+                            </div>
+                            <div>
+                                <dt>Trạng thái</dt>
+                                <dd id="confirmationStatus"></dd>
+                            </div>
+                            <div>
+                                <dt>Phí giao hàng</dt>
+                                <dd id="confirmationDeliveryFee"></dd>
+                            </div>
+                        </dl>
+                    </div>
+
+                    <div class="confirmation-block">
+                        <h2>Chi tiết đơn hàng</h2>
+                        <div class="confirmation-items" id="confirmationItems"></div>
+                        <div class="confirmation-total">
+                            <span class="confirmation-total-label">Tổng tiền</span>
+                            <span class="confirmation-total-value" id="confirmationTotal"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="confirmation-actions">
+                    <a class="btn btn-primary" href="/thuc-don">Tiếp tục mua sắm</a>
+                    <a class="btn btn-outline" href="/tra-cuu-don-hang">Tra cứu đơn hàng</a>
+                    <a class="btn btn-outline" href="/sweet-home-bakery">Về trang chủ</a>
+                </div>
+            </div>
+
+            <div class="confirmation-panel" id="confirmationNotFound" hidden>
+                <h1>Không tìm thấy đơn hàng</h1>
+                <p>Đơn hàng không tồn tại hoặc đã hết hạn hiển thị trên trình duyệt này.</p>
+                <div class="confirmation-actions">
+                    <a class="btn btn-primary" href="/thuc-don">Xem thực đơn</a>
+                    <a class="btn btn-outline" href="/sweet-home-bakery">Về trang chủ</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <ezy:block ezy:replace="~{sweet_bakery/footer :: content}" />
+</main>
+<script ezy:msrc="/api/v1/media/sweet-bakery.js"></script>
+<script>
+    (function () {
+        var ORDER_API = "/api/v1/orders/";
+
+        var ORDER_STATUS_LABELS = {
+            WAITING_FOR_CONFIRMATION: "Chờ xác nhận",
+            CONFIRMED: "Đã xác nhận",
+            DELIVERING: "Đang giao hàng",
+            DELIVERED: "Đã giao hàng",
+            COMPLETED: "Hoàn tất",
+            CANCELED: "Đã hủy",
+            REJECTED: "Bị từ chối"
+        };
+
+        var foundPanel = document.getElementById("confirmationFound");
+        var notFoundPanel = document.getElementById("confirmationNotFound");
+
+        function labelOf(map, value) {
+            if (!value) return "";
+            return map[value] || value;
+        }
+
+        function formatDate(timestamp) {
+            if (!timestamp) return "";
+            try {
+                return new Date(timestamp).toLocaleString("vi-VN");
+            } catch (e) {
+                return "";
+            }
+        }
+
+        function renderItem(item) {
+            var row = document.createElement("div");
+            row.className = "confirmation-item";
+
+            var info = document.createElement("div");
+            var name = document.createElement("span");
+            name.className = "confirmation-item-name";
+            name.textContent = item.product ? item.product.productName : "";
+
+            var metaParts = [];
+            if (item.size) metaParts.push(item.size.sizeDisplayName || item.size.sizeName);
+            if (item.color) metaParts.push(item.color.colorDisplayName || item.color.colorName);
+            if (item.material) metaParts.push(item.material.materialDisplayName || item.material.materialName);
+            metaParts.push("SL: " + item.amount);
+
+            var meta = document.createElement("span");
+            meta.className = "confirmation-item-meta";
+            meta.textContent = metaParts.join(" · ");
+
+            info.appendChild(name);
+            info.appendChild(meta);
+
+            var subtotal = document.createElement("span");
+            subtotal.className = "confirmation-item-subtotal";
+            subtotal.textContent = item.formattedTotalAmountMoneyIncludeSymbol;
+
+            row.appendChild(info);
+            row.appendChild(subtotal);
+            return row;
+        }
+
+        function renderOrder(order) {
+            foundPanel.hidden = false;
+
+            document.getElementById("confirmationOrderCode").textContent = "DH" + order.id;
+            document.getElementById("confirmationCreatedAt").textContent = formatDate(order.createdAt);
+            document.getElementById("confirmationStatus").textContent = labelOf(ORDER_STATUS_LABELS, order.status);
+            document.getElementById("confirmationDeliveryFee").textContent = order.formattedDeliveryFeeIncludeSymbol || "0đ";
+
+            var itemsContainer = document.getElementById("confirmationItems");
+            itemsContainer.innerHTML = "";
+            (order.products || []).forEach(function (item) {
+                itemsContainer.appendChild(renderItem(item));
+            });
+
+            document.getElementById("confirmationTotal").textContent = order.formattedTotalAmountMoneyIncludeSymbol;
+        }
+
+        var params = new URLSearchParams(window.location.search);
+        var orderId = params.get("id");
+
+        if (!orderId) {
+            notFoundPanel.hidden = false;
+            return;
+        }
+
+        fetch(ORDER_API + encodeURIComponent(orderId))
+            .then(function (response) {
+                if (!response.ok) throw new Error("Order not found");
+                return response.json();
+            })
+            .then(renderOrder)
+            .catch(function () {
+                notFoundPanel.hidden = false;
+            });
+    })();
+</script>
+</body>
+</html>

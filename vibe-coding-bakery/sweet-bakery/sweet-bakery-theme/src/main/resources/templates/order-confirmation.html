@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{ezytheme}">
+<head>
+    <link rel="stylesheet" type="text/css" ezy:vhref="/css/main.css" />
+    <link rel="stylesheet" type="text/css" ezy:vhref="/css/pages/order-confirmation.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet" />
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+    (function () {
+        var STORAGE_KEY = "sweetBakeryTheme";
+        var stored = null;
+        try {
+            stored = localStorage.getItem(STORAGE_KEY);
+        } catch (e) {}
+        var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        var theme = stored === "light" || stored === "dark" ? stored : (prefersDark ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+    })();
+    /*]]>*/
+    </script>
+</head>
+<body>
+<div layout:fragment="content">
+    <main class="bakery-page">
+        <section class="confirmation-page" th:aria-label="#{order_confirmation_page_title}">
+            <div class="section-inner">
+                <p class="breadcrumb">
+                    <a href="/sweet-home-bakery" th:text="#{nav_home}">Trang chủ</a> / <span th:text="#{order_confirmation_page_title}">Xác nhận đơn hàng</span>
+                </p>
+
+                <div class="confirmation-panel" id="confirmationFound" hidden="hidden">
+                    <div class="confirmation-icon" aria-hidden="true">✓</div>
+                    <h1>Đặt hàng thành công!</h1>
+                    <p>Cảm ơn bạn đã tin tưởng Sweet Home Bakery. Chúng tôi sẽ liên hệ để xác nhận và giao bánh sớm nhất.</p>
+                    <div class="confirmation-code">Mã đơn hàng: <span id="confirmationOrderCode"></span></div>
+
+                    <div class="confirmation-details">
+                        <div class="confirmation-block">
+                            <h2>Thông tin đơn hàng</h2>
+                            <dl class="confirmation-customer">
+                                <div>
+                                    <dt>Ngày đặt</dt>
+                                    <dd id="confirmationCreatedAt"></dd>
+                                </div>
+                                <div>
+                                    <dt>Trạng thái</dt>
+                                    <dd id="confirmationStatus"></dd>
+                                </div>
+                                <div>
+                                    <dt>Phí giao hàng</dt>
+                                    <dd id="confirmationDeliveryFee"></dd>
+                                </div>
+                            </dl>
+                        </div>
+
+                        <div class="confirmation-block">
+                            <h2>Chi tiết đơn hàng</h2>
+                            <div class="confirmation-items" id="confirmationItems"></div>
+                            <div class="confirmation-total">
+                                <span class="confirmation-total-label">Tổng tiền</span>
+                                <span class="confirmation-total-value" id="confirmationTotal"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="confirmation-actions">
+                        <a class="btn btn-primary" href="/thuc-don" th:text="#{view_menu}">Tiếp tục mua sắm</a>
+                        <a class="btn btn-outline" href="/tra-cuu-don-hang" th:text="#{nav_order_lookup}">Tra cứu đơn hàng</a>
+                        <a class="btn btn-outline" href="/sweet-home-bakery">Về trang chủ</a>
+                    </div>
+                </div>
+
+                <div class="confirmation-panel" id="confirmationNotFound" hidden="hidden">
+                    <h1>Không tìm thấy đơn hàng</h1>
+                    <p>Đơn hàng không tồn tại hoặc đã hết hạn hiển thị trên trình duyệt này.</p>
+                    <div class="confirmation-actions">
+                        <a class="btn btn-primary" href="/thuc-don" th:text="#{view_menu}">Xem thực đơn</a>
+                        <a class="btn btn-outline" href="/sweet-home-bakery">Về trang chủ</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <th:block th:replace="~{fragments/footer :: footer}" />
+    </main>
+</div>
+<th:block layout:fragment="post-scripts">
+    <script ezy:vsrc="/js/main.js"></script>
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+    (function () {
+        var ORDER_API = "/api/v1/orders/";
+
+        var ORDER_STATUS_LABELS = {
+            WAITING_FOR_CONFIRMATION: "Chờ xác nhận",
+            CONFIRMED: "Đã xác nhận",
+            DELIVERING: "Đang giao hàng",
+            DELIVERED: "Đã giao hàng",
+            COMPLETED: "Hoàn tất",
+            CANCELED: "Đã hủy",
+            REJECTED: "Bị từ chối"
+        };
+
+        var foundPanel = document.getElementById("confirmationFound");
+        var notFoundPanel = document.getElementById("confirmationNotFound");
+
+        function labelOf(map, value) {
+            if (!value) return "";
+            return map[value] || value;
+        }
+
+        function formatDate(timestamp) {
+            if (!timestamp) return "";
+            try {
+                return new Date(timestamp).toLocaleString("vi-VN");
+            } catch (e) {
+                return "";
+            }
+        }
+
+        function renderItem(item) {
+            var row = document.createElement("div");
+            row.className = "confirmation-item";
+
+            var info = document.createElement("div");
+            var name = document.createElement("span");
+            name.className = "confirmation-item-name";
+            name.textContent = item.product ? item.product.productName : "";
+
+            var metaParts = [];
+            if (item.size) metaParts.push(item.size.sizeDisplayName || item.size.sizeName);
+            if (item.color) metaParts.push(item.color.colorDisplayName || item.color.colorName);
+            if (item.material) metaParts.push(item.material.materialDisplayName || item.material.materialName);
+            metaParts.push("SL: " + item.amount);
+
+            var meta = document.createElement("span");
+            meta.className = "confirmation-item-meta";
+            meta.textContent = metaParts.join(" · ");
+
+            info.appendChild(name);
+            info.appendChild(meta);
+
+            var subtotal = document.createElement("span");
+            subtotal.className = "confirmation-item-subtotal";
+            subtotal.textContent = item.formattedTotalAmountMoneyIncludeSymbol;
+
+            row.appendChild(info);
+            row.appendChild(subtotal);
+            return row;
+        }
+
+        function renderOrder(order) {
+            foundPanel.hidden = false;
+
+            document.getElementById("confirmationOrderCode").textContent = "DH" + order.id;
+            document.getElementById("confirmationCreatedAt").textContent = formatDate(order.createdAt);
+            document.getElementById("confirmationStatus").textContent = labelOf(ORDER_STATUS_LABELS, order.status);
+            document.getElementById("confirmationDeliveryFee").textContent = order.formattedDeliveryFeeIncludeSymbol || "0đ";
+
+            var itemsContainer = document.getElementById("confirmationItems");
+            itemsContainer.innerHTML = "";
+            (order.products || []).forEach(function (item) {
+                itemsContainer.appendChild(renderItem(item));
+            });
+
+            document.getElementById("confirmationTotal").textContent = order.formattedTotalAmountMoneyIncludeSymbol;
+        }
+
+        var params = new URLSearchParams(window.location.search);
+        var orderId = params.get("id");
+
+        if (!orderId) {
+            notFoundPanel.hidden = false;
+            return;
+        }
+
+        fetch(ORDER_API + encodeURIComponent(orderId))
+            .then(function (response) {
+                if (!response.ok) throw new Error("Order not found");
+                return response.json();
+            })
+            .then(renderOrder)
+            .catch(function () {
+                notFoundPanel.hidden = false;
+            });
+    })();
+    /*]]>*/
+    </script>
+</th:block>
+</body>
+</html>

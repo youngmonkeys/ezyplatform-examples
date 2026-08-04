@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout">
+<body>
+<header th:fragment="header" class="site-header">
+    <div class="section-inner header-inner">
+        <a class="brand" href="/sweet-home-bakery" th:aria-label="#{home_brand_aria_label}">
+            <img ezy:vsrc="/images/logo-horizontal.svg" th:alt="#{site_name}" />
+        </a>
+        <div class="header-actions">
+            <nav class="main-nav" th:aria-label="#{main_nav_aria_label}">
+                <a href="/thuc-don" th:text="#{nav_menu}">Thực đơn</a>
+                <a href="/tra-cuu-don-hang" th:text="#{nav_order_lookup}">Tra cứu đơn hàng</a>
+                <a href="#contact" th:text="#{nav_contact}">Liên hệ</a>
+            </nav>
+            <a class="cart-link" href="/gio-hang" th:aria-label="#{cart_aria_label}">
+                <svg class="cart-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M7 4h-2l-1 2v1h2l3.6 7.59-1.35 2.44c-.16.28-.25.61-.25.97 0 1.1.9 2 2 2h12v-2h-11.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.24-5.88c.08-.14.12-.31.12-.47 0-.55-.45-1-1-1h-14.3l-.95-2z" fill="currentColor" />
+                </svg>
+                <span class="cart-count" id="cartCount" hidden="hidden">0</span>
+            </a>
+            <button type="button" id="themeToggle" class="theme-toggle" role="switch" aria-checked="false" th:aria-label="#{theme_toggle_aria_label}">
+                <span class="theme-toggle-icon theme-toggle-icon--sun" aria-hidden="true">☀</span>
+                <span class="theme-toggle-icon theme-toggle-icon--moon" aria-hidden="true">☾</span>
+                <span class="theme-toggle-thumb"></span>
+            </button>
+        </div>
+    </div>
+</header>
+<th:block th:fragment="scripts"></th:block>
+</body>
+</html>

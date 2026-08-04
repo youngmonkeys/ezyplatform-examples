@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <script>
+        (function () {
+            var STORAGE_KEY = "sweetHomeBakeryTheme";
+            var stored = null;
+            try {
+                stored = localStorage.getItem(STORAGE_KEY);
+            } catch (e) {}
+            var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+            var theme = stored === "light" || stored === "dark" ? stored : (prefersDark ? "dark" : "light");
+            document.documentElement.setAttribute("data-theme", theme);
+        })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tra cứu đơn hàng - Sweet Home Bakery</title>
+    <meta name="description" content="Tra cứu và tìm kiếm danh sách đơn hàng đã đặt tại Sweet Home Bakery." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" ezy:mhref="/api/v1/media/sweet-bakery.css" />
+    <style>
+        /* Lookup page */
+
+        .lookup-page {
+            padding: 16px 0 72px;
+        }
+
+        .lookup-page h1 {
+            margin: 16px 0 8px;
+            color: var(--cocoa);
+            font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+            font-size: clamp(2rem, 4vw, 2.6rem);
+            line-height: 1.05;
+        }
+
+        .lookup-intro {
+            margin: 0 0 24px;
+            color: #7a5947;
+        }
+
+        .lookup-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 0 0 32px;
+            padding: 20px;
+            border-radius: 16px;
+            background: var(--milk);
+            box-shadow: var(--shadow);
+        }
+
+        .lookup-form input,
+        .lookup-form select {
+            flex: 1 1 220px;
+            min-width: 0;
+            padding: 12px 14px;
+            border: 1.5px solid rgba(92, 52, 34, 0.28);
+            border-radius: 10px;
+            color: var(--coffee);
+            background: var(--milk);
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+
+        .lookup-form select {
+            flex: 0 1 200px;
+        }
+
+        .lookup-form button {
+            flex: 0 0 auto;
+        }
+
+        .lookup-form input:focus,
+        .lookup-form select:focus {
+            border-color: var(--caramel-hover);
+            outline: none;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 0 28px;
+            border: none;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.98rem;
+            cursor: pointer;
+            transition: transform 180ms ease, background 180ms ease, color 180ms ease;
+        }
+
+        .lookup-panel {
+            max-width: 720px;
+            padding: 40px;
+            border-radius: 16px;
+            background: var(--milk);
+            box-shadow: var(--shadow);
+        }
+
+        .lookup-panel--center {
+            text-align: center;
+        }
+
+        .lookup-panel h2 {
+            margin: 0 0 10px;
+            color: var(--cocoa);
+            font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+            font-size: clamp(1.5rem, 3.5vw, 1.9rem);
+        }
+
+        .lookup-panel > p {
+            margin: 0;
+            color: #7a5947;
+        }
+
+        .lookup-results {
+            display: grid;
+            gap: 16px;
+            margin: 0 0 24px;
+        }
+
+        .order-card {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 24px;
+            border-radius: 16px;
+            background: var(--milk);
+            box-shadow: var(--shadow);
+        }
+
+        .order-card-main {
+            display: grid;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .order-card-code {
+            color: var(--cocoa);
+            font-family: "Nunito", Arial, Helvetica, sans-serif;
+            font-size: 1.05rem;
+            font-weight: 800;
+        }
+
+        .order-card-date {
+            color: #7a5947;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .order-card-meta {
+            display: grid;
+            gap: 6px;
+            justify-items: start;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 999px;
+            color: var(--caramel-hover);
+            background: rgba(139, 94, 60, 0.14);
+            font-size: 0.8rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .status-badge[data-status="DELIVERED"],
+        .status-badge[data-status="COMPLETED"],
+        .status-badge[data-status="CONFIRMED"] {
+            color: var(--success-green, #3f8b52);
+            background: rgba(63, 139, 82, 0.14);
+        }
+
+        .status-badge[data-status="CANCELED"],
+        .status-badge[data-status="REJECTED"] {
+            color: var(--sale-red);
+            background: rgba(194, 74, 59, 0.14);
+        }
+
+        .order-card-count {
+            color: #7a5947;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .order-card-total {
+            color: #8b5e3c;
+            font-family: "Nunito", Arial, Helvetica, sans-serif;
+            font-size: 1.15rem;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .order-card-link {
+            min-height: 40px;
+            padding: 0 20px;
+            font-size: 0.9rem;
+        }
+
+        .lookup-load-more {
+            display: flex;
+            justify-content: center;
+            margin: 8px 0 32px;
+        }
+
+        @media (max-width: 560px) {
+            .section-inner {
+                width: min(100% - 28px, 1120px);
+            }
+
+            .header-inner {
+                gap: 14px;
+            }
+
+            .brand img {
+                height: 34px;
+            }
+
+            .header-actions {
+                gap: 12px;
+            }
+
+            .main-nav {
+                gap: 16px;
+            }
+
+            .main-nav a {
+                font-size: 0.9rem;
+            }
+
+            .contact-panel {
+                padding: 22px;
+            }
+
+            .contact-item {
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+
+            .lookup-form {
+                flex-direction: column;
+            }
+
+            .lookup-form input,
+            .lookup-form select {
+                flex: 1 1 auto;
+            }
+
+            .lookup-panel {
+                padding: 28px 20px;
+            }
+
+            .order-card {
+                grid-template-columns: 1fr;
+                justify-items: start;
+                gap: 10px;
+            }
+        }
+
+        :root[data-theme="dark"] .breadcrumb,
+        :root[data-theme="dark"] .contact-title p,
+        :root[data-theme="dark"] .lookup-intro,
+        :root[data-theme="dark"] .lookup-panel > p,
+        :root[data-theme="dark"] .order-card-date,
+        :root[data-theme="dark"] .order-card-count {
+            color: #d9c3a8;
+        }
+
+        :root[data-theme="dark"] .lookup-form,
+        :root[data-theme="dark"] .lookup-panel,
+        :root[data-theme="dark"] .order-card {
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+        }
+
+        :root[data-theme="dark"] .lookup-form input,
+        :root[data-theme="dark"] .lookup-form select {
+            border-color: rgba(250, 243, 231, 0.28);
+        }
+    </style>
+</head>
+<body>
+<ezy:block ezy:replace="~{sweet_bakery/header :: content}" />
+<main class="bakery-page">
+    <section class="lookup-page" aria-label="Tra cứu đơn hàng">
+        <div class="section-inner">
+            <p class="breadcrumb">
+                <a href="/sweet-home-bakery">Trang chủ</a> / Tra cứu đơn hàng
+            </p>
+            <h1>Tra cứu đơn hàng</h1>
+            <p class="lookup-intro">Tìm kiếm và xem lại danh sách đơn hàng bạn đã đặt tại Sweet Home Bakery.</p>
+
+            <form class="lookup-form" id="lookupForm" novalidate>
+                <input type="text" id="keywordInput" name="keyword" placeholder="Nhập mã đơn hàng hoặc tên sản phẩm..." autocomplete="off" />
+                <select id="statusSelect" name="status">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="WAITING_FOR_CONFIRMATION">Chờ xác nhận</option>
+                    <option value="CONFIRMED">Đã xác nhận</option>
+                    <option value="DELIVERING">Đang giao hàng</option>
+                    <option value="DELIVERED">Đã giao hàng</option>
+                    <option value="COMPLETED">Hoàn tất</option>
+                    <option value="CANCELED">Đã hủy</option>
+                    <option value="REJECTED">Bị từ chối</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+            </form>
+
+            <div class="lookup-results" id="lookupResults"></div>
+
+            <div class="lookup-load-more" id="lookupLoadMoreWrap" hidden>
+                <button type="button" class="btn btn-outline" id="lookupLoadMoreBtn">Xem thêm đơn hàng</button>
+            </div>
+
+            <div class="lookup-panel lookup-panel--center" id="lookupEmpty" hidden>
+                <h2>Không tìm thấy đơn hàng</h2>
+                <p>Không có đơn hàng nào phù hợp với tìm kiếm của bạn.</p>
+            </div>
+        </div>
+    </section>
+
+    <ezy:block ezy:replace="~{sweet_bakery/footer :: content}" />
+</main>
+<script ezy:msrc="/api/v1/media/sweet-bakery.js"></script>
+<script>
+    (function () {
+        var ORDERS_API = "/api/v1/orders";
+        var CONFIRMATION_URL = "/xac-nhan-don-hang";
+        var PAGE_LIMIT = 10;
+
+        var ORDER_STATUS_LABELS = {
+            WAITING_FOR_CONFIRMATION: "Chờ xác nhận",
+            CONFIRMED: "Đã xác nhận",
+            DELIVERING: "Đang giao hàng",
+            DELIVERED: "Đã giao hàng",
+            COMPLETED: "Hoàn tất",
+            CANCELED: "Đã hủy",
+            REJECTED: "Bị từ chối"
+        };
+
+        var form = document.getElementById("lookupForm");
+        var keywordInput = document.getElementById("keywordInput");
+        var statusSelect = document.getElementById("statusSelect");
+        var resultsContainer = document.getElementById("lookupResults");
+        var emptyPanel = document.getElementById("lookupEmpty");
+        var loadMoreWrap = document.getElementById("lookupLoadMoreWrap");
+        var loadMoreBtn = document.getElementById("lookupLoadMoreBtn");
+
+        var state = {
+            nextPageToken: "",
+            hasNext: false
+        };
+
+        function statusLabel(value) {
+            if (!value) return "";
+            return ORDER_STATUS_LABELS[value] || value;
+        }
+
+        function formatDateTime(timestamp) {
+            if (!timestamp) return "";
+            try {
+                return new Date(timestamp).toLocaleString("vi-VN", {
+                    dateStyle: "long",
+                    timeStyle: "short"
+                });
+            } catch (e) {
+                return "";
+            }
+        }
+
+        function buildOrderCard(order) {
+            var card = document.createElement("article");
+            card.className = "order-card";
+
+            var main = document.createElement("div");
+            main.className = "order-card-main";
+            var code = document.createElement("span");
+            code.className = "order-card-code";
+            code.textContent = "Đơn hàng #" + order.id;
+            var date = document.createElement("span");
+            date.className = "order-card-date";
+            date.textContent = formatDateTime(order.createdAt);
+            main.appendChild(code);
+            main.appendChild(date);
+
+            var meta = document.createElement("div");
+            meta.className = "order-card-meta";
+            var status = document.createElement("span");
+            status.className = "status-badge";
+            status.setAttribute("data-status", order.status || "");
+            status.textContent = statusLabel(order.status);
+            meta.appendChild(status);
+            if (order.totalProducts != null) {
+                var count = document.createElement("span");
+                count.className = "order-card-count";
+                count.textContent = order.totalProducts + " sản phẩm";
+                meta.appendChild(count);
+            }
+
+            var total = document.createElement("div");
+            total.className = "order-card-total";
+            total.textContent = order.formattedTotalAmountMoneyIncludeSymbol || "";
+
+            var link = document.createElement("a");
+            link.className = "btn btn-outline order-card-link";
+            link.href = CONFIRMATION_URL + "?id=" + encodeURIComponent(order.id);
+            link.textContent = "Xem chi tiết";
+
+            card.appendChild(main);
+            card.appendChild(meta);
+            card.appendChild(total);
+            card.appendChild(link);
+            return card;
+        }
+
+        function buildUrl(nextPageToken) {
+            var params = new URLSearchParams();
+            var keyword = keywordInput.value.trim();
+            if (keyword) params.set("keyword", keyword);
+            if (statusSelect.value) params.set("status", statusSelect.value);
+            params.set("limit", String(PAGE_LIMIT));
+            if (nextPageToken) params.set("nextPageToken", nextPageToken);
+            return ORDERS_API + "?" + params.toString();
+        }
+
+        function updateLoadMoreVisibility() {
+            loadMoreWrap.hidden = !state.hasNext;
+        }
+
+        function fetchOrders(nextPageToken, append) {
+            if (!append) {
+                resultsContainer.innerHTML = "";
+                emptyPanel.hidden = true;
+            }
+
+            return fetch(buildUrl(nextPageToken))
+                .then(function (response) {
+                    if (!response.ok) throw new Error("Failed to load orders");
+                    return response.json();
+                })
+                .then(function (data) {
+                    var items = data.items || [];
+                    items.forEach(function (order) {
+                        resultsContainer.appendChild(buildOrderCard(order));
+                    });
+
+                    state.hasNext = !!(data.continuation && data.continuation.hasNext);
+                    state.nextPageToken = (data.pageToken && data.pageToken.next) || "";
+                    updateLoadMoreVisibility();
+
+                    if (!append && items.length === 0) {
+                        emptyPanel.hidden = false;
+                    }
+                })
+                .catch(function (error) {
+                    console.error("Không thể tải danh sách đơn hàng", error);
+                    if (!append) emptyPanel.hidden = false;
+                });
+        }
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            fetchOrders("", false);
+        });
+
+        loadMoreBtn.addEventListener("click", function () {
+            loadMoreBtn.disabled = true;
+            loadMoreBtn.textContent = "Đang tải...";
+            fetchOrders(state.nextPageToken, true).then(function () {
+                loadMoreBtn.disabled = false;
+                loadMoreBtn.textContent = "Xem thêm đơn hàng";
+            });
+        });
+
+        var params = new URLSearchParams(window.location.search);
+        var prefillKeyword = params.get("keyword");
+        if (prefillKeyword) keywordInput.value = prefillKeyword;
+
+        fetchOrders("", false);
+    })();
+</script>
+</body>
+</html>

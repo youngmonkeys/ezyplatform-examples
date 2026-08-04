@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{ezytheme}">
+<head>
+    <link rel="stylesheet" type="text/css" ezy:vhref="/css/main.css" />
+    <link rel="stylesheet" type="text/css" ezy:vhref="/css/pages/order-lookup.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet" />
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+    (function () {
+        var STORAGE_KEY = "sweetBakeryTheme";
+        var stored = null;
+        try {
+            stored = localStorage.getItem(STORAGE_KEY);
+        } catch (e) {}
+        var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        var theme = stored === "light" || stored === "dark" ? stored : (prefersDark ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+    })();
+    /*]]>*/
+    </script>
+</head>
+<body>
+<div layout:fragment="content">
+    <main class="bakery-page">
+        <section class="lookup-page" th:aria-label="#{order_lookup_page_title}">
+            <div class="section-inner">
+                <p class="breadcrumb">
+                    <a href="/sweet-home-bakery" th:text="#{nav_home}">Trang chủ</a> / <span th:text="#{order_lookup_page_title}">Tra cứu đơn hàng</span>
+                </p>
+                <h1 th:text="#{order_lookup_page_title}">Tra cứu đơn hàng</h1>
+                <p class="lookup-intro">Tìm kiếm và xem lại danh sách đơn hàng bạn đã đặt tại Sweet Home Bakery.</p>
+
+                <form class="lookup-form" id="lookupForm" novalidate="novalidate">
+                    <input type="text" id="keywordInput" name="keyword" placeholder="Nhập mã đơn hàng hoặc tên sản phẩm..." autocomplete="off" />
+                    <select id="statusSelect" name="status">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="WAITING_FOR_CONFIRMATION">Chờ xác nhận</option>
+                        <option value="CONFIRMED">Đã xác nhận</option>
+                        <option value="DELIVERING">Đang giao hàng</option>
+                        <option value="DELIVERED">Đã giao hàng</option>
+                        <option value="COMPLETED">Hoàn tất</option>
+                        <option value="CANCELED">Đã hủy</option>
+                        <option value="REJECTED">Bị từ chối</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                </form>
+
+                <div class="lookup-results" id="lookupResults"></div>
+
+                <div class="lookup-load-more" id="lookupLoadMoreWrap" hidden="hidden">
+                    <button type="button" class="btn btn-outline" id="lookupLoadMoreBtn">Xem thêm đơn hàng</button>
+                </div>
+
+                <div class="lookup-panel lookup-panel--center" id="lookupEmpty" hidden="hidden">
+                    <h2>Không tìm thấy đơn hàng</h2>
+                    <p>Không có đơn hàng nào phù hợp với tìm kiếm của bạn.</p>
+                </div>
+            </div>
+        </section>
+
+        <th:block th:replace="~{fragments/footer :: footer}" />
+    </main>
+</div>
+<th:block layout:fragment="post-scripts">
+    <script ezy:vsrc="/js/main.js"></script>
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+    (function () {
+        var ORDERS_API = "/api/v1/orders";
+        var CONFIRMATION_URL = "/xac-nhan-don-hang";
+        var PAGE_LIMIT = 10;
+
+        var ORDER_STATUS_LABELS = {
+            WAITING_FOR_CONFIRMATION: "Chờ xác nhận",
+            CONFIRMED: "Đã xác nhận",
+            DELIVERING: "Đang giao hàng",
+            DELIVERED: "Đã giao hàng",
+            COMPLETED: "Hoàn tất",
+            CANCELED: "Đã hủy",
+            REJECTED: "Bị từ chối"
+        };
+
+        var form = document.getElementById("lookupForm");
+        var keywordInput = document.getElementById("keywordInput");
+        var statusSelect = document.getElementById("statusSelect");
+        var resultsContainer = document.getElementById("lookupResults");
+        var emptyPanel = document.getElementById("lookupEmpty");
+        var loadMoreWrap = document.getElementById("lookupLoadMoreWrap");
+        var loadMoreBtn = document.getElementById("lookupLoadMoreBtn");
+
+        var state = {
+            nextPageToken: "",
+            hasNext: false
+        };
+
+        function statusLabel(value) {
+            if (!value) return "";
+            return ORDER_STATUS_LABELS[value] || value;
+        }
+
+        function formatDateTime(timestamp) {
+            if (!timestamp) return "";
+            try {
+                return new Date(timestamp).toLocaleString("vi-VN", {
+                    dateStyle: "long",
+                    timeStyle: "short"
+                });
+            } catch (e) {
+                return "";
+            }
+        }
+
+        function buildOrderCard(order) {
+            var card = document.createElement("article");
+            card.className = "order-card";
+
+            var main = document.createElement("div");
+            main.className = "order-card-main";
+            var code = document.createElement("span");
+            code.className = "order-card-code";
+            code.textContent = "Đơn hàng #" + order.id;
+            var date = document.createElement("span");
+            date.className = "order-card-date";
+            date.textContent = formatDateTime(order.createdAt);
+            main.appendChild(code);
+            main.appendChild(date);
+
+            var meta = document.createElement("div");
+            meta.className = "order-card-meta";
+            var status = document.createElement("span");
+            status.className = "status-badge";
+            status.setAttribute("data-status", order.status || "");
+            status.textContent = statusLabel(order.status);
+            meta.appendChild(status);
+            if (order.totalProducts != null) {
+                var count = document.createElement("span");
+                count.className = "order-card-count";
+                count.textContent = order.totalProducts + " sản phẩm";
+                meta.appendChild(count);
+            }
+
+            var total = document.createElement("div");
+            total.className = "order-card-total";
+            total.textContent = order.formattedTotalAmountMoneyIncludeSymbol || "";
+
+            var link = document.createElement("a");
+            link.className = "btn btn-outline order-card-link";
+            link.href = CONFIRMATION_URL + "?id=" + encodeURIComponent(order.id);
+            link.textContent = "Xem chi tiết";
+
+            card.appendChild(main);
+            card.appendChild(meta);
+            card.appendChild(total);
+            card.appendChild(link);
+            return card;
+        }
+
+        function buildUrl(nextPageToken) {
+            var params = new URLSearchParams();
+            var keyword = keywordInput.value.trim();
+            if (keyword) params.set("keyword", keyword);
+            if (statusSelect.value) params.set("status", statusSelect.value);
+            params.set("limit", String(PAGE_LIMIT));
+            if (nextPageToken) params.set("nextPageToken", nextPageToken);
+            return ORDERS_API + "?" + params.toString();
+        }
+
+        function updateLoadMoreVisibility() {
+            loadMoreWrap.hidden = !state.hasNext;
+        }
+
+        function fetchOrders(nextPageToken, append) {
+            if (!append) {
+                resultsContainer.innerHTML = "";
+                emptyPanel.hidden = true;
+            }
+
+            return fetch(buildUrl(nextPageToken))
+                .then(function (response) {
+                    if (!response.ok) throw new Error("Failed to load orders");
+                    return response.json();
+                })
+                .then(function (data) {
+                    var items = data.items || [];
+                    items.forEach(function (order) {
+                        resultsContainer.appendChild(buildOrderCard(order));
+                    });
+
+                    state.hasNext = !!(data.continuation && data.continuation.hasNext);
+                    state.nextPageToken = (data.pageToken && data.pageToken.next) || "";
+                    updateLoadMoreVisibility();
+
+                    if (!append && items.length === 0) {
+                        emptyPanel.hidden = false;
+                    }
+                })
+                .catch(function (error) {
+                    console.error("Không thể tải danh sách đơn hàng", error);
+                    if (!append) emptyPanel.hidden = false;
+                });
+        }
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            fetchOrders("", false);
+        });
+
+        loadMoreBtn.addEventListener("click", function () {
+            loadMoreBtn.disabled = true;
+            loadMoreBtn.textContent = "Đang tải...";
+            fetchOrders(state.nextPageToken, true).then(function () {
+                loadMoreBtn.disabled = false;
+                loadMoreBtn.textContent = "Xem thêm đơn hàng";
+            });
+        });
+
+        var params = new URLSearchParams(window.location.search);
+        var prefillKeyword = params.get("keyword");
+        if (prefillKeyword) keywordInput.value = prefillKeyword;
+
+        fetchOrders("", false);
+    })();
+    /*]]>*/
+    </script>
+</th:block>
+</body>
+</html>

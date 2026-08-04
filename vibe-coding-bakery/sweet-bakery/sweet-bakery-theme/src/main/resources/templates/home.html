@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{ezytheme}">
+<head>
+    <link rel="stylesheet" type="text/css" ezy:vhref="/css/main.css" />
+    <link rel="stylesheet" type="text/css" ezy:vhref="/css/pages/home.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet" />
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+    (function () {
+        var STORAGE_KEY = "sweetBakeryTheme";
+        var stored = null;
+        try {
+            stored = localStorage.getItem(STORAGE_KEY);
+        } catch (e) {}
+        var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        var theme = stored === "light" || stored === "dark" ? stored : (prefersDark ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+    })();
+    /*]]>*/
+    </script>
+</head>
+<body>
+<div layout:fragment="content">
+    <main class="bakery-page">
+        <section class="hero" th:aria-label="#{site_name}">
+            <div class="section-inner">
+                <div class="hero-content">
+                    <p class="eyebrow" th:text="#{home_hero_eyebrow}">Tiệm bánh thủ công</p>
+                    <h1 th:text="#{site_name}">Sweet Home Bakery</h1>
+                    <p th:text="#{home_hero_subtitle}">Bánh ngọt handmade mỗi ngày</p>
+                    <a class="hero-button" href="#menu" th:text="#{home_hero_cta}">Xem thực đơn</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="featured" id="menu">
+            <div class="section-inner">
+                <div class="section-heading">
+                    <h2 th:text="#{home_featured_title}">Bánh nổi bật</h2>
+                    <p th:text="#{home_featured_subtitle}">Mỗi mẻ bánh được chuẩn bị trong ngày với nguyên liệu chọn lọc và hương vị ấm áp như ở nhà.</p>
+                </div>
+
+                <div class="cake-grid" id="featuredCakeGrid">
+                    <th:block th:if="${featuredProducts != null}">
+                    <article class="cake-card"
+                             th:each="product : ${featuredProducts.items}"
+                             th:attr="data-code=${product.code}"
+                             tabindex="0" role="button" th:aria-label="${product.name}">
+                        <div class="cake-card-media">
+                            <img th:src="${product.iconImage != null ? product.iconImage.getUrlOrDefault('/images/placeholder-product.jpg') : '/images/placeholder-product.jpg'}" th:alt="${product.name}" src="/images/placeholder-product.jpg" alt="" />
+                            <span class="discount-badge" th:if="${product.discountPercent != null and product.discountPercent > 0}" th:text="'-' + ${#numbers.formatDecimal(product.discountPercent, 1, 0)} + '%'">-20%</span>
+                        </div>
+                        <div class="cake-info">
+                            <h3 th:text="${product.name}">Chocolate Dream Cake</h3>
+                            <span class="cake-price" th:text="${product.formattedPrice}">120.000đ</span>
+                        </div>
+                    </article>
+                    </th:block>
+                </div>
+            </div>
+        </section>
+
+        <div class="modal-overlay" id="cakeModal" aria-hidden="true">
+            <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalCakeName">
+                <button type="button" class="modal-close" id="modalClose" th:aria-label="#{close}">&times;</button>
+                <div class="modal-body">
+                    <div class="modal-gallery">
+                        <div class="gallery-main">
+                            <img id="galleryMainImage" src="" alt="" />
+                            <span class="discount-badge modal-discount-badge" id="modalDiscountBadge" hidden="hidden"></span>
+                            <button type="button" class="gallery-nav gallery-prev" id="galleryPrev" th:aria-label="#{gallery_prev}">&lsaquo;</button>
+                            <button type="button" class="gallery-nav gallery-next" id="galleryNext" th:aria-label="#{gallery_next}">&rsaquo;</button>
+                        </div>
+                        <div class="gallery-thumbs" id="galleryThumbs"></div>
+                    </div>
+                    <div class="modal-info">
+                        <h2 id="modalCakeName" class="modal-cake-name"></h2>
+                        <div class="modal-price-row">
+                            <span class="price-original" id="modalPriceOriginal" hidden="hidden"></span>
+                            <span class="price-sale" id="modalPriceSale"></span>
+                        </div>
+                        <div class="modal-field">
+                            <span class="modal-field-label" th:text="#{product_size_label}">Kích thước</span>
+                            <div class="size-options" id="sizeOptions"></div>
+                        </div>
+                        <div class="modal-field">
+                            <span class="modal-field-label" th:text="#{product_quantity_label}">Số lượng</span>
+                            <div class="quantity-stepper">
+                                <button type="button" id="qtyMinus" th:aria-label="#{quantity_decrease}">&minus;</button>
+                                <input type="text" id="qtyInput" value="1" readonly="readonly" th:aria-label="#{product_quantity_label}" />
+                                <button type="button" id="qtyPlus" th:aria-label="#{quantity_increase}">+</button>
+                            </div>
+                        </div>
+                        <div class="modal-actions">
+                            <button type="button" class="btn btn-outline" id="btnAddToCart" th:text="#{add_to_cart}">Thêm giỏ hàng</button>
+                            <button type="button" class="btn btn-primary" id="btnBuyNow" th:text="#{buy_now}">Mua ngay</button>
+                            <button type="button" class="btn btn-ghost" id="btnViewDetail" th:text="#{view_details}">Xem chi tiết</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <th:block th:replace="~{fragments/footer :: footer}" />
+    </main>
+</div>
+<th:block layout:fragment="post-scripts">
+    <script ezy:vsrc="/js/main.js"></script>
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+    (function () {
+        var CHECKOUT_URL = "/thanh-toan";
+        var DETAIL_URL_PREFIX = "/chi-tiet-banh?slug=";
+        var PRODUCT_DETAILS_API_PREFIX = "/api/v1/products/";
+        var CURRENCY_ID = 3;
+        var DEFAULT_IMAGE = "/images/placeholder-product.jpg";
+
+        function addToCheckoutCart(cake, size, quantity) {
+            var url = PRODUCT_DETAILS_API_PREFIX + encodeURIComponent(cake.slug) + "/checkout";
+            var body = { quantity: quantity };
+            if (size.id) {
+                body.sizeName = size.key;
+            }
+            return fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            }).then(function (response) {
+                if (!response.ok) throw new Error("Failed to add to cart");
+                return response.json();
+            });
+        }
+
+        function fetchProductDetails(code) {
+            var url = PRODUCT_DETAILS_API_PREFIX + encodeURIComponent(code) + "/details?currencyId=" + CURRENCY_ID;
+            return fetch(url)
+                .then(function (response) {
+                    if (!response.ok) throw new Error("Failed to load product details");
+                    return response.json();
+                })
+                .then(function (data) {
+                    var gallery = [];
+                    var iconUrl = mediaUrl(data.iconImage);
+                    if (iconUrl) gallery.push(iconUrl);
+                    (data.colorMediaList || []).forEach(function (media) {
+                        var mediaSrc = mediaUrl(media);
+                        if (mediaSrc) gallery.push(mediaSrc);
+                    });
+                    if (gallery.length === 0) gallery.push(DEFAULT_IMAGE);
+
+                    var sizes = (data.sizes && data.sizes.length > 0)
+                        ? data.sizes.map(function (size) {
+                            return { id: size.id, key: size.sizeName, label: size.sizeDisplayName || size.sizeName };
+                        })
+                        : [{ id: null, key: "default", label: "Chuẩn" }];
+
+                    return {
+                        id: data.id,
+                        slug: data.code,
+                        name: data.name,
+                        gallery: gallery,
+                        price: data.price,
+                        formattedPrice: data.formattedPrice,
+                        formattedOriginalPrice: data.formattedOriginalPrice,
+                        discountPercent: data.discountPercent || 0,
+                        sizes: sizes
+                    };
+                });
+        }
+
+        function fetchSizeColorPrice(productId, sizeId) {
+            var url = PRODUCT_DETAILS_API_PREFIX + encodeURIComponent(productId) + "/size-color-price?sizeId=" + encodeURIComponent(sizeId) + "&currencyId=" + CURRENCY_ID;
+            return fetch(url).then(function (response) {
+                if (!response.ok) throw new Error("Failed to load size price");
+                return response.json();
+            });
+        }
+
+        /* ---- Modal ---- */
+        var modal = document.getElementById("cakeModal");
+        var modalClose = document.getElementById("modalClose");
+        var galleryMainImage = document.getElementById("galleryMainImage");
+        var galleryThumbs = document.getElementById("galleryThumbs");
+        var galleryPrev = document.getElementById("galleryPrev");
+        var galleryNext = document.getElementById("galleryNext");
+        var modalDiscountBadge = document.getElementById("modalDiscountBadge");
+        var modalCakeName = document.getElementById("modalCakeName");
+        var modalPriceOriginal = document.getElementById("modalPriceOriginal");
+        var modalPriceSale = document.getElementById("modalPriceSale");
+        var sizeOptions = document.getElementById("sizeOptions");
+        var qtyInput = document.getElementById("qtyInput");
+        var qtyMinus = document.getElementById("qtyMinus");
+        var qtyPlus = document.getElementById("qtyPlus");
+        var btnAddToCart = document.getElementById("btnAddToCart");
+        var btnBuyNow = document.getElementById("btnBuyNow");
+        var btnViewDetail = document.getElementById("btnViewDetail");
+
+        var state = {
+            cake: null,
+            imageIndex: 0,
+            sizeIndex: 0,
+            quantity: 1
+        };
+        var lastFocusedElement = null;
+
+        function renderGallery() {
+            var cake = state.cake;
+            galleryMainImage.src = cake.gallery[state.imageIndex];
+            galleryMainImage.alt = cake.name;
+
+            galleryThumbs.innerHTML = "";
+            cake.gallery.forEach(function (url, index) {
+                var thumbBtn = document.createElement("button");
+                thumbBtn.type = "button";
+                thumbBtn.className = "gallery-thumb" + (index === state.imageIndex ? " is-active" : "");
+                thumbBtn.setAttribute("aria-label", "Ảnh " + (index + 1));
+
+                var thumbImg = document.createElement("img");
+                thumbImg.src = url;
+                thumbImg.alt = "";
+                thumbBtn.appendChild(thumbImg);
+
+                thumbBtn.addEventListener("click", function () {
+                    state.imageIndex = index;
+                    renderGallery();
+                });
+
+                galleryThumbs.appendChild(thumbBtn);
+            });
+        }
+
+        function renderPrice() {
+            var cake = state.cake;
+
+            if (cake.discountPercent > 0) {
+                modalPriceOriginal.hidden = false;
+                modalPriceOriginal.textContent = cake.formattedOriginalPrice;
+                modalDiscountBadge.hidden = false;
+                modalDiscountBadge.textContent = "-" + Math.round(cake.discountPercent) + "%";
+            } else {
+                modalPriceOriginal.hidden = true;
+                modalDiscountBadge.hidden = true;
+            }
+            modalPriceSale.textContent = cake.formattedPrice;
+        }
+
+        function renderSizeOptions() {
+            var cake = state.cake;
+            sizeOptions.innerHTML = "";
+            cake.sizes.forEach(function (size, index) {
+                var optBtn = document.createElement("button");
+                optBtn.type = "button";
+                optBtn.className = "size-option" + (index === state.sizeIndex ? " is-active" : "");
+                optBtn.textContent = size.label;
+                optBtn.addEventListener("click", function () {
+                    state.sizeIndex = index;
+                    renderSizeOptions();
+                    if (size.id) {
+                        fetchSizeColorPrice(cake.id, size.id).then(function (priceData) {
+                            cake.price = priceData.price;
+                            cake.formattedPrice = priceData.formattedPrice;
+                            cake.formattedOriginalPrice = priceData.formattedOriginalPrice;
+                            cake.discountPercent = priceData.discountPercent || 0;
+                            renderPrice();
+                        }).catch(function (error) {
+                            console.error("Không thể tải giá theo kích thước", error);
+                        });
+                    }
+                });
+                sizeOptions.appendChild(optBtn);
+            });
+        }
+
+        function renderQuantity() {
+            qtyInput.value = String(state.quantity);
+        }
+
+        function openModal(code) {
+            fetchProductDetails(code).then(function (cake) {
+                state.cake = cake;
+                state.imageIndex = 0;
+                state.sizeIndex = 0;
+                state.quantity = 1;
+
+                modalCakeName.textContent = cake.name;
+                renderGallery();
+                renderPrice();
+                renderSizeOptions();
+                renderQuantity();
+
+                lastFocusedElement = document.activeElement;
+                modal.classList.add("is-open");
+                modal.setAttribute("aria-hidden", "false");
+                document.body.classList.add("modal-open");
+                modalClose.focus();
+            }).catch(function (error) {
+                console.error("Không thể tải chi tiết sản phẩm", error);
+            });
+        }
+
+        function closeModal() {
+            modal.classList.remove("is-open");
+            modal.setAttribute("aria-hidden", "true");
+            document.body.classList.remove("modal-open");
+            if (lastFocusedElement && typeof lastFocusedElement.focus === "function") {
+                lastFocusedElement.focus();
+            }
+        }
+
+        galleryPrev.addEventListener("click", function () {
+            var cake = state.cake;
+            state.imageIndex = (state.imageIndex - 1 + cake.gallery.length) % cake.gallery.length;
+            renderGallery();
+        });
+
+        galleryNext.addEventListener("click", function () {
+            var cake = state.cake;
+            state.imageIndex = (state.imageIndex + 1) % cake.gallery.length;
+            renderGallery();
+        });
+
+        qtyMinus.addEventListener("click", function () {
+            if (state.quantity > 1) {
+                state.quantity -= 1;
+                renderQuantity();
+            }
+        });
+
+        qtyPlus.addEventListener("click", function () {
+            state.quantity += 1;
+            renderQuantity();
+        });
+
+        modalClose.addEventListener("click", closeModal);
+
+        modal.addEventListener("click", function (event) {
+            if (event.target === modal) closeModal();
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape" && modal.classList.contains("is-open")) {
+                closeModal();
+            }
+        });
+
+        function addCurrentSelectionToCart() {
+            var cake = state.cake;
+            var size = cake.sizes[state.sizeIndex];
+            return addToCheckoutCart(cake, size, state.quantity)
+                .then(function () {
+                    return updateCartCount();
+                });
+        }
+
+        btnAddToCart.addEventListener("click", function () {
+            addCurrentSelectionToCart().then(function () {
+                closeModal();
+            }).catch(function (error) {
+                console.error("Không thể thêm vào giỏ hàng", error);
+            });
+        });
+
+        btnBuyNow.addEventListener("click", function () {
+            addCurrentSelectionToCart().then(function () {
+                window.location.href = CHECKOUT_URL;
+            }).catch(function (error) {
+                console.error("Không thể thêm vào giỏ hàng", error);
+            });
+        });
+
+        btnViewDetail.addEventListener("click", function () {
+            window.location.href = DETAIL_URL_PREFIX + state.cake.slug;
+        });
+
+        var cardEls = document.querySelectorAll(".cake-card[data-code]");
+        for (var i = 0; i < cardEls.length; i++) {
+            (function (cardEl) {
+                cardEl.addEventListener("click", function () {
+                    openModal(cardEl.getAttribute("data-code"));
+                });
+                cardEl.addEventListener("keydown", function (event) {
+                    if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        openModal(cardEl.getAttribute("data-code"));
+                    }
+                });
+            })(cardEls[i]);
+        }
+
+        updateCartCount().catch(function (error) {
+            console.error("Không thể tải số lượng giỏ hàng", error);
+        });
+    })();
+    /*]]>*/
+    </script>
+</th:block>
+</body>
+</html>

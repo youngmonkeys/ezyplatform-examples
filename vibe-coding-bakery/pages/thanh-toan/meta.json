@@ -1,0 +1,11 @@
+{
+  "slug": "thanh-toan",
+  "title": "Thanh toán",
+  "summary": "Điền thông tin giao hàng để hoàn tất đặt bánh tại Sweet Home Bakery",
+  "featuredImageName": "",
+  "pageType": "STANDALONE_PAGE",
+  "contentType": "THYMELEAF",
+  "status": "PUBLISHED",
+  "metadata": {},
+  "id": 46
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<footer th:fragment="footer">
+    <section class="contact" id="contact" th:aria-label="#{contact_section_aria_label}">
+        <div class="section-inner">
+            <div class="contact-panel">
+                <div class="contact-title">
+                    <h2 th:text="#{contact_title}">Ghé Sweet Home Bakery</h2>
+                    <p th:text="#{contact_subtitle}">Đặt bánh trước hoặc ghé tiệm để chọn những mẻ bánh mới ra lò trong ngày.</p>
+                </div>
+
+                <dl class="contact-list">
+                    <div class="contact-item">
+                        <dt th:text="#{contact_address_label}">Địa chỉ</dt>
+                        <dd th:text="#{contact_address_value}">123 Đường Hoa Sữa, Quận 3, TP. Hồ Chí Minh</dd>
+                    </div>
+                    <div class="contact-item">
+                        <dt th:text="#{contact_phone_label}">Điện thoại</dt>
+                        <dd th:text="#{contact_phone_value}">0901 234 567</dd>
+                    </div>
+                    <div class="contact-item">
+                        <dt th:text="#{contact_hours_label}">Giờ mở cửa</dt>
+                        <dd th:text="#{contact_hours_value}">07:00 - 21:00, Thứ Hai đến Chủ Nhật</dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+    </section>
+</footer>
+</body>
+</html>

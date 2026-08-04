@@ -1,0 +1,11 @@
+{
+  "slug": "sweet-home-bakery",
+  "title": "Sweet Home Bakery",
+  "summary": "Bánh ngọt handmade mỗi ngày",
+  "featuredImageName": "",
+  "pageType": "STANDALONE_PAGE",
+  "contentType": "THYMELEAF",
+  "status": "PUBLISHED",
+  "metadata": {},
+  "id": 40
+}

@@ -1,0 +1,11 @@
+{
+  "slug": "thuc-don",
+  "title": "Thực đơn",
+  "summary": "Toàn bộ các loại bánh đang bán tại Sweet Home Bakery",
+  "featuredImageName": "",
+  "pageType": "STANDALONE_PAGE",
+  "contentType": "THYMELEAF",
+  "status": "PUBLISHED",
+  "metadata": {},
+  "id": 43
+}

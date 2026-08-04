@@ -1,0 +1,26 @@
+<header class="site-header">
+    <div class="section-inner header-inner">
+        <a class="brand" href="/sweet-home-bakery" aria-label="Sweet Home Bakery - Về trang chủ">
+            <img src="/api/v1/media/sweet-home-bakery-logo-horizontal.svg" alt="Sweet Home Bakery" />
+        </a>
+        <div class="header-actions">
+            <nav class="main-nav" aria-label="Menu chính">
+                <a href="/thuc-don">Thực đơn</a>
+                <a href="/tra-cuu-don-hang">Tra cứu đơn hàng</a>
+                <a href="#contact">Liên hệ</a>
+            </nav>
+            <a class="cart-link" href="/gio-hang" aria-label="Xem giỏ hàng">
+                <svg class="cart-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M7 4h-2l-1 2v1h2l3.6 7.59-1.35 2.44c-.16.28-.25.61-.25.97 0 1.1.9 2 2 2h12v-2h-11.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.24-5.88c.08-.14.12-.31.12-.47 0-.55-.45-1-1-1h-14.3l-.95-2z" fill="currentColor" />
+                </svg>
+                <span class="cart-count" id="cartCount" hidden>0</span>
+            </a>
+            <button type="button" id="themeToggle" class="theme-toggle" role="switch" aria-checked="false" aria-label="Chuyển sang chế độ tối">
+                <span class="theme-toggle-icon theme-toggle-icon--sun" aria-hidden="true">☀</span>
+                <span class="theme-toggle-icon theme-toggle-icon--moon" aria-hidden="true">☾</span>
+                <span class="theme-toggle-thumb"></span>
+            </button>
+        </div>
+    </div>
+</header>
+<script ezy:msrc="/api/v1/media/cart.js"></script>

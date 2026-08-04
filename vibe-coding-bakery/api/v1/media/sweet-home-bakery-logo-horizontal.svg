@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 200" width="620" height="200">
+  <defs>
+    <style>
+      .brand-text {
+        font-family: Georgia, 'Playfair Display', 'Times New Roman', serif;
+        font-style: italic;
+        fill: #5C3A21;
+      }
+    </style>
+  </defs>
+
+  <!-- ICON -->
+  <g transform="translate(0,0) scale(0.62)">
+    <circle cx="200" cy="235" r="78" fill="#FAF3E7" stroke="#5C3A21" stroke-width="5"/>
+
+    <path d="M 165 210 Q 175 235 165 260" fill="none" stroke="#5C3A21" stroke-width="6" stroke-linecap="round"/>
+    <path d="M 200 200 Q 210 235 200 270" fill="none" stroke="#5C3A21" stroke-width="6" stroke-linecap="round"/>
+    <path d="M 235 210 Q 245 235 235 260" fill="none" stroke="#5C3A21" stroke-width="6" stroke-linecap="round"/>
+
+    <path d="
+      M 85 245
+      C 85 150 135 78 200 78
+      C 265 78 315 150 315 245
+      C 315 215 300 185 275 195
+      C 255 203 250 225 227 225
+      C 215 225 208 210 200 210
+      C 192 210 185 225 173 225
+      C 150 225 145 203 125 195
+      C 100 185 85 215 85 245
+      Z"
+      fill="#8B5E3C" stroke="#5C3A21" stroke-width="3" stroke-linejoin="round"/>
+
+    <path d="M 200 78 C 150 78 108 130 95 200" fill="none" stroke="#5C3A21" stroke-width="2" opacity="0.35" stroke-linecap="round"/>
+  </g>
+
+  <!-- CHỮ bên phải icon -->
+  <g>
+    <text x="270" y="100" class="brand-text" font-size="44" font-weight="600">Sweet Home</text>
+    <text x="270" y="140" class="brand-text" font-size="30" letter-spacing="3">B A K E R Y</text>
+  </g>
+</svg>

@@ -1,0 +1,135 @@
+.page-banner {
+    padding: 48px 0 12px;
+}
+
+.page-banner h1 {
+    margin: 0;
+    color: var(--cocoa);
+    font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+    font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+    line-height: 1.05;
+}
+
+.page-banner p {
+    max-width: 560px;
+    margin: 14px 0 0;
+    color: #7a5947;
+}
+
+.menu-section {
+    padding: 32px 0 72px;
+}
+
+.cake-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.cake-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid transparent;
+    border-radius: 16px;
+    background: var(--header-cream);
+    box-shadow: var(--shadow);
+    transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.cake-card-media img {
+    aspect-ratio: 4 / 3;
+    height: auto;
+    object-fit: cover;
+}
+
+.cake-card-body {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px;
+}
+
+.cake-name {
+    margin: 0;
+    color: var(--cocoa);
+    font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.cake-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-detail {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    margin-top: auto;
+    padding: 0 20px;
+    border: 1.5px solid var(--caramel-hover);
+    border-radius: 999px;
+    color: var(--caramel-hover);
+    background: transparent;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 180ms ease, color 180ms ease;
+}
+
+.btn-detail:hover {
+    color: #fff;
+    background: var(--caramel-hover);
+}
+
+.load-more-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.btn-load-more {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 28px;
+    border: 1.5px solid var(--caramel-hover);
+    border-radius: 999px;
+    color: #fff;
+    background: var(--caramel-hover);
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: transform 180ms ease, background 180ms ease;
+}
+
+.btn-load-more:hover {
+    transform: translateY(-2px);
+    background: #6f4a2f;
+}
+
+.btn-load-more:disabled {
+    cursor: default;
+    opacity: 0.6;
+    transform: none;
+}
+
+@media (max-width: 840px) {
+    .cake-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 560px) {
+    .page-banner {
+        padding-top: 36px;
+    }
+}

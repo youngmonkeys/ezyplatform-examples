@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:ezy="http://www.ezyplatform.com/thymeleaf/layout"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{ezytheme}">
+<head>
+    <link rel="stylesheet" type="text/css" ezy:vhref="/css/main.css" />
+    <link rel="stylesheet" type="text/css" ezy:vhref="/css/pages/product-details.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet" />
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+    (function () {
+        var STORAGE_KEY = "sweetBakeryTheme";
+        var stored = null;
+        try {
+            stored = localStorage.getItem(STORAGE_KEY);
+        } catch (e) {}
+        var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        var theme = stored === "light" || stored === "dark" ? stored : (prefersDark ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+    })();
+    /*]]>*/
+    </script>
+</head>
+<body>
+<div layout:fragment="content">
+    <main class="bakery-page"
+          th:with="pdMainImageUrl=${pdProduct != null ? (pdProduct.iconImage != null ? pdProduct.iconImage.getUrlOrDefault('/images/placeholder-product.jpg') : '/images/placeholder-product.jpg') : ''}">
+        <section class="product-detail" th:aria-label="#{product_detail_aria_label}">
+            <div class="section-inner">
+                <p class="breadcrumb">
+                    <a href="/sweet-home-bakery" th:text="#{nav_home}">Trang chủ</a> /
+                    <a href="/thuc-don" th:text="#{nav_menu}">Thực đơn</a> /
+                    <span th:if="${pdProduct != null}" th:text="${pdProduct.name}"></span>
+                    <span th:if="${pdProduct == null}" th:text="#{product_not_found_title}">Không tìm thấy</span>
+                </p>
+
+                <div class="not-found" th:if="${pdProduct == null}">
+                    <h1 th:text="#{product_not_found_title}">Không tìm thấy bánh</h1>
+                    <p th:text="#{product_not_found_message}">Vui lòng quay lại Thực đơn để chọn một loại bánh khác.</p>
+                </div>
+
+                <th:block th:if="${pdProduct != null}">
+                <div class="product-detail-grid" id="pdWrapper" style="margin-top: 16px;" th:attr="data-product-id=${pdProduct.id}">
+                    <div class="product-gallery">
+                        <div class="gallery-main">
+                            <img id="pdMainImage" th:src="${pdMainImageUrl}" th:alt="${pdProduct.name}" src="" alt="" />
+                            <span class="discount-badge" id="pdDiscountBadge"
+                                  th:attr="hidden=${pdProduct.discountPercent != null and pdProduct.discountPercent > 0} ? null : 'hidden'"
+                                  th:text="'-' + ${#numbers.formatDecimal(pdProduct.discountPercent != null ? pdProduct.discountPercent : 0, 1, 0)} + '%'">-20%</span>
+                            <button type="button" class="gallery-nav gallery-prev" id="pdGalleryPrev" th:aria-label="#{gallery_prev}">&lsaquo;</button>
+                            <button type="button" class="gallery-nav gallery-next" id="pdGalleryNext" th:aria-label="#{gallery_next}">&rsaquo;</button>
+                        </div>
+                        <div class="gallery-thumbs" id="pdThumbs">
+                            <button type="button" class="gallery-thumb is-active" th:attr="data-src=${pdMainImageUrl}">
+                                <img th:src="${pdMainImageUrl}" th:alt="${pdProduct.name}" src="" alt="" />
+                            </button>
+                            <button type="button" class="gallery-thumb"
+                                    th:each="media : ${pdProduct.colorMediaList}"
+                                    th:attr="data-src=${media.getUrlOrDefault(pdMainImageUrl)}">
+                                <img th:src="${media.getUrlOrDefault(pdMainImageUrl)}" alt="" src="" />
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h1 class="product-name" id="pdName" th:text="${pdProduct.name}"></h1>
+                        <div class="price-row">
+                            <span class="price-original" id="pdPriceOriginal"
+                                  th:attr="hidden=${pdProduct.discountPercent != null and pdProduct.discountPercent > 0} ? null : 'hidden'"
+                                  th:text="${pdProduct.formattedOriginalPrice}"></span>
+                            <span class="price-sale" id="pdPriceSale" th:text="${pdProduct.formattedPrice}"></span>
+                        </div>
+                        <div class="field" th:if="${pdProduct.sizes != null and !pdProduct.sizes.isEmpty()}">
+                            <span class="field-label" th:text="#{product_size_label}">Kích thước</span>
+                            <div class="size-options" id="pdSizeOptions">
+                                <button type="button" class="size-option"
+                                        th:each="size, sizeStat : ${pdProduct.sizes}"
+                                        th:classappend="${sizeStat.first} ? ' is-active'"
+                                        th:text="${size.sizeDisplayName != null and !size.sizeDisplayName.isEmpty() ? size.sizeDisplayName : size.sizeName}"
+                                        th:attr="data-size-id=${size.id}, data-size-name=${size.sizeName}, data-size-label=${size.sizeDisplayName != null and !size.sizeDisplayName.isEmpty() ? size.sizeDisplayName : size.sizeName}"></button>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <span class="field-label" th:text="#{product_quantity_label}">Số lượng</span>
+                            <div class="quantity-stepper">
+                                <button type="button" id="pdQtyMinus" th:aria-label="#{quantity_decrease}">&minus;</button>
+                                <input type="text" id="pdQtyInput" value="1" readonly="readonly" th:aria-label="#{product_quantity_label}" />
+                                <button type="button" id="pdQtyPlus" th:aria-label="#{quantity_increase}">+</button>
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <button type="button" class="btn btn-primary" id="pdAddToCart" th:text="#{add_to_cart}"
+                                    th:attr="data-code=${pdProduct.code}, data-name=${pdProduct.name}, data-image=${pdMainImageUrl}, data-price=${pdProduct.price}">Thêm vào giỏ hàng</button>
+                            <button type="button" class="btn btn-primary" id="pdBuyNow" th:text="#{buy_now}"
+                                    th:attr="data-code=${pdProduct.code}, data-name=${pdProduct.name}, data-image=${pdMainImageUrl}, data-price=${pdProduct.price}">Mua ngay</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="description-section" id="pdDescriptionSection">
+                    <h2 th:text="#{product_description_title}">Mô tả chi tiết</h2>
+                    <div class="description" id="pdDescription" th:utext="${pdProduct.description}"></div>
+                </div>
+                </th:block>
+            </div>
+        </section>
+
+        <div class="toast" id="pdToast" role="status" aria-live="polite"></div>
+
+        <th:block th:replace="~{fragments/footer :: footer}" />
+    </main>
+</div>
+<th:block layout:fragment="post-scripts">
+    <script ezy:vsrc="/js/main.js"></script>
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+    (function () {
+        var CHECKOUT_URL = "/thanh-toan";
+        var wrapper = document.getElementById("pdWrapper");
+        if (!wrapper) return;
+
+        var PRODUCT_DETAILS_API_PREFIX = "/api/v1/products/";
+        var CURRENCY_ID = 3;
+        var productId = wrapper.getAttribute("data-product-id");
+
+        function fetchSizeColorPrice(sizeId) {
+            var url = PRODUCT_DETAILS_API_PREFIX + encodeURIComponent(productId) + "/size-color-price?sizeId=" + encodeURIComponent(sizeId) + "&currencyId=" + CURRENCY_ID;
+            return fetch(url).then(function (response) {
+                if (!response.ok) throw new Error("Failed to load size price");
+                return response.json();
+            });
+        }
+
+        function addToCheckoutCart(code, sizeName, quantity) {
+            var url = PRODUCT_DETAILS_API_PREFIX + encodeURIComponent(code) + "/checkout";
+            var body = { quantity: quantity };
+            if (sizeName) {
+                body.sizeName = sizeName;
+            }
+            return fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            }).then(function (response) {
+                if (!response.ok) throw new Error("Failed to add to cart");
+                return response.json();
+            });
+        }
+
+        /* Gallery */
+        var mainImage = document.getElementById("pdMainImage");
+        var thumbButtons = Array.prototype.slice.call(document.querySelectorAll(".gallery-thumb"));
+        var galleryPrev = document.getElementById("pdGalleryPrev");
+        var galleryNext = document.getElementById("pdGalleryNext");
+        var imageIndex = 0;
+
+        function renderGallery() {
+            if (thumbButtons.length === 0) return;
+            mainImage.src = thumbButtons[imageIndex].getAttribute("data-src");
+            thumbButtons.forEach(function (btn, index) {
+                btn.classList.toggle("is-active", index === imageIndex);
+            });
+        }
+
+        thumbButtons.forEach(function (btn, index) {
+            btn.addEventListener("click", function () {
+                imageIndex = index;
+                renderGallery();
+            });
+        });
+
+        if (galleryPrev) {
+            galleryPrev.addEventListener("click", function () {
+                imageIndex = (imageIndex - 1 + thumbButtons.length) % thumbButtons.length;
+                renderGallery();
+            });
+        }
+
+        if (galleryNext) {
+            galleryNext.addEventListener("click", function () {
+                imageIndex = (imageIndex + 1) % thumbButtons.length;
+                renderGallery();
+            });
+        }
+
+        renderGallery();
+
+        /* Size selection */
+        var priceSaleEl = document.getElementById("pdPriceSale");
+        var priceOriginalEl = document.getElementById("pdPriceOriginal");
+        var discountBadgeEl = document.getElementById("pdDiscountBadge");
+
+        function applyPrice(priceData) {
+            if (priceSaleEl) priceSaleEl.textContent = priceData.formattedPrice;
+            var hasDiscount = priceData.discountPercent > 0;
+            if (priceOriginalEl) {
+                priceOriginalEl.hidden = !hasDiscount;
+                if (hasDiscount) priceOriginalEl.textContent = priceData.formattedOriginalPrice;
+            }
+            if (discountBadgeEl) {
+                discountBadgeEl.hidden = !hasDiscount;
+                if (hasDiscount) discountBadgeEl.textContent = "-" + priceData.discountPercent + "%";
+            }
+            if (btnAddToCart) btnAddToCart.setAttribute("data-price", priceData.price);
+            if (btnBuyNow) btnBuyNow.setAttribute("data-price", priceData.price);
+        }
+
+        var sizeButtons = Array.prototype.slice.call(document.querySelectorAll(".size-option"));
+        sizeButtons.forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                sizeButtons.forEach(function (other) {
+                    other.classList.remove("is-active");
+                });
+                btn.classList.add("is-active");
+
+                var sizeId = btn.getAttribute("data-size-id");
+                if (!productId || !sizeId) return;
+                fetchSizeColorPrice(sizeId).then(applyPrice).catch(function (error) {
+                    console.error("Không thể tải giá theo kích thước", error);
+                });
+            });
+        });
+
+        /* Quantity */
+        var qtyInput = document.getElementById("pdQtyInput");
+        var qtyMinus = document.getElementById("pdQtyMinus");
+        var qtyPlus = document.getElementById("pdQtyPlus");
+        var quantity = 1;
+
+        function renderQuantity() {
+            qtyInput.value = String(quantity);
+        }
+
+        qtyMinus.addEventListener("click", function () {
+            if (quantity > 1) {
+                quantity -= 1;
+                renderQuantity();
+            }
+        });
+
+        qtyPlus.addEventListener("click", function () {
+            quantity += 1;
+            renderQuantity();
+        });
+
+        /* Cart actions */
+        var btnAddToCart = document.getElementById("pdAddToCart");
+        var btnBuyNow = document.getElementById("pdBuyNow");
+        var toast = document.getElementById("pdToast");
+        var toastTimer = null;
+
+        function getSelectedSize() {
+            var activeBtn = document.querySelector(".size-option.is-active");
+            if (!activeBtn) return { key: null, label: null };
+            return {
+                key: activeBtn.getAttribute("data-size-name"),
+                label: activeBtn.getAttribute("data-size-label")
+            };
+        }
+
+        function addCurrentSelectionToCart(sourceBtn) {
+            var size = getSelectedSize();
+            var code = sourceBtn.getAttribute("data-code");
+            return addToCheckoutCart(code, size.key, quantity).then(function () {
+                return updateCartCount();
+            });
+        }
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add("is-visible");
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(function () {
+                toast.classList.remove("is-visible");
+            }, 2200);
+        }
+
+        btnAddToCart.addEventListener("click", function () {
+            addCurrentSelectionToCart(btnAddToCart).then(function () {
+                showToast("Đã thêm vào giỏ hàng");
+            }).catch(function (error) {
+                console.error("Không thể thêm vào giỏ hàng", error);
+            });
+        });
+
+        btnBuyNow.addEventListener("click", function () {
+            addCurrentSelectionToCart(btnBuyNow).then(function () {
+                window.location.href = CHECKOUT_URL;
+            }).catch(function (error) {
+                console.error("Không thể thêm vào giỏ hàng", error);
+            });
+        });
+
+        updateCartCount().catch(function (error) {
+            console.error("Không thể tải số lượng giỏ hàng", error);
+        });
+    })();
+    /*]]>*/
+    </script>
+</th:block>
+</body>
+</html>

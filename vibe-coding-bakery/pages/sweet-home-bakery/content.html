@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <script>
+        (function () {
+            var STORAGE_KEY = "sweetHomeBakeryTheme";
+            var stored = null;
+            try {
+                stored = localStorage.getItem(STORAGE_KEY);
+            } catch (e) {}
+            var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+            var theme = stored === "light" || stored === "dark" ? stored : (prefersDark ? "dark" : "light");
+            document.documentElement.setAttribute("data-theme", theme);
+        })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sweet Home Bakery</title>
+    <meta name="description" content="Sweet Home Bakery - Bánh ngọt handmade mỗi ngày." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" ezy:mhref="/api/v1/media/sweet-bakery.css" />
+    <style>
+        .hero {
+            position: relative;
+            min-height: 76vh;
+            display: flex;
+            align-items: center;
+            padding: 56px 0;
+            color: var(--milk);
+            background:
+                linear-gradient(90deg, rgba(47, 28, 20, 0.82), rgba(92, 52, 34, 0.48), rgba(92, 52, 34, 0.18)),
+                url("/api/v1/media/cinnamon-roll.jpg") center / cover;
+        }
+
+        .hero::after {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            height: 120px;
+            background: linear-gradient(180deg, rgba(255, 248, 236, 0), var(--cream));
+            content: "";
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 650px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 0 18px;
+            color: #ffe7bf;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            width: 42px;
+            height: 2px;
+            background: #ffe7bf;
+            content: "";
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(3rem, 8vw, 6.8rem);
+            line-height: 0.95;
+            letter-spacing: 0;
+        }
+
+        .hero p {
+            max-width: 500px;
+            margin: 24px 0 32px;
+            color: #fff1dc;
+            font-size: clamp(1.1rem, 2vw, 1.35rem);
+        }
+
+        .hero-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 50px;
+            padding: 0 26px;
+            border-radius: 999px;
+            color: var(--coffee);
+            background: var(--butter);
+            font-weight: 700;
+            box-shadow: 0 14px 30px rgba(47, 28, 20, 0.24);
+            transition: transform 180ms ease, background 180ms ease;
+        }
+
+        .hero-button:hover {
+            background: #ffe1aa;
+            transform: translateY(-2px);
+        }
+
+        .featured {
+            padding: 74px 0 54px;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        .section-heading h2 {
+            margin: 0;
+            color: var(--cocoa);
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.05;
+            letter-spacing: 0;
+        }
+
+        .section-heading p {
+            max-width: 390px;
+            margin: 0;
+            color: #7a5947;
+        }
+
+        .cake-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        .cake-card {
+            overflow: hidden;
+            border: 1px solid transparent;
+            border-radius: 14px;
+            background: var(--header-cream);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+        }
+
+        .cake-card:focus-visible {
+            outline: 2px solid var(--caramel-hover);
+            outline-offset: 2px;
+        }
+
+        .cake-card img {
+            aspect-ratio: 4 / 3;
+            height: auto;
+            object-fit: cover;
+        }
+
+        .cake-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 20px;
+        }
+
+        .cake-info h3 {
+            margin: 0;
+            color: var(--cocoa);
+            font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            line-height: 1.25;
+        }
+
+        .cake-price {
+            flex: 0 0 auto;
+            color: var(--caramel);
+            font-family: "Nunito", Arial, Helvetica, sans-serif;
+            font-weight: 800;
+        }
+
+        @media (max-width: 840px) {
+            .hero {
+                min-height: 68vh;
+                background-position: 58% center;
+            }
+
+            .section-heading,
+            .contact-panel {
+                display: block;
+            }
+
+            .section-heading p,
+            .contact-title p {
+                margin-top: 12px;
+            }
+
+            .cake-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cake-card {
+                display: grid;
+                grid-template-columns: 42% 1fr;
+            }
+
+            .cake-card img {
+                height: 100%;
+                min-height: 170px;
+            }
+
+            .contact-list {
+                margin-top: 24px;
+            }
+
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-info {
+                padding: 4px 24px 28px;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .section-inner {
+                width: min(100% - 28px, 1120px);
+            }
+
+            .header-inner {
+                gap: 14px;
+            }
+
+            .brand img {
+                height: 34px;
+            }
+
+            .header-actions {
+                gap: 12px;
+            }
+
+            .main-nav {
+                gap: 16px;
+            }
+
+            .main-nav a {
+                font-size: 0.9rem;
+            }
+
+            .hero {
+                min-height: 72vh;
+                padding: 44px 0;
+            }
+
+            .hero h1 {
+                font-size: clamp(2.8rem, 16vw, 4.2rem);
+            }
+
+            .featured {
+                padding-top: 56px;
+            }
+
+            .cake-card {
+                display: block;
+            }
+
+            .cake-info {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .contact-panel {
+                padding: 22px;
+            }
+
+            .contact-item {
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+
+            .modal-gallery {
+                padding: 18px;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
+
+            .modal-actions .btn {
+                width: 100%;
+            }
+        }
+
+        :root[data-theme="dark"] {
+            --cream: #3b2a1e;
+            --coffee: #faf3e7;
+            --cocoa: #faf3e7;
+            --milk: #faf3e7;
+            --header-cream: #4a3728;
+            --header-text: #faf3e7;
+            --shadow: 0 18px 42px rgba(0, 0, 0, 0.4);
+        }
+
+        :root[data-theme="dark"] .section-heading p,
+        :root[data-theme="dark"] .contact-title p {
+            color: #d9c3a8;
+        }
+
+        :root[data-theme="dark"] .hero-button {
+            color: #faf3e7;
+            background: var(--caramel-hover);
+        }
+
+        :root[data-theme="dark"] .hero-button:hover {
+            background: #6f4a2f;
+        }
+    </style>
+</head>
+<body>
+<ezy:block ezy:replace="~{sweet_bakery/header :: content}" />
+<main class="bakery-page">
+    <section class="hero" aria-label="Sweet Home Bakery">
+        <div class="section-inner">
+            <div class="hero-content">
+                <p class="eyebrow">Tiệm bánh thủ công</p>
+                <h1>Sweet Home Bakery</h1>
+                <p>Bánh ngọt handmade mỗi ngày</p>
+                <a class="hero-button" href="#menu">Xem thực đơn</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured" id="menu">
+        <div class="section-inner">
+            <div class="section-heading">
+                <h2>Bánh nổi bật</h2>
+                <p>Mỗi mẻ bánh được chuẩn bị trong ngày với nguyên liệu chọn lọc và hương vị ấm áp như ở nhà.</p>
+            </div>
+
+            <div class="cake-grid" id="featuredCakeGrid" th:with="featuredProducts=${ezyfunctions.call('get_product_pagination', '{shopId:1, currencyId:3, categoryName:\'banh\', limit:12}')}">
+                <th:block th:if="${featuredProducts != null}">
+                <article class="cake-card"
+                         th:each="product : ${featuredProducts.items}"
+                         th:attr="data-code=${product.code}"
+                         tabindex="0" role="button" th:aria-label="'Xem chi tiết ' + ${product.name}">
+                    <div class="cake-card-media">
+                        <img th:src="${product.iconImage != null ? product.iconImage.getUrlOrDefault('/api/v1/media/chocolate-dream-cake.jpg') : '/api/v1/media/chocolate-dream-cake.jpg'}" th:alt="${product.name}" src="/api/v1/media/chocolate-dream-cake.jpg" alt="" />
+                        <span class="discount-badge" th:if="${product.discountPercent != null and product.discountPercent > 0}" th:text="'-' + ${#numbers.formatDecimal(product.discountPercent, 1, 0)} + '%'">-20%</span>
+                    </div>
+                    <div class="cake-info">
+                        <h3 th:text="${product.name}">Chocolate Dream Cake</h3>
+                        <span class="cake-price" th:text="${product.formattedPrice}">120.000đ</span>
+                    </div>
+                </article>
+                </th:block>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal-overlay" id="cakeModal" aria-hidden="true">
+        <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalCakeName">
+            <button type="button" class="modal-close" id="modalClose" aria-label="Đóng">&times;</button>
+            <div class="modal-body">
+                <div class="modal-gallery">
+                    <div class="gallery-main">
+                        <img id="galleryMainImage" src="" alt="" />
+                        <span class="discount-badge modal-discount-badge" id="modalDiscountBadge" hidden></span>
+                        <button type="button" class="gallery-nav gallery-prev" id="galleryPrev" aria-label="Ảnh trước">&lsaquo;</button>
+                        <button type="button" class="gallery-nav gallery-next" id="galleryNext" aria-label="Ảnh sau">&rsaquo;</button>
+                    </div>
+                    <div class="gallery-thumbs" id="galleryThumbs"></div>
+                </div>
+                <div class="modal-info">
+                    <h2 id="modalCakeName" class="modal-cake-name"></h2>
+                    <div class="modal-price-row">
+                        <span class="price-original" id="modalPriceOriginal" hidden></span>
+                        <span class="price-sale" id="modalPriceSale"></span>
+                    </div>
+                    <div class="modal-field">
+                        <span class="modal-field-label">Kích thước</span>
+                        <div class="size-options" id="sizeOptions"></div>
+                    </div>
+                    <div class="modal-field">
+                        <span class="modal-field-label">Số lượng</span>
+                        <div class="quantity-stepper">
+                            <button type="button" id="qtyMinus" aria-label="Giảm số lượng">&minus;</button>
+                            <input type="text" id="qtyInput" value="1" readonly aria-label="Số lượng" />
+                            <button type="button" id="qtyPlus" aria-label="Tăng số lượng">+</button>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-outline" id="btnAddToCart">Thêm giỏ hàng</button>
+                        <button type="button" class="btn btn-primary" id="btnBuyNow">Mua ngay</button>
+                        <button type="button" class="btn btn-ghost" id="btnViewDetail">Xem chi tiết</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ezy:block ezy:replace="~{sweet_bakery/footer :: content}" />
+</main>
+<script ezy:msrc="/api/v1/media/sweet-bakery.js"></script>
+<script>
+    (function () {
+        var CHECKOUT_URL = "/thanh-toan";
+        var DETAIL_URL_PREFIX = "/chi-tiet-banh?slug=";
+        var PRODUCT_DETAILS_API_PREFIX = "/api/v1/products/";
+        var CURRENCY_ID = 3;
+        var DEFAULT_IMAGE = "/api/v1/media/chocolate-dream-cake.jpg";
+
+        function addToCheckoutCart(cake, size, quantity) {
+            var url = PRODUCT_DETAILS_API_PREFIX + encodeURIComponent(cake.slug) + "/checkout";
+            var body = { quantity: quantity };
+            if (size.id) {
+                body.sizeName = size.key;
+            }
+            return fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            }).then(function (response) {
+                if (!response.ok) throw new Error("Failed to add to cart");
+                return response.json();
+            });
+        }
+
+        function fetchProductDetails(code) {
+            var url = PRODUCT_DETAILS_API_PREFIX + encodeURIComponent(code) + "/details?currencyId=" + CURRENCY_ID;
+            return fetch(url)
+                .then(function (response) {
+                    if (!response.ok) throw new Error("Failed to load product details");
+                    return response.json();
+                })
+                .then(function (data) {
+                    var gallery = [];
+                    var iconUrl = mediaUrl(data.iconImage);
+                    if (iconUrl) gallery.push(iconUrl);
+                    (data.colorMediaList || []).forEach(function (media) {
+                        var mediaSrc = mediaUrl(media);
+                        if (mediaSrc) gallery.push(mediaSrc);
+                    });
+                    if (gallery.length === 0) gallery.push(DEFAULT_IMAGE);
+
+                    var sizes = (data.sizes && data.sizes.length > 0)
+                        ? data.sizes.map(function (size) {
+                            return { id: size.id, key: size.sizeName, label: size.sizeDisplayName || size.sizeName };
+                        })
+                        : [{ id: null, key: "default", label: "Chuẩn" }];
+
+                    return {
+                        id: data.id,
+                        slug: data.code,
+                        name: data.name,
+                        gallery: gallery,
+                        price: data.price,
+                        formattedPrice: data.formattedPrice,
+                        formattedOriginalPrice: data.formattedOriginalPrice,
+                        discountPercent: data.discountPercent || 0,
+                        sizes: sizes
+                    };
+                });
+        }
+
+        function fetchSizeColorPrice(productId, sizeId) {
+            var url = PRODUCT_DETAILS_API_PREFIX + encodeURIComponent(productId) + "/size-color-price?sizeId=" + encodeURIComponent(sizeId) + "&currencyId=" + CURRENCY_ID;
+            return fetch(url).then(function (response) {
+                if (!response.ok) throw new Error("Failed to load size price");
+                return response.json();
+            });
+        }
+
+        /* ---- Modal ---- */
+        var modal = document.getElementById("cakeModal");
+        var modalClose = document.getElementById("modalClose");
+        var galleryMainImage = document.getElementById("galleryMainImage");
+        var galleryThumbs = document.getElementById("galleryThumbs");
+        var galleryPrev = document.getElementById("galleryPrev");
+        var galleryNext = document.getElementById("galleryNext");
+        var modalDiscountBadge = document.getElementById("modalDiscountBadge");
+        var modalCakeName = document.getElementById("modalCakeName");
+        var modalPriceOriginal = document.getElementById("modalPriceOriginal");
+        var modalPriceSale = document.getElementById("modalPriceSale");
+        var sizeOptions = document.getElementById("sizeOptions");
+        var qtyInput = document.getElementById("qtyInput");
+        var qtyMinus = document.getElementById("qtyMinus");
+        var qtyPlus = document.getElementById("qtyPlus");
+        var btnAddToCart = document.getElementById("btnAddToCart");
+        var btnBuyNow = document.getElementById("btnBuyNow");
+        var btnViewDetail = document.getElementById("btnViewDetail");
+
+        var state = {
+            cake: null,
+            imageIndex: 0,
+            sizeIndex: 0,
+            quantity: 1
+        };
+        var lastFocusedElement = null;
+
+        function renderGallery() {
+            var cake = state.cake;
+            galleryMainImage.src = cake.gallery[state.imageIndex];
+            galleryMainImage.alt = cake.name;
+
+            galleryThumbs.innerHTML = "";
+            cake.gallery.forEach(function (url, index) {
+                var thumbBtn = document.createElement("button");
+                thumbBtn.type = "button";
+                thumbBtn.className = "gallery-thumb" + (index === state.imageIndex ? " is-active" : "");
+                thumbBtn.setAttribute("aria-label", "Ảnh " + (index + 1));
+
+                var thumbImg = document.createElement("img");
+                thumbImg.src = url;
+                thumbImg.alt = "";
+                thumbBtn.appendChild(thumbImg);
+
+                thumbBtn.addEventListener("click", function () {
+                    state.imageIndex = index;
+                    renderGallery();
+                });
+
+                galleryThumbs.appendChild(thumbBtn);
+            });
+        }
+
+        function renderPrice() {
+            var cake = state.cake;
+
+            if (cake.discountPercent > 0) {
+                modalPriceOriginal.hidden = false;
+                modalPriceOriginal.textContent = cake.formattedOriginalPrice;
+                modalDiscountBadge.hidden = false;
+                modalDiscountBadge.textContent = "-" + cake.discountPercent + "%";
+            } else {
+                modalPriceOriginal.hidden = true;
+                modalDiscountBadge.hidden = true;
+            }
+            modalPriceSale.textContent = cake.formattedPrice;
+        }
+
+        function renderSizeOptions() {
+            var cake = state.cake;
+            sizeOptions.innerHTML = "";
+            cake.sizes.forEach(function (size, index) {
+                var optBtn = document.createElement("button");
+                optBtn.type = "button";
+                optBtn.className = "size-option" + (index === state.sizeIndex ? " is-active" : "");
+                optBtn.textContent = size.label;
+                optBtn.addEventListener("click", function () {
+                    state.sizeIndex = index;
+                    renderSizeOptions();
+                    if (size.id) {
+                        fetchSizeColorPrice(cake.id, size.id).then(function (priceData) {
+                            cake.price = priceData.price;
+                            cake.formattedPrice = priceData.formattedPrice;
+                            cake.formattedOriginalPrice = priceData.formattedOriginalPrice;
+                            cake.discountPercent = priceData.discountPercent || 0;
+                            renderPrice();
+                        }).catch(function (error) {
+                            console.error("Không thể tải giá theo kích thước", error);
+                        });
+                    }
+                });
+                sizeOptions.appendChild(optBtn);
+            });
+        }
+
+        function renderQuantity() {
+            qtyInput.value = String(state.quantity);
+        }
+
+        function openModal(code) {
+            fetchProductDetails(code).then(function (cake) {
+                state.cake = cake;
+                state.imageIndex = 0;
+                state.sizeIndex = 0;
+                state.quantity = 1;
+
+                modalCakeName.textContent = cake.name;
+                renderGallery();
+                renderPrice();
+                renderSizeOptions();
+                renderQuantity();
+
+                lastFocusedElement = document.activeElement;
+                modal.classList.add("is-open");
+                modal.setAttribute("aria-hidden", "false");
+                document.body.classList.add("modal-open");
+                modalClose.focus();
+            }).catch(function (error) {
+                console.error("Không thể tải chi tiết sản phẩm", error);
+            });
+        }
+
+        function closeModal() {
+            modal.classList.remove("is-open");
+            modal.setAttribute("aria-hidden", "true");
+            document.body.classList.remove("modal-open");
+            if (lastFocusedElement && typeof lastFocusedElement.focus === "function") {
+                lastFocusedElement.focus();
+            }
+        }
+
+        galleryPrev.addEventListener("click", function () {
+            var cake = state.cake;
+            state.imageIndex = (state.imageIndex - 1 + cake.gallery.length) % cake.gallery.length;
+            renderGallery();
+        });
+
+        galleryNext.addEventListener("click", function () {
+            var cake = state.cake;
+            state.imageIndex = (state.imageIndex + 1) % cake.gallery.length;
+            renderGallery();
+        });
+
+        qtyMinus.addEventListener("click", function () {
+            if (state.quantity > 1) {
+                state.quantity -= 1;
+                renderQuantity();
+            }
+        });
+
+        qtyPlus.addEventListener("click", function () {
+            state.quantity += 1;
+            renderQuantity();
+        });
+
+        modalClose.addEventListener("click", closeModal);
+
+        modal.addEventListener("click", function (event) {
+            if (event.target === modal) closeModal();
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape" && modal.classList.contains("is-open")) {
+                closeModal();
+            }
+        });
+
+        function addCurrentSelectionToCart() {
+            var cake = state.cake;
+            var size = cake.sizes[state.sizeIndex];
+            return addToCheckoutCart(cake, size, state.quantity)
+                .then(function () {
+                    return updateCartCount();
+                });
+        }
+
+        btnAddToCart.addEventListener("click", function () {
+            addCurrentSelectionToCart().then(function () {
+                closeModal();
+            }).catch(function (error) {
+                console.error("Không thể thêm vào giỏ hàng", error);
+            });
+        });
+
+        btnBuyNow.addEventListener("click", function () {
+            addCurrentSelectionToCart().then(function () {
+                window.location.href = CHECKOUT_URL;
+            }).catch(function (error) {
+                console.error("Không thể thêm vào giỏ hàng", error);
+            });
+        });
+
+        btnViewDetail.addEventListener("click", function () {
+            window.location.href = DETAIL_URL_PREFIX + state.cake.slug;
+        });
+
+        var cardEls = document.querySelectorAll(".cake-card[data-code]");
+        for (var i = 0; i < cardEls.length; i++) {
+            (function (cardEl) {
+                cardEl.addEventListener("click", function () {
+                    openModal(cardEl.getAttribute("data-code"));
+                });
+                cardEl.addEventListener("keydown", function (event) {
+                    if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        openModal(cardEl.getAttribute("data-code"));
+                    }
+                });
+            })(cardEls[i]);
+        }
+
+        updateCartCount().catch(function (error) {
+            console.error("Không thể tải số lượng giỏ hàng", error);
+        });
+    })();
+</script>
+</body>
+</html>
