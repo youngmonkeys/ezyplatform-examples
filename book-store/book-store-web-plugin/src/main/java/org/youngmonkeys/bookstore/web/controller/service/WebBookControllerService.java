@@ -11,6 +11,8 @@ import org.youngmonkeys.ecommerce.model.*;
 import org.youngmonkeys.ecommerce.pagination.*;
 import org.youngmonkeys.ecommerce.service.PaginationProductPriceService;
 import org.youngmonkeys.ecommerce.service.PaginationProductService;
+import org.youngmonkeys.ecommerce.service.SetProductService;
+import org.youngmonkeys.ecommerce.service.UpsellProductService;
 import org.youngmonkeys.ecommerce.web.service.WebProductCategoryProductService;
 import org.youngmonkeys.ecommerce.web.service.WebProductCategoryService;
 import org.youngmonkeys.ecommerce.web.service.WebProductService;
@@ -37,10 +39,10 @@ public class WebBookControllerService {
     private final PaginationProductService paginationProductService;
     private final PaginationProductPriceService paginationProductPriceService;
     private final WebBookModelDecorator bookModelDecorator;
-    private final ProductPaginationParameterConverter
-        productPaginationParameterConverter;
-    private final ProductPricePaginationParameterConverter
-        productPricePaginationParameterConverter;
+    private final ProductPaginationParameterConverter productPaginationParameterConverter;
+    private final ProductPricePaginationParameterConverter productPricePaginationParameterConverter;
+    private final SetProductService setProductService;
+    private final UpsellProductService upsellProductService;
 
     public List<WebBookResponse> getHighlightBooks(
         ProductCurrencyModel currency,
@@ -137,6 +139,33 @@ public class WebBookControllerService {
         );
     }
 
+    public List<WebBookResponse> getSetProductBooks(
+        long bookId,
+        ProductCurrencyModel currency,
+        int limit
+    ) {
+        List<Long> bookIds = setProductService.getSetProductIdsByProductIdAAndProductBStatuses(
+            bookId,
+            Collections.singletonList(ProductStatus.PUBLISHED.toString()),
+            0,
+            limit
+        );
+        return getBooksByIds(bookIds, currency);
+    }
+
+    public List<WebBookResponse> getUpsellProductBooks(
+        long bookId,
+        ProductCurrencyModel currency,
+        int limit
+    ) {
+        List<Long> bookIds = upsellProductService.getUpsellProductIdsByMainProductId(
+            bookId,
+            0,
+            limit
+        );
+        return getBooksByIds(bookIds, currency);
+    }
+
     public PaginationModel<WebBookResponse> getBookPagination(
         ProductFilter productFilter,
         ProductPriceFilter productPriceFilter,
@@ -231,4 +260,5 @@ public class WebBookControllerService {
             productItemById.get(it.getProductId())
         );
     }
+
 }
