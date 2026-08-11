@@ -23,4 +23,5 @@ import lombok.Setter;
 @Setter
 public class AdminPersonalSaveSettingsRequest {
     private boolean allowCalculatePostReadTime;
+    private boolean showCoinWidget;
 }

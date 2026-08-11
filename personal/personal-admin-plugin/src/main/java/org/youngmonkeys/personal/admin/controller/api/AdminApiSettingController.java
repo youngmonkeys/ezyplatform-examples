@@ -28,6 +28,11 @@ public class AdminApiSettingController {
                     request.isAllowCalculatePostReadTime()
                 )
             )
+            .registerOperation(() ->
+                personalSettingService.setShowCoinWidget(
+                    request.isShowCoinWidget()
+                )
+            )
             .blockingExecute();
         return ResponseEntity.noContent();
     }

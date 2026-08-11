@@ -1,0 +1,109 @@
+.coin-widget {
+    position: fixed;
+    right: 20px;
+    bottom: 80px;
+    z-index: 9999;
+}
+
+/* Toggle button */
+.coin-widget-toggle {
+    width: 48px;
+    height: 48px;
+    background: #667FEA;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* Panel */
+.coin-widget-panel {
+    position: absolute;
+    right: 0;
+    bottom: 60px;
+    width: 360px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    overflow: hidden;
+    display: none;
+}
+
+/* Expanded */
+.coin-widget.expanded .coin-widget-panel {
+    display: block;
+}
+
+/* Header */
+.coin-widget-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: #667FEA;
+    color: #fff;
+    font-weight: 800;
+}
+
+.close-btn {
+    color: #fff;
+}
+
+.coin-widget-body {
+    max-height: 360px;
+    overflow-y: auto;
+}
+
+.coin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.coin-table th,
+.coin-table td {
+    padding: 8px;
+    text-align: right;
+    border-bottom: 1px solid #eee;
+}
+
+.coin-table th:nth-child(1),
+.coin-table td:nth-child(1) {
+    text-align: left;
+}
+
+.coin-info .symbol {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.coin-info .name {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.coin-price {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.price-up {
+    color: #16a34a; /* green */
+    font-weight: 600;
+}
+
+.price-down {
+    color: #dc2626; /* red */
+    font-weight: 600;
+}
+
+.price-flat {
+    color: #6b7280; /* gray */
+}
+
+.price-arrow {
+    margin-right: 4px;
+    font-size: 12px;
+}

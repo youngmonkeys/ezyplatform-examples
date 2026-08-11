@@ -30,6 +30,10 @@ public class AdminSettingsController {
                 "allowCalculatePostReadTime",
                 personalSettingService.isAllowCalculatePostReadTime()
             )
+            .addVariable(
+                "showCoinWidget",
+                personalSettingService.isShowCoinWidget()
+            )
             .build();
     }
 }
